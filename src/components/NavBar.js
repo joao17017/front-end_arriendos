@@ -1,16 +1,36 @@
-// src/components/NavBar.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
+import axios from 'axios';
 import './NavBar.css';
 
 Modal.setAppElement('#root');
 
 const NavBar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Nuevo estado para el mensaje de éxito
 
   const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setError('');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:3000/auth/login', { email, contrasena: password });
+      console.log(response.data); // Puedes manejar el token aquí
+      setSuccessMessage('Inicio de sesión exitoso'); // Establecer mensaje de éxito
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      setError('Usuario o contraseña incorrectos');
+    }
+  };
 
   return (
     <div>
@@ -29,19 +49,31 @@ const NavBar = () => {
         overlayClassName="modal-overlay"
       >
         <h2>Login</h2>
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Email:</label>
-            <input type="email" required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
           <div className="form-group">
             <label>Password:</label>
-            <input type="password" required />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
           <button type="submit" className="modal-button">Login</button>
           <button type="button" className="modal-button" onClick={closeModal}>Close</button>
         </form>
       </Modal>
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
     </div>
   );
 };
