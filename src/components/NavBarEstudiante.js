@@ -16,8 +16,14 @@ const NavBarEstudiante = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleLogout = () => {
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:3000/auth/logout');
+      localStorage.removeItem('token'); // Eliminar el token del almacenamiento local
+      navigate('/'); // Redirigir a la página de inicio
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
   };
 
   const handleSearch = async (e) => {
