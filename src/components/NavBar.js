@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
 import axios from 'axios';
 import './NavBar.css';
@@ -11,7 +11,8 @@ const NavBar = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Nuevo estado para el mensaje de éxito
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate(); // Reemplaza useHistory con useNavigate
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => {
@@ -23,9 +24,19 @@ const NavBar = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3000/auth/login', { email, contrasena: password });
-      console.log(response.data); // Puedes manejar el token aquí
-      setSuccessMessage('Inicio de sesión exitoso'); // Establecer mensaje de éxito
+      const { token, message, tipo } = response.data;
+      localStorage.setItem('token', token); // Almacenar el token en localStorage
+      setSuccessMessage(message);
       closeModal();
+
+      // Redirigir basado en el tipo de usuario
+      if (tipo === 'estudiante') {
+        navigate('/estudiante/dashboard');
+      } else if (tipo === 'administrador') {
+        navigate('/administrador/dashboard');
+      } else if (tipo === 'arrendador') {
+        navigate('/arrendador/dashboard');
+      }
     } catch (err) {
       console.error(err);
       setError('Usuario o contraseña incorrectos');
@@ -70,7 +81,7 @@ const NavBar = () => {
           </div>
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <button type="submit" className="modal-button">Login</button>
-          <button type="button" className="modal-button" onClick={closeModal}>Close</button>
+          <button type="button" className="modal-button" onClick={closeModal}>Cerrar</button>
         </form>
       </Modal>
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}

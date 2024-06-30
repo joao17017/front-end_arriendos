@@ -1,33 +1,53 @@
 // src/components/Home.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
 import './Home.css';
 
-const arriendos = [
-  { id: 1, title: 'Departamento céntrico', price: '$300', image: '/images/image.png' },
-  { id: 2, title: 'Casa amplia', price: '$500', image: '/images/image.png' },
-  { id: 3, title: 'Habitación económica', price: '$150', image: '/images/image.png' },
-  { id: 4, title: 'Suite moderna', price: '$400', image: '/images/image.png' },
-  { id: 5, title: 'Departamento amoblado', price: '$350', image: '/images/image.png' },
-  { id: 6, title: 'Casa con jardín', price: '$450', image: '/images/image.png' },
-  { id: 7, title: 'Habitación compartida', price: '$200', image: '/images/image.png' },
-  { id: 8, title: 'Penthouse de lujo', price: '$800', image: '/images/image.png' },
-];
-
 const Home = () => {
+  const [departamentos, setDepartamentos] = useState([]);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDepartamentos = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/departamentos');
+        setDepartamentos(response.data);
+      } catch (err) {
+        setError('Error al obtener los departamentos');
+        console.error(err);
+      }
+    };
+
+    fetchDepartamentos();
+  }, []);
+
+  const handleDepartamentoClick = (id) => {
+    navigate(`/login`);
+  };
+
   return (
     <div>
       <NavBar />
       <div className="home-container">
         <h1>Bienvenidos a Arriendos Riobamba</h1>
         <p>Encuentra los mejores arriendos en Riobamba.</p>
+        {error && <p className="error-message">{error}</p>}
         <div className="cards-container">
-          {arriendos.map((arriendo) => (
-            <div className="card" key={arriendo.id}>
-              <img src={arriendo.image} alt={arriendo.title} className="card-image" />
+          {departamentos.map((departamento) => (
+            <div
+              className="card"
+              key={departamento.id_departamento}
+              onClick={() => handleDepartamentoClick(departamento.id_departamento)}
+            >
+              <img src={departamento.imagen || '/images/image.png'} alt={departamento.nombre} className="card-image" />
               <div className="card-content">
-                <h3>{arriendo.title}</h3>
-                <p>{arriendo.price}</p>
+                <h3>{departamento.nombre}</h3>
+                <p>{departamento.direccion}</p>
+                <p>{departamento.precio}</p>
+                <p>{departamento.descripcion}</p>
               </div>
             </div>
           ))}
