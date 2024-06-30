@@ -24,6 +24,15 @@ const Filters = ({ filters, setFilters }) => {
       <div>
         <input
           type="checkbox"
+          name="todos_los_servicios_basicos"
+          checked={filters.todos_los_servicios_basicos}
+          onChange={handleCheckboxChange}
+        />
+        <label>Todos los Servicios Basicos</label>
+      </div>
+      <div>
+        <input
+          type="checkbox"
           name="incluye_luz"
           checked={filters.incluye_luz}
           onChange={handleCheckboxChange}
@@ -108,6 +117,24 @@ const Filters = ({ filters, setFilters }) => {
           type="number"
           name="precioMax"
           value={filters.precioMax}
+          onChange={handlePriceChange}
+        />
+      </div>
+      <div>
+        <label>Tamaño mínimo:</label>
+        <input
+          type="number"
+          name="tamanoMin"
+          value={filters.tamanoMin}
+          onChange={handlePriceChange}
+        />
+      </div>
+      <div>
+        <label>Tamaño máximo:</label>
+        <input
+          type="number"
+          name="tamanoMax"
+          value={filters.tamanoMax}
           onChange={handlePriceChange}
         />
       </div>

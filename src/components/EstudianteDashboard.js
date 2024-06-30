@@ -1,4 +1,4 @@
-// EstudianteDashboard.js
+// src/components/EstudianteDashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ const EstudianteDashboard = () => {
   const [filteredDepartamentos, setFilteredDepartamentos] = useState([]);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState({
+    todos_los_servicios_basicos: false,
     incluye_luz: false,
     incluye_agua: false,
     incluye_telefono: false,
@@ -21,6 +22,8 @@ const EstudianteDashboard = () => {
     lavanderia: false,
     precioMin: '',
     precioMax: '',
+    tamanoMin: '',
+    tamanoMax: '',
   });
   const navigate = useNavigate();
 
@@ -43,9 +46,9 @@ const EstudianteDashboard = () => {
     const applyFilters = () => {
       let filtered = departamentos;
 
-      // Aplica cada filtro solo si está activado
+      // Filtrar por campos booleanos
       Object.keys(filters).forEach((key) => {
-        if (key !== 'precioMin' && key !== 'precioMax' && filters[key]) {
+        if (filters[key] === true) {
           filtered = filtered.filter((departamento) => departamento[key]);
         }
       });
@@ -60,6 +63,19 @@ const EstudianteDashboard = () => {
       if (filters.precioMax !== '') {
         filtered = filtered.filter(
           (departamento) => parseFloat(departamento.precio) <= parseFloat(filters.precioMax)
+        );
+      }
+
+      // Filtrar por rango de tamaño
+      if (filters.tamanoMin !== '') {
+        filtered = filtered.filter(
+          (departamento) => parseFloat(departamento.tamano_m_cuadrados) >= parseFloat(filters.tamanoMin)
+        );
+      }
+
+      if (filters.tamanoMax !== '') {
+        filtered = filtered.filter(
+          (departamento) => parseFloat(departamento.tamano_m_cuadrados) <= parseFloat(filters.tamanoMax)
         );
       }
 
