@@ -1,18 +1,21 @@
-// App.js
+// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Signup from "./components/Signup";
 import Home from "./components/Home";
 import TestAxios from "./components/TestAxios";
 import Arrendatarios from "./components/Arrendatarios";
-import Departamentos from "./components/Departamento";
-import EstudianteDashboard from "./components/EstudianteDashboard";
-import AdministradorDashboard from "./components/AdministradorDashboard";
-import ArrendadorDashboard from "./components/ArrendadorDashboard";
-import DepartamentoDetalles from "./components/DepartamentoDetalles";
 import Login from "./components/Login";
-import PrivateRoute from "./components/PrivateRoute";
+import DepartamentoDetalles from "./components/DepartamentoDetalles";
+import EstudianteDashboard from './components/EstudianteDashboard';
+import AdministradorDashboard from './components/AdministradorDashboard';
+import ArrendadorDashboard from './components/ArrendadorDashboard';
+import AnunciosPorActivar from './components/AnunciosPorActivar';
+import MisDepartamentos from './components/MisDepartamentos';
+import AnunciosActivados from './components/AnunciosActivados';
+import SolicitudesVisita from './components/SolicitudesVisita';
 import NavBar from "./components/NavBar";
+import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
 
 function App() {
@@ -25,7 +28,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/test-axios" element={<TestAxios />} />
           <Route path="/arrendatarios" element={<Arrendatarios />} />
-          <Route path="/departamentos" element={<Departamentos />} />
+          <Route path="/arrendador/anuncios-por-activar" element={<AnunciosPorActivar />} />
+          <Route path="/arrendador/mis-departamentos" element={<MisDepartamentos />} />
           <Route
             path="/estudiante/dashboard"
             element={
@@ -45,9 +49,9 @@ function App() {
           <Route
             path="/arrendador/dashboard"
             element={
-              <PrivateRoute allowedRoles={["arrendador"]}>
+              //<PrivateRoute allowedRoles={["arrendador"]}>
                 <ArrendadorDashboard />
-              </PrivateRoute>
+              //</PrivateRoute>
             }
           />
           <Route path="/departamentos/:id" element={<PrivateRoute allowedRoles={["estudiante"]}><DepartamentoDetalles /></PrivateRoute>} />
