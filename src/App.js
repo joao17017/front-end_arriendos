@@ -17,6 +17,7 @@ import SolicitudesVisita from "./components/SolicitudesVisita";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import EditarDepartamento from "./components/EditarDepartamento";
+import ArrendadorProfile from './components/ArrendadorProfile';
 import "./App.css";
 
 function App() {
@@ -58,6 +59,14 @@ function App() {
             element={
               <PrivateRoute allowedRoles={["arrendador"]}>
                 <ArrendadorDashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/arrendador/perfil"
+            element={
+              <PrivateRoute allowedRoles={["arrendador"]}>
+                <ArrendadorProfile />
               </PrivateRoute>
             }
           />
