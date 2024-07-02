@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
 import { useAuth } from '../hooks/useAuth';
-import NavBarArrendador from './NavBarArrendador'; // Importa la barra de navegación
+import NavBarArrendador from './NavBarArrendador';
 
 const ArrendadorProfile = () => {
   const { user } = useAuth();
@@ -17,7 +17,7 @@ const ArrendadorProfile = () => {
 
   useEffect(() => {
     if (user) {
-      axios.get(`/arrendador/${user.id}`)
+      axios.get(`/arrendadores/${user.id}`)
         .then(response => {
           setProfile(response.data);
         })
@@ -37,7 +37,7 @@ const ArrendadorProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`/arrendador/${user.id}`, profile)
+    axios.put(`/arrendadores/${user.id}`, profile)
       .then(response => {
         alert("Perfil actualizado exitosamente");
         setIsEditing(false);
@@ -49,7 +49,7 @@ const ArrendadorProfile = () => {
 
   return (
     <div>
-      <NavBarArrendador /> {/* Añade la barra de navegación aquí */}
+      <NavBarArrendador /> 
       <h2>Perfil del Arrendador</h2>
       {isEditing ? (
         <form onSubmit={handleSubmit}>
