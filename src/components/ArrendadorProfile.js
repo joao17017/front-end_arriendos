@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
 import { useAuth } from '../hooks/useAuth';
 import NavBarArrendador from './NavBarArrendador';
+import './ArrendadorProfile.css';
 
 const ArrendadorProfile = () => {
   const { user } = useAuth();

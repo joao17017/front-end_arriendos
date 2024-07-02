@@ -17,8 +17,10 @@ import SolicitudesVisita from "./components/SolicitudesVisita";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import EditarDepartamento from "./components/EditarDepartamento";
+import ArrendadorProfile from './components/ArrendadorProfile';
+import EstudianteProfile from './components/EstudianteProfile';
+import AdministradorProfile from './components/AdministradorProfile';
 import CrearDepartamento from "./components/CrearDepartamento";
-import ArrendadorProfile from "./components/ArrendadorProfile";
 import MisFavoritos from "./components/MisFavoritos";
 import AdminSolicitudesActivacion from "./components/AdminSolicitudesActivacion";
 import SolicitudesVisitaArrendador from "./components/SolicitudesVisitaArrendador";
@@ -57,6 +59,14 @@ function App() {
             }
           />
           <Route
+            path="/estudiante/perfil"
+            element={
+              <PrivateRoute allowedRoles={["estudiante"]}>
+                <EstudianteProfile />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/estudiante/MisFavoritos"
             element={
               <PrivateRoute allowedRoles={["estudiante"]}>
@@ -67,8 +77,18 @@ function App() {
           <Route
             path="/administrador/dashboard"
             element={
+              //<PrivateRoute allowedRoles={["administrador"]}>
               <PrivateRoute allowedRoles={["administrador"]}>
                 <AdministradorDashboard />
+              //</PrivateRoute>
+            }
+          />
+          <Route
+            path="/administrador/perfil"
+            element={
+              <PrivateRoute allowedRoles={["administrador"]}>
+                <AdministradorProfile />
+              </PrivateRoute>
               </PrivateRoute>
             }
           />
