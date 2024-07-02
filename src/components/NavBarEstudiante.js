@@ -55,7 +55,7 @@ const NavBarEstudiante = () => {
           </button>
           <button
             className="navbar-button"
-            onClick={() => navigate("/favoritos")}
+            onClick={() => navigate("/estudiante/MisFavoritos")}
           >
             Favoritos
           </button>
