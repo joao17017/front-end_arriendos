@@ -52,9 +52,13 @@ const MisDepartamentos = () => {
   const handleSolicitarActivacion = async (id) => {
     try {
       const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const id_arrendador = decoded.id;
+
       await axios.post(
         "http://localhost:3000/solicitudes-activacion",
-        { id_departamento: id },
+        { id_arrendador,
+          id_departamento: id },
         {
           headers: {
             Authorization: token,

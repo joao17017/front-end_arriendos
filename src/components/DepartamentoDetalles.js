@@ -1,16 +1,19 @@
-// src/components/DepartamentoDetalles.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import NavBarEstudiante from './NavBarEstudiante';
-import { jwtDecode } from 'jwt-decode';
+import NavBarArrendador from './NavBarArrendador';
+import {jwtDecode} from 'jwt-decode'; // Corregido, sin llaves.
 import './DepartamentoDetalles.css';
 
 const DepartamentoDetalles = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // id del departamento obtenido desde los parámetros de la URL
   const [departamento, setDepartamento] = useState(null);
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [usuario, setUsuario] = useState(null);
+  const [fechaSolicitada, setFechaSolicitada] = useState(''); // Nuevo estado para la fecha solicitada
+  const [comentario, setComentario] = useState(''); // Nuevo estado para el comentario
 
   useEffect(() => {
     const fetchDepartamento = async () => {
@@ -24,7 +27,43 @@ const DepartamentoDetalles = () => {
     };
 
     fetchDepartamento();
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUsuario(decoded);
+    }
   }, [id]);
+
+  const handleSolicitudVisita = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Por favor inicia sesión para solicitar una visita');
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const id_usuario = decoded.id;
+
+      const response = await axios.post('http://localhost:3000/solicitudes-visita', {
+        id_departamento: id, // id del departamento obtenido desde los parámetros de la URL
+        id_usuario, // id del usuario obtenido desde el token
+        fecha_solicitada: fechaSolicitada, // Fecha solicitada ingresada por el usuario
+        comentario // Comentario ingresado por el usuario
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setMensaje('Solicitud de visita enviada correctamente');
+      alert('Solicitud de visita enviada correctamente');
+    } catch (err) {
+      console.error('Error al enviar la solicitud de visita:', err);
+      setError(err.response?.data?.error || 'Error al enviar la solicitud de visita');
+    }
+  };
 
   const handleAnadirAFavorito = async () => {
     try {
@@ -64,12 +103,21 @@ const DepartamentoDetalles = () => {
 
   return (
     <div>
+      {usuario && usuario.tipo === 'estudiante' && (
       <NavBarEstudiante />
+    )}
+     {usuario && usuario.tipo === 'arrendador' && (
+      <NavBarArrendador />
+    )}
       <div className="detalles-container">
         <div className="image-container">
           <img src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/image.png'} alt={departamento.nombre} className="detalles-image" />
-          <button className="solicitar-visita-button">Solicitar Visita</button>
-          <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
+          {usuario && usuario.tipo === 'estudiante' && (
+            <button className="solicitar-visita-button" onClick={handleSolicitudVisita}>Solicitar Visita</button>
+          )}
+          {usuario && usuario.tipo === 'estudiante' && (
+            <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
+          )}
         </div>
         <div className="detalles-content">
           <h1>{departamento.nombre}</h1>
@@ -88,6 +136,26 @@ const DepartamentoDetalles = () => {
           <p><strong>Incluye Garaje:</strong> {departamento.incluye_garaje ? 'Sí' : 'No'}</p>
           <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
         </div>
+        {usuario && usuario.tipo === 'estudiante' && (
+        <div className="solicitud-visita-form">
+          <label>
+            Fecha Solicitada:
+            <input 
+              type="date" 
+              value={fechaSolicitada} 
+              onChange={(e) => setFechaSolicitada(e.target.value)} 
+            />
+          </label>
+          <label>
+            Comentario:
+            <textarea 
+              value={comentario} 
+              onChange={(e) => setComentario(e.target.value)} 
+            />
+          </label>
+          <button onClick={handleSolicitudVisita}>Enviar Solicitud de Visita</button>
+        </div>
+        )}
       </div>
       {mensaje && <p className="mensaje">{mensaje}</p>}
     </div>

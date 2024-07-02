@@ -1,0 +1,27 @@
+/* src/components/ListaSolicitudesVisita.css */
+.lista-solicitudes-container {
+    padding: 20px;
+  }
+  
+  .solicitudes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .solicitud-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    width: 300px;
+  }
+  
+  .solicitud-card img {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  
+  .solicitud-card h3 {
+    margin-top: 0;
+  }
+  

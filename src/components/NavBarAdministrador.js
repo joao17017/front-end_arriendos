@@ -45,8 +45,8 @@ const NavBarAdministrador = ({ onGestionarUsuariosClick }) => {
             onKeyDown={handleSearch}
             className="search-input"
           />
-          <button className="navbar-button" onClick={() => navigate('/buscarconbot')}>Gestionar Departamentos</button>
-          <button className="navbar-button" onClick={() => navigate('/favoritos')}>Administrar Solicitudes</button>
+          <button className="navbar-button" onClick={() => navigate('#')}>Gestionar Departamentos</button>
+          <button className="navbar-button" onClick={() => navigate('/administrador/lista-solicitudes')}>Administrar Solicitudes</button>
           <button className="navbar-button" onClick={onGestionarUsuariosClick}>Gestionar Usuarios</button>
           <div className="navbar-account">
             <FaUserCircle size={24} onClick={toggleDropdown} />

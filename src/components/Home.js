@@ -1,3 +1,4 @@
+// components/Home.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -10,17 +11,18 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDepartamentos = async () => {
+    const fetchDepartamentosActivos = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/departamentos');
-        setDepartamentos(response.data);
+        const response = await axios.get('http://localhost:3000/departamentos-activos');
+        const departamentosActivos = response.data.map(da => da.Departamento); 
+        setDepartamentos(departamentosActivos);
       } catch (err) {
-        setError('Error al obtener los departamentos');
+        setError('Error al obtener los departamentos activos');
         console.error(err);
       }
     };
 
-    fetchDepartamentos();
+    fetchDepartamentosActivos();
   }, []);
 
   const handleDepartamentoClick = (id) => {

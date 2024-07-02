@@ -25,11 +25,12 @@ const AnunciosPorActivar = () => {
 
         const response = await axios.get(`http://localhost:3000/solicitudes-activacion/arrendador/${id_arrendador}`, {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`, // Corrección del encabezado de autorización
           },
         });
 
-        setSolicitudes(response.data);
+        const solicitudesPendientes = response.data.filter(solicitud => solicitud.estado !== 'aprobada');
+        setSolicitudes(solicitudesPendientes);
       } catch (err) {
         console.error('Error fetching solicitudes de activación:', err);
       }
@@ -47,11 +48,17 @@ const AnunciosPorActivar = () => {
         <div className="cards-container">
           {solicitudes.map(solicitud => (
             <div className="card" key={solicitud.id_solicitud}>
-              <h3>{solicitud.Departamento.nombre}</h3>
-              <p>{solicitud.Departamento.descripcion}</p>
-              <p><strong>Estado:</strong> {solicitud.estado}</p>
-              {solicitud.Departamento.imagen && (
-                <img src={`http://localhost:3000/${solicitud.Departamento.imagen}`} alt={solicitud.Departamento.nombre} className="card-image" />
+              {solicitud.Departamento ? (
+                <>
+                  <h3>{solicitud.Departamento.nombre}</h3>
+                  <p>{solicitud.Departamento.descripcion}</p>
+                  <p><strong>Estado:</strong> {solicitud.estado}</p>
+                  {solicitud.Departamento.imagen && (
+                    <img src={`http://localhost:3000/${solicitud.Departamento.imagen}`} alt={solicitud.Departamento.nombre} className="card-image" />
+                  )}
+                </>
+              ) : (
+                <p>Departamento no encontrado</p>
               )}
             </div>
           ))}

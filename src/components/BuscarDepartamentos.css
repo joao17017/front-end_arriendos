@@ -1,0 +1,61 @@
+/* src/components/BuscarDepartamentos.css */
+.buscar-departamentos-container {
+    padding: 20px;
+  }
+  
+  .buscar-departamentos-container h1 {
+    text-align: center;
+  }
+  
+  .buscar-departamentos-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+  }
+  
+  .buscar-departamentos-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .buscar-departamentos-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .error-message {
+    color: red;
+    text-align: center;
+  }
+  
+  .departamentos-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .departamento-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    width: 300px;
+    box-sizing: border-box;
+  }
+  
+  .departamento-card h3 {
+    margin: 0;
+  }
+  
+  .departamento-card p {
+    margin: 5px 0;
+  }
+  
+  .departamento-image {
+    width: 100%;
+    height: auto;
+  }
+  

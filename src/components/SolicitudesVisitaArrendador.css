@@ -1,0 +1,76 @@
+
+.dashboard {
+  padding: 20px;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.card img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-right: 5px;
+}
+
+.button:hover {
+  background-color: #45a049;
+}
+
+.reprogramar-button {
+  background-color: #2196F3;
+}
+
+.reprogramar-button:hover {
+  background-color: #0b7dda;
+}
+
+.postergar-button {
+  background-color: #FFC107;
+}
+
+.postergar-button:hover {
+  background-color: #ffa000;
+}
+
+.rechazar-button {
+  background-color: #F44336;
+}
+
+.rechazar-button:hover {
+  background-color: #d32f2f;
+}
+
+.eliminar-button {
+  background-color: #9E9E9E;
+}
+
+.eliminar-button:hover {
+  background-color: #757575;
+}

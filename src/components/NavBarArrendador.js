@@ -38,10 +38,11 @@ const NavBarArrendador = () => {
       <nav className="navbar">
         <Link to="/arrendador/dashboard" className="navbar-brand">Arriendos Riobamba</Link>
         <div className="navbar-buttons">
+        <button className="navbar-button" onClick={() => navigate('/arrendador/crear-departamento')}>Crear Departamento</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/mis-departamentos')}>Departamentos</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/anuncios-por-activar')}>Anuncios por Activar</button>
-          <button className="navbar-button" onClick={() => navigate('#')}>Anuncios Activados</button>
-          <button className="navbar-button" onClick={() => navigate('#')}>Solicitudes de Visita</button>
+          <button className="navbar-button" onClick={() => navigate('/arrendador/anuncios-activados')}>Anuncios Activados</button>
+          <button className="navbar-button" onClick={() => navigate('/arrendador/solicitudes-visita')}>Solicitudes de Visita</button>
           <div className="navbar-account">
             <FaUserCircle size={24} onClick={toggleDropdown} />
             {dropdownOpen && (
