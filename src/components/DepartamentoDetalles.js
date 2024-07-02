@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import NavBarEstudiante from './NavBarEstudiante';
 import NavBarArrendador from './NavBarArrendador';
+import NavBarAdministrador from './NavBarAdministrador';
 import {jwtDecode} from 'jwt-decode'; // Corregido, sin llaves.
 import './DepartamentoDetalles.css';
-
 const DepartamentoDetalles = () => {
   const { id } = useParams(); // id del departamento obtenido desde los parámetros de la URL
   const [departamento, setDepartamento] = useState(null);
@@ -105,6 +105,10 @@ const DepartamentoDetalles = () => {
     <div>
       {usuario && usuario.tipo === 'estudiante' && (
       <NavBarEstudiante />
+    )}
+    
+      {usuario && usuario.tipo === 'administrador' && (
+      <NavBarAdministrador />
     )}
      {usuario && usuario.tipo === 'arrendador' && (
       <NavBarArrendador />

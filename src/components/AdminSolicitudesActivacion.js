@@ -1,12 +1,14 @@
 // src/components/AdminSolicitudesActivacion.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import NavBarAdministrador from './NavBarAdministrador';
 import './AdminSolicitudesActivacion.css';
 
 const AdminSolicitudesActivacion = () => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSolicitudes = async () => {
@@ -52,6 +54,10 @@ const AdminSolicitudesActivacion = () => {
     }
   };
 
+  const handleVerDetalles = (id_departamento) => {
+    navigate(`/departamentos/${id_departamento}`);
+  };
+
   if (error) {
     return <p className="error-message">{error}</p>;
   }
@@ -67,6 +73,11 @@ const AdminSolicitudesActivacion = () => {
           <div className="solicitudes-grid">
             {solicitudes.map(solicitud => (
               <div className="solicitud-card" key={solicitud.id_solicitud}>
+                <img 
+                  src={solicitud.Departamento.imagen ? `http://localhost:3000/${solicitud.Departamento.imagen}` : '/images/default-image.png'} 
+                  alt={solicitud.Departamento.nombre} 
+                  className="card-image" 
+                />
                 <p><strong>ID Solicitud:</strong> {solicitud.id_solicitud}</p>
                 <p><strong>ID Departamento:</strong> {solicitud.id_departamento}</p>
                 <p><strong>ID Arrendador:</strong> {solicitud.id_arrendador}</p>
@@ -75,6 +86,7 @@ const AdminSolicitudesActivacion = () => {
                   <button onClick={() => handleAprobar(solicitud.id_solicitud)} className="button button-approve">Aprobar</button>
                   <button onClick={() => handleEliminar(solicitud.id_solicitud)} className="button button-delete">Eliminar</button>
                   <button onClick={() => handleDesaprobar(solicitud.id_solicitud)} className="button button-disapprove">Desaprobar</button>
+                  <button onClick={() => handleVerDetalles(solicitud.id_departamento)} className="button button-details">Ver Detalles</button>
                 </div>
               </div>
             ))}
