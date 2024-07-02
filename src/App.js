@@ -17,6 +17,7 @@ import SolicitudesVisita from "./components/SolicitudesVisita";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import EditarDepartamento from "./components/EditarDepartamento";
+import MisFavoritos from "./components/MisFavoritos";
 import "./App.css";
 
 function App() {
@@ -46,11 +47,19 @@ function App() {
             }
           />
           <Route
+            path="/estudiante/MisFavoritos"
+            element={
+              <PrivateRoute allowedRoles={["estudiante"]}>
+                <MisFavoritos />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/administrador/dashboard"
             element={
-              <PrivateRoute allowedRoles={["administrador"]}>
+            //  <PrivateRoute allowedRoles={["administrador"]}>
                 <AdministradorDashboard />
-              </PrivateRoute>
+            //  </PrivateRoute>
             }
           />
           <Route
@@ -64,11 +73,12 @@ function App() {
           <Route
             path="/departamentos/:id"
             element={
-              <PrivateRoute allowedRoles={["estudiante"]}>
+              <PrivateRoute allowedRoles={["estudiante","arrendador"]}>
                 <DepartamentoDetalles />
               </PrivateRoute>
             }
           />
+          
           <Route
             path="/departamentos/editar/:id_departamento"
             element={

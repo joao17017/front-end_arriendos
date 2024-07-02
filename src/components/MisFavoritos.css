@@ -1,0 +1,58 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .favoritos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .favorito-card {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .favorito-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .favorito-details {
+    padding: 16px;
+  }
+  
+  .favorito-details h2 {
+    margin: 0 0 8px;
+    font-size: 1.25em;
+  }
+  
+  .favorito-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .button-view {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .button-delete {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
