@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import NavBarEstudiante from './NavBarEstudiante';
+import { jwtDecode } from 'jwt-decode';
 import './DepartamentoDetalles.css';
 
 const DepartamentoDetalles = () => {
   const { id } = useParams();
   const [departamento, setDepartamento] = useState(null);
   const [error, setError] = useState('');
+  const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
     const fetchDepartamento = async () => {
@@ -24,6 +26,34 @@ const DepartamentoDetalles = () => {
     fetchDepartamento();
   }, [id]);
 
+  const handleAnadirAFavorito = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Por favor inicia sesión para añadir a favoritos');
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const id_usuario = decoded.id;
+
+      const response = await axios.post('http://localhost:3000/favoritos', {
+        id_usuario,
+        id_departamento: id
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setMensaje('Añadido a favoritos correctamente');
+      alert('Añadido a favoritos correctamente');
+    } catch (err) {
+      console.error('Error al añadir a favoritos:', err);
+      setError(err.response?.data?.error || 'Error al añadir a favoritos');
+    }
+  };
+
   if (error) {
     return <p className="error-message">{error}</p>;
   }
@@ -37,9 +67,9 @@ const DepartamentoDetalles = () => {
       <NavBarEstudiante />
       <div className="detalles-container">
         <div className="image-container">
-          <img src={departamento.imagen || '/images/image.png'} alt={departamento.nombre} className="detalles-image" />
+          <img src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/image.png'} alt={departamento.nombre} className="detalles-image" />
           <button className="solicitar-visita-button">Solicitar Visita</button>
-          <button className='anadir-a-favorito'>Añadir a Favorito</button>
+          <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
         </div>
         <div className="detalles-content">
           <h1>{departamento.nombre}</h1>
@@ -59,6 +89,7 @@ const DepartamentoDetalles = () => {
           <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
         </div>
       </div>
+      {mensaje && <p className="mensaje">{mensaje}</p>}
     </div>
   );
 };
