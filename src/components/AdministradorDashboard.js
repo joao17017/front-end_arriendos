@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBarAdministrador from './NavBarAdministrador';
 import './AdministradorDashboard.css';
+import { FaEdit } from 'react-icons/fa';
 
 const AdministradorDashboard = () => {
   const [showUserManagement, setShowUserManagement] = useState(false);
@@ -12,12 +13,18 @@ const AdministradorDashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState({
-    id: '',
+    id_administrador: '',
     cedula: '',
     nombres: '',
     telefono: '',
     email: '',
-    contrasena: ''
+    contrasena: '' // Este campo se deja vacío inicialmente
+  });
+  const [editableFields, setEditableFields] = useState({
+    nombres: false,
+    telefono: false,
+    email: false,
+    contrasena: false
   });
 
   const handleUserManagementClick = () => {
@@ -73,7 +80,16 @@ const AdministradorDashboard = () => {
   }, [searchQuery, activeUserType]);
 
   const handleEdit = (data) => {
-    setEditData(data);
+    setEditData({
+      ...data,
+      contrasena: '' // Resetear la contraseña al editar
+    });
+    setEditableFields({
+      nombres: false,
+      telefono: false,
+      email: false,
+      contrasena: false
+    });
     setShowEditModal(true);
   };
 
@@ -122,33 +138,48 @@ const AdministradorDashboard = () => {
     setEditData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const toggleEditableField = (field) => {
+    setEditableFields((prevEditableFields) => ({
+      ...prevEditableFields,
+      [field]: !prevEditableFields[field]
+    }));
+  };
+
   const saveEdit = async () => {
     try {
       let url = '';
       if (activeUserType === 'Arrendador') {
-        url = `http://localhost:3000/arrendadores/${editData.id}`;
+        url = `http://localhost:3000/arrendadores/${editData.id_arrendador}`;
       } else if (activeUserType === 'Administrador') {
-        url = `http://localhost:3000/administradores/${editData.id}`;
+        url = `http://localhost:3000/administradores/${editData.id_administrador}`;
       } else if (activeUserType === 'Estudiante') {
-        url = `http://localhost:3000/estudiantes/${editData.id}`;
+        url = `http://localhost:3000/estudiantes/${editData.id_estudiante}`;
       }
+
+      // Construir el objeto de actualización solo con los campos modificados
+      const updatedFields = {};
+      if (editableFields.nombres) updatedFields.nombres = editData.nombres;
+      if (editableFields.telefono) updatedFields.telefono = editData.telefono;
+      if (editableFields.email) updatedFields.email = editData.email;
+      if (editableFields.contrasena && editData.contrasena) updatedFields.contrasena = editData.contrasena;
 
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editData)
+        body: JSON.stringify(updatedFields)
       });
 
       if (response.ok) {
         const updatedRecord = await response.json();
         setSearchResults((prevResults) => prevResults.map((result) =>
-          result.id === updatedRecord.id ? updatedRecord : result
+          result.id_administrador === updatedRecord.id_administrador ? updatedRecord : result
         ));
         setShowEditModal(false);
       } else {
-        alert('Error al guardar los cambios');
+        const errorData = await response.json();
+        alert('Error al guardar los cambios: ' + errorData.error);
       }
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
@@ -205,12 +236,8 @@ const AdministradorDashboard = () => {
                                   <td>{result.telefono}</td>
                                   <td>{result.email}</td>
                                   <td>
-                                    <button onClick={() => handleEdit(result)}>
-                                      Editar
-                                    </button>
-                                    <button onClick={() => handleDelete(result.id_administrador || result.id_arrendador || result.id_estudiante)}>
-                                      Eliminar
-                                    </button>
+                                    <button onClick={() => handleEdit(result)}>Editar</button>
+                                    <button onClick={() => handleDelete(result.id_administrador || result.id_arrendador || result.id_estudiante)}>Eliminar</button>
                                   </td>
                                 </tr>
                               ))}
@@ -244,7 +271,7 @@ const AdministradorDashboard = () => {
           <div className="modal-content">
             <h3>Editar Usuario</h3>
             <form>
-              <div>
+              <div className="form-group">
                 <label>Cédula</label>
                 <input
                   type="text"
@@ -254,41 +281,65 @@ const AdministradorDashboard = () => {
                   disabled
                 />
               </div>
-              <div>
+              <div className="form-group">
                 <label>Nombres</label>
-                <input
-                  type="text"
-                  name="nombres"
-                  value={editData.nombres}
-                  onChange={handleEditChange}
-                />
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="nombres"
+                    value={editData.nombres}
+                    onChange={handleEditChange}
+                    disabled={!editableFields.nombres}
+                  />
+                  <button type="button" onClick={() => toggleEditableField('nombres')} className="edit-button">
+                    <FaEdit />
+                  </button>
+                </div>
               </div>
-              <div>
+              <div className="form-group">
                 <label>Teléfono</label>
-                <input
-                  type="text"
-                  name="telefono"
-                  value={editData.telefono}
-                  onChange={handleEditChange}
-                />
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="telefono"
+                    value={editData.telefono}
+                    onChange={handleEditChange}
+                    disabled={!editableFields.telefono}
+                  />
+                  <button type="button" onClick={() => toggleEditableField('telefono')} className="edit-button">
+                    <FaEdit />
+                  </button>
+                </div>
               </div>
-              <div>
+              <div className="form-group">
                 <label>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={editData.email}
-                  onChange={handleEditChange}
-                />
+                <div className="input-group">
+                  <input
+                    type="email"
+                    name="email"
+                    value={editData.email}
+                    onChange={handleEditChange}
+                    disabled={!editableFields.email}
+                  />
+                  <button type="button" onClick={() => toggleEditableField('email')} className="edit-button">
+                    <FaEdit />
+                  </button>
+                </div>
               </div>
-              <div>
-                <label>Contraseña</label>
-                <input
-                  type="password"
-                  name="contrasena"
-                  value={editData.contrasena}
-                  onChange={handleEditChange}
-                />
+              <div className="form-group">
+                <label>Nueva Contraseña</label>
+                <div className="input-group">
+                  <input
+                    type="password"
+                    name="contrasena"
+                    value={editData.contrasena}
+                    onChange={handleEditChange}
+                    disabled={!editableFields.contrasena}
+                  />
+                  <button type="button" onClick={() => toggleEditableField('contrasena')} className="edit-button">
+                    <FaEdit />
+                  </button>
+                </div>
               </div>
               <div>
                 <button type="button" onClick={saveEdit}>Guardar</button>
