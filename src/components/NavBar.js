@@ -11,13 +11,21 @@ const NavBar = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Definir el estado successMessage
   const navigate = useNavigate(); // Reemplaza useHistory con useNavigate
 
-  const openModal = () => setModalIsOpen(true);
+  const openModal = () => {
+    setModalIsOpen(true);
+    setEmail('');
+    setPassword('');
+    setError('');
+    setSuccessMessage('');
+  };
+
   const closeModal = () => {
     setModalIsOpen(false);
     setError('');
+    setSuccessMessage('');
   };
 
   const handleLogin = async (e) => {

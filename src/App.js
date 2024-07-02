@@ -7,15 +7,16 @@ import TestAxios from "./components/TestAxios";
 import Arrendatarios from "./components/Arrendatarios";
 import Login from "./components/Login";
 import DepartamentoDetalles from "./components/DepartamentoDetalles";
-import EstudianteDashboard from './components/EstudianteDashboard';
-import AdministradorDashboard from './components/AdministradorDashboard';
-import ArrendadorDashboard from './components/ArrendadorDashboard';
-import AnunciosPorActivar from './components/AnunciosPorActivar';
-import MisDepartamentos from './components/MisDepartamentos';
-import AnunciosActivados from './components/AnunciosActivados';
-import SolicitudesVisita from './components/SolicitudesVisita';
+import EstudianteDashboard from "./components/EstudianteDashboard";
+import AdministradorDashboard from "./components/AdministradorDashboard";
+import ArrendadorDashboard from "./components/ArrendadorDashboard";
+import AnunciosPorActivar from "./components/AnunciosPorActivar";
+import MisDepartamentos from "./components/MisDepartamentos";
+import AnunciosActivados from "./components/AnunciosActivados";
+import SolicitudesVisita from "./components/SolicitudesVisita";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
+import EditarDepartamento from "./components/EditarDepartamento";
 import "./App.css";
 
 function App() {
@@ -28,8 +29,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/test-axios" element={<TestAxios />} />
           <Route path="/arrendatarios" element={<Arrendatarios />} />
-          <Route path="/arrendador/anuncios-por-activar" element={<AnunciosPorActivar />} />
-          <Route path="/arrendador/mis-departamentos" element={<MisDepartamentos />} />
+          <Route
+            path="/arrendador/anuncios-por-activar"
+            element={<AnunciosPorActivar />}
+          />
+          <Route
+            path="/arrendador/mis-departamentos"
+            element={<MisDepartamentos />}
+          />
           <Route
             path="/estudiante/dashboard"
             element={
@@ -49,12 +56,27 @@ function App() {
           <Route
             path="/arrendador/dashboard"
             element={
-              //<PrivateRoute allowedRoles={["arrendador"]}>
+              <PrivateRoute allowedRoles={["arrendador"]}>
                 <ArrendadorDashboard />
-              //</PrivateRoute>
+              </PrivateRoute>
             }
           />
-          <Route path="/departamentos/:id" element={<PrivateRoute allowedRoles={["estudiante"]}><DepartamentoDetalles /></PrivateRoute>} />
+          <Route
+            path="/departamentos/:id"
+            element={
+              <PrivateRoute allowedRoles={["estudiante"]}>
+                <DepartamentoDetalles />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/departamentos/editar/:id_departamento"
+            element={
+              <PrivateRoute allowedRoles={["arrendador"]}>
+                <EditarDepartamento />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>

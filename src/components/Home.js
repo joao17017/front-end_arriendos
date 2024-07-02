@@ -1,4 +1,3 @@
-// src/components/Home.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +24,7 @@ const Home = () => {
   }, []);
 
   const handleDepartamentoClick = (id) => {
-    navigate(`/login`);
+    navigate(`/departamentos/${id}`);
   };
 
   return (
@@ -42,7 +41,11 @@ const Home = () => {
               key={departamento.id_departamento}
               onClick={() => handleDepartamentoClick(departamento.id_departamento)}
             >
-              <img src={departamento.imagen || '/images/image.png'} alt={departamento.nombre} className="card-image" />
+              <img 
+                src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/default-image.png'} 
+                alt={departamento.nombre} 
+                className="card-image" 
+              />
               <div className="card-content">
                 <h3>{departamento.nombre}</h3>
                 <p>{departamento.direccion}</p>
