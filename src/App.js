@@ -25,8 +25,11 @@ import MisFavoritos from "./components/MisFavoritos";
 import AdminSolicitudesActivacion from "./components/AdminSolicitudesActivacion";
 import SolicitudesVisitaArrendador from "./components/SolicitudesVisitaArrendador";
 import BuscarDepartamentos from "./components/BuscarDepartamentos";
+import DepartamentosArrendados from "./components/DepartamentosArrendados";
+import DepartamentosArrendadosUsuario from "./components/DepartamentosArrendadosUsuario";
 import ListaSolicitudesVisita from "./components/ListaSolicitudesVisita";
 import "./App.css";
+import DepartamentoDetalles2 from "./components/DepartamentoDetalles2";
 
 function App() {
   return (
@@ -146,6 +149,9 @@ function App() {
             path="/estudiante/BuscarDepartamentos"
             element={<BuscarDepartamentos />}
           />
+        <Route path="/arrendador/departamentos-arrendados" element={<DepartamentosArrendados />} />
+        <Route path="/arrendador/mis-departamentos/:id" element={< DepartamentoDetalles2/>} />
+        <Route path="/estudiante/mis-arriendos/" element={< DepartamentosArrendadosUsuario/>} />
         </Routes>
       </div>
     </Router>

@@ -43,6 +43,7 @@ const NavBarArrendador = () => {
           <button className="navbar-button" onClick={() => navigate('/arrendador/anuncios-por-activar')}>Anuncios por Activar</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/anuncios-activados')}>Anuncios Activados</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/solicitudes-visita')}>Solicitudes de Visita</button>
+          <button className="navbar-button" onClick={() => navigate('/arrendador/departamentos-arrendados')}>Departamentos Arrendados</button>
           <div className="navbar-account">
             <FaUserCircle size={24} onClick={toggleDropdown} />
             {dropdownOpen && (

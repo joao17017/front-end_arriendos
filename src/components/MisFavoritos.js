@@ -1,8 +1,8 @@
-//components/MisFavoritos.js
+// components/MisFavoritos.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Importación corregida
 import NavBarEstudiante from './NavBarEstudiante';
 import './MisFavoritos.css';
 
@@ -30,7 +30,6 @@ const MisFavoritos = () => {
         setFavoritos(response.data);
       } catch (err) {
         console.error('Error fetching favoritos:', err);
-        
       }
     };
 
@@ -62,19 +61,23 @@ const MisFavoritos = () => {
         <div className="favoritos-grid">
           {favoritos.map(favorito => (
             <div className="favorito-card" key={favorito.id_favorito}>
-              <img
-                src={favorito.Departamento.imagen ? `http://localhost:3000/${favorito.Departamento.imagen}` : '/images/default-image.png'}
-                alt={favorito.Departamento.nombre}
-                className="favorito-image"
-              />
-              <div className="favorito-details">
-                <h2>{favorito.Departamento.nombre}</h2>
-                <p>{favorito.Departamento.descripcion}</p>
-                <div className="favorito-buttons">
-                  <button onClick={() => handleVer(favorito.id_departamento)} className="button button-view">Ver</button>
-                  <button onClick={() => handleEliminar(favorito.id_favorito)} className="button button-delete">Eliminar</button>
-                </div>
-              </div>
+              {favorito.DepartamentoActivo?.Departamento && (
+                <>
+                  <img
+                    src={favorito.DepartamentoActivo.Departamento.imagen ? `http://localhost:3000/${favorito.DepartamentoActivo.Departamento.imagen}` : '/images/default-image.png'}
+                    alt={favorito.DepartamentoActivo.Departamento.nombre}
+                    className="favorito-image"
+                  />
+                  <div className="favorito-details">
+                    <h2>{favorito.DepartamentoActivo.Departamento.nombre}</h2>
+                    <p>{favorito.DepartamentoActivo.Departamento.descripcion}</p>
+                    <div className="favorito-buttons">
+                      <button onClick={() => handleVer(favorito.DepartamentoActivo.id_departamento)} className="button button-view">Ver</button>
+                      <button onClick={() => handleEliminar(favorito.id_favorito)} className="button button-delete">Eliminar</button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>

@@ -72,6 +72,12 @@ const NavBarEstudiante = () => {
           >
             Solicitud de Visita
           </button>
+          <button
+            className="navbar-button"
+            onClick={() => navigate("/estudiante/mis-arriendos/")}
+          >
+            Mi Arriendo
+          </button>
           <div className="navbar-account">
             <FaUserCircle size={24} onClick={toggleDropdown} />
             {dropdownOpen && (

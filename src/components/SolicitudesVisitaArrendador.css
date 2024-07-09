@@ -1,4 +1,3 @@
-
 .dashboard {
   padding: 20px;
 }
@@ -73,4 +72,65 @@
 
 .eliminar-button:hover {
   background-color: #757575;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  bottom: 50%;;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-width: 100%;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content label {
+  margin-top: 10px;
+}
+
+.modal-content input,
+.modal-content textarea {
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-content button {
+  margin-top: 15px;
+}
+
+.modal-content .button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.modal-content .button + .button {
+  margin-top: 10px;
 }

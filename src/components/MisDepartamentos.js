@@ -54,11 +54,10 @@ const MisDepartamentos = () => {
       const token = localStorage.getItem("token");
       const decoded = jwtDecode(token);
       const id_arrendador = decoded.id;
-
+  
       await axios.post(
         "http://localhost:3000/solicitudes-activacion",
-        { id_arrendador,
-          id_departamento: id },
+        { id_arrendador, id_departamento: id },
         {
           headers: {
             Authorization: token,
@@ -68,11 +67,19 @@ const MisDepartamentos = () => {
       alert("Solicitud de activación enviada");
     } catch (err) {
       console.error("Error al solicitar activación:", err);
+  
+      // Mostrar el mensaje de error si existe
+      if (err.response && err.response.data && err.response.data.error) {
+        alert(`Error: ${err.response.data.error}`);
+      } else {
+        alert("Error al solicitar activación");
+      }
     }
   };
+  
 
   const handleDepartamentoClick = (id) => {
-    navigate(`/departamentos/${id}`);
+    navigate(`./${id}`);
   };
 
   return (
