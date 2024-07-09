@@ -6,9 +6,8 @@ import NavBarArrendador from './NavBarArrendador';
 import NavBarAdministrador from './NavBarAdministrador';
 import {jwtDecode} from 'jwt-decode'; // Corregido, sin llaves.
 import './DepartamentoDetalles.css';
-
-const DepartamentoDetalles = () => {
-  const { id } = useParams(); // id del departamento activo obtenido desde los parámetros de la URL
+const DepartamentoDetalles2 = () => {
+  const { id } = useParams(); // id del departamento obtenido desde los parámetros de la URL
   const [departamento, setDepartamento] = useState(null);
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
@@ -19,8 +18,8 @@ const DepartamentoDetalles = () => {
   useEffect(() => {
     const fetchDepartamento = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/departamentos-activos/${id}`);
-        setDepartamento(response.data.Departamento); // Acceder a los datos del departamento
+        const response = await axios.get(`http://localhost:3000/departamentos/${id}`);
+        setDepartamento(response.data);
       } catch (err) {
         setError('Error al obtener el departamento');
         console.error(err);
@@ -43,12 +42,12 @@ const DepartamentoDetalles = () => {
         setError('Por favor inicia sesión para solicitar una visita');
         return;
       }
-  
+
       const decoded = jwtDecode(token);
       const id_usuario = decoded.id;
-      alert("id_departamento:"+id+"id_usuario:"+id_usuario+"fecha_solicitada:"+fechaSolicitada+"comentario:"+comentario);
+
       const response = await axios.post('http://localhost:3000/solicitudes-visita', {
-        id_departamento_activo: id, // id del departamento desde los datos del departamento
+        id_departamento: id, // id del departamento obtenido desde los parámetros de la URL
         id_usuario, // id del usuario obtenido desde el token
         fecha_solicitada: fechaSolicitada, // Fecha solicitada ingresada por el usuario
         comentario // Comentario ingresado por el usuario
@@ -57,7 +56,7 @@ const DepartamentoDetalles = () => {
           Authorization: `Bearer ${token}`
         }
       });
-  
+
       setMensaje('Solicitud de visita enviada correctamente');
       alert('Solicitud de visita enviada correctamente');
     } catch (err) {
@@ -65,7 +64,6 @@ const DepartamentoDetalles = () => {
       setError(err.response?.data?.error || 'Error al enviar la solicitud de visita');
     }
   };
-  
 
   const handleAnadirAFavorito = async () => {
     try {
@@ -80,7 +78,7 @@ const DepartamentoDetalles = () => {
 
       const response = await axios.post('http://localhost:3000/favoritos', {
         id_usuario,
-        id_departamento_activo: id
+        id_departamento: id
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -127,7 +125,6 @@ const DepartamentoDetalles = () => {
         </div>
         <div className="detalles-content">
           <h1>{departamento.nombre}</h1>
-          <p><strong>Departamento Activo:</strong> {id}</p>
           <p><strong>Dirección:</strong> {departamento.direccion}</p>
           <p><strong>Precio:</strong> {departamento.precio}</p>
           <p><strong>Descripción:</strong> {departamento.descripcion}</p>
@@ -169,4 +166,4 @@ const DepartamentoDetalles = () => {
   );
 };
 
-export default DepartamentoDetalles;
+export default DepartamentoDetalles2;

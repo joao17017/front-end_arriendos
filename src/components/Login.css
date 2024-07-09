@@ -12,18 +12,21 @@ body {
     height: 100vh;
     font-family: 'Poppins', sans-serif;
     margin: 0;
+    padding: 0; /* Asegúrate de que no haya padding superior */
 }
 
 .login-container {
     height: auto;
     max-width: 60em;
-    margin: 6em auto;
+    margin: 0 auto; /* Elimina el margen superior */
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
     overflow: hidden;
     border: 2px solid #282434;
     background-color: #ffffff;
+    position: relative;
+    top: 0; /* Asegúrate de que el contenedor esté en la parte superior */
 }
 
 .login-info-container {
@@ -45,8 +48,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.login-image {
+    max-width: 100%;
+    max-height: 100%;
     transition: opacity 0.3s ease; /* Suaviza la transición de opacidad */
-    opacity: 1; /* Asegura que la imagen sea visible por defecto */
 }
 
 .title {
@@ -137,12 +144,20 @@ body {
     cursor: pointer;
 }
 
+.span:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+}
+
 @media screen and (max-width: 1000px) {
     .login-container {
         flex-direction: column;
         align-items: center;
         width: 80%;
-        margin-top: 3rem;
+        margin-top: 0; /* Elimina el margen superior */
     }
 
     .login-info-container {

@@ -1,6 +1,16 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+<<<<<<< HEAD
+<<<<<<< HEAD
+import './NavBar.css';  // Asegúrate de tener los estilos CSS aplicados
+=======
+import { FaUserCircle } from 'react-icons/fa';
+import './NavBar.css'; // Asegúrate de importar el archivo CSS para los estilos
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
+=======
+import { FaUserCircle } from 'react-icons/fa';
+import './NavBar.css'; // Asegúrate de importar el archivo CSS para los estilos
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -16,34 +26,33 @@ const NavBar = () => {
           <div className="row">
             <div className="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
               <div className="d-inline-flex align-items-center">
-                
+<<<<<<< HEAD
+<<<<<<< HEAD
+                {/* Contenido */}
+=======
+                {/* Aquí puedes añadir contenido adicional si es necesario */}
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
+=======
+                {/* Aquí puedes añadir contenido adicional si es necesario */}
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
               </div>
             </div>
-            <div className="col-md-6 text-center text-lg-right">
-              <div className="d-inline-flex align-items-center">
-                <a className="text-white px-3" href="/">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a className="text-white px-3" href="/">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a className="text-white px-3" href="/">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-                <a className="text-white px-3" href="/">
-                  <i className="fab fa-instagram"></i>
-                </a>
-                <a className="text-white pl-3" href="/">
-                  <i className="fab fa-youtube"></i>
-                </a>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
-{/* Navbar */}
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+      {/* Navbar */}
+      <div className="container-fluid position-relative nav-bar-container p-0">  {/* Cambié la clase aquí */}
+        <div className="container position-relative" style={{ zIndex: 9, padding: '0 15px' }}>
+=======
+=======
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
       <div className="container-fluid position-relative nav-bar p-0">
         <div className="container position-relative" style={{ zIndex: 9 }}>
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
           <nav className="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
             <a href="/" className="navbar-brand">
               <h1 className="m-0 display-5 text-white">
@@ -63,13 +72,6 @@ const NavBar = () => {
               id="navbarCollapse"
             >
               <div className="navbar-nav ml-auto py-0">
-                
-                <div className="nav-item dropdown">
-                  
-                  <div className="dropdown-menu rounded-0 m-0">
-                    
-                  </div>
-                </div>
                 <a href="/login" className="nav-item nav-link">
                   Login
                 </a>
@@ -81,37 +83,40 @@ const NavBar = () => {
           </nav>
         </div>
       </div>
+<<<<<<< HEAD
+=======
 
       <div className="container-fluid bg-white py-3">
         <div className="container">
           <div className="row">
             <div className="col-lg-4 text-left mb-3 mb-lg-0">
               <div className="d-inline-flex text-left">
-                
+                {/* Aquí puedes añadir contenido adicional si es necesario */}
                 <div className="d-flex flex-column">
-                  
+                  {/* Contenido adicional */}
                 </div>
               </div>
             </div>
             <div className="col-lg-4 text-left text-lg-center mb-3 mb-lg-0">
               <div className="d-inline-flex text-left">
-                
+                {/* Aquí puedes añadir contenido adicional si es necesario */}
                 <div className="d-flex flex-column">
-                  
+                  {/* Contenido adicional */}
                 </div>
               </div>
             </div>
             <div className="col-lg-4 text-left text-lg-right mb-3 mb-lg-0">
               <div className="d-inline-flex text-left">
-                
+                {/* Aquí puedes añadir contenido adicional si es necesario */}
                 <div className="d-flex flex-column">
-                  
+                  {/* Contenido adicional */}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+>>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
     </div>
   );
 };

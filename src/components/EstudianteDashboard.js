@@ -1,4 +1,4 @@
-// src/components/EstudianteDashboard.js
+//src/components/EstudianteDashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -39,7 +39,10 @@ const EstudianteDashboard = () => {
         } else {
           response = await axios.get('http://localhost:3000/departamentos-activos');
         }
-        const departamentosActivos = response.data.map(da => da.Departamento || da);
+        const departamentosActivos = response.data.map(da => ({
+          ...da.Departamento,
+          id_departamento_activo: da.id_departamento_activo
+        }));
         setDepartamentos(departamentosActivos);
       } catch (err) {
         setError('Error al obtener los departamentos activos');
@@ -93,8 +96,8 @@ const EstudianteDashboard = () => {
     applyFilters();
   }, [filters, departamentos]);
 
-  const handleDepartamentoClick = (id) => {
-    navigate(`/departamentos/${id}`);
+  const handleDepartamentoClick = (id_departamento_activo) => {
+    navigate(`/departamentos/${id_departamento_activo}`);
   };
 
   return (
@@ -109,8 +112,8 @@ const EstudianteDashboard = () => {
           {filteredDepartamentos.map((departamento) => (
             <div
               className="card"
-              key={departamento.id_departamento}
-              onClick={() => handleDepartamentoClick(departamento.id_departamento)}
+              key={departamento.id_departamento_activo}
+              onClick={() => handleDepartamentoClick(departamento.id_departamento_activo)}
             >
               <img 
                 src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/default-image.png'} 

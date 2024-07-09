@@ -38,21 +38,38 @@ const MisDepartamentos = () => {
         }
     };
 
-    const handleSolicitarActivacion = async (id) => {
-        try {
-            const token = localStorage.getItem("token");
-            const decoded = jwtDecode(token);
-            const id_arrendador = decoded.id;
-            await axios.post(
-                "http://localhost:3000/solicitudes-activacion",
-                { id_arrendador, id_departamento: id },
-                { headers: { Authorization: token } }
-            );
-            alert("Solicitud de activación enviada");
-        } catch (err) {
-            console.error("Error al solicitar activación:", err);
+  const handleSolicitarActivacion = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const decoded = jwtDecode(token);
+      const id_arrendador = decoded.id;
+  
+      await axios.post(
+        "http://localhost:3000/solicitudes-activacion",
+        { id_arrendador, id_departamento: id },
+        {
+          headers: {
+            Authorization: token,
+          },
         }
-    };
+      );
+      alert("Solicitud de activación enviada");
+    } catch (err) {
+      console.error("Error al solicitar activación:", err);
+  
+      // Mostrar el mensaje de error si existe
+      if (err.response && err.response.data && err.response.data.error) {
+        alert(`Error: ${err.response.data.error}`);
+      } else {
+        alert("Error al solicitar activación");
+      }
+    }
+  };
+  
+
+  const handleDepartamentoClick = (id_departamento_activo) => {
+    navigate(`/departamentos/${id_departamento_activo}`);
+  };
 
     return (
         <div>
@@ -89,7 +106,7 @@ const MisDepartamentos = () => {
                                             Eliminar
                                         </Link>
                                         <Link
-                                            to={`/departamentos/${departamento.id_departamento}`}
+                                            to={`./${departamento.id_departamento}`}
                                             className="nav-link text-white small"
                                         >
                                             Ver
