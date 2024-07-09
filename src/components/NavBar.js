@@ -47,7 +47,7 @@ const NavBar = () => {
           <nav className="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
             <a href="/" className="navbar-brand">
               <h1 className="m-0 display-5 text-white">
-                <span className="text-primary">a</span>RRIENDOS RIOBAMBA
+                <span className="text-primary">RIO</span>ARRIENDOS
               </h1>
             </a>
             <button

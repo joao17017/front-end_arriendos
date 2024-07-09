@@ -1,8 +1,9 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css';
+import './Login.css'; // Importa tu archivo CSS
+import departamentoImage from '../imag/Departamento.jpg'; // Importa la imagen
+import NavBar from './NavBar';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -36,30 +37,46 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div>
+      <NavBar /> {/* No se modifica la NavBar */}
+      <div className="login-container">
+        <div className="login-info-container">
+          <h1 className="title">Iniciar Sesión</h1>
+          <form className="inputs-container" onSubmit={handleLogin}>
+            <div className="input-container">
+              <input
+                type="text"
+                className="input"
+                placeholder=" "
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <label htmlFor="email" className="label">Correo Electrónico</label>
+            </div>
+            <div className="input-container">
+              <input
+                type="password"
+                className="input"
+                placeholder=" "
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <label htmlFor="password" className="label">Contraseña</label>
+            </div>
+            
+            {error && <p className="error-message">{error}</p>} {/* Muestra el error si existe */}
+            
+            <p>¿Olvidaste tu contraseña? <span className="span">Haz clic aquí</span></p>
+            <button type="submit" className="btn">Login</button>
+            <p>¿No tiene una cuenta aún? <span className="span">Regístrate</span></p>
+          </form>
         </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" className="login-button">Login</button>
-      </form>
+        <img className="image-container" src={departamentoImage} alt="Departamento" /> {/* Utiliza la imagen importada */}
+      </div>
     </div>
   );
 };
