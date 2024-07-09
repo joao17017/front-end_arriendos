@@ -1,98 +1,117 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Modal from 'react-modal';
-import axios from 'axios';
-import './NavBar.css';
 
-Modal.setAppElement('#root');
 
 const NavBar = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Definir el estado successMessage
-  const navigate = useNavigate(); // Reemplaza useHistory con useNavigate
+  const navigate = useNavigate();
 
-  const openModal = () => {
-    setModalIsOpen(true);
-    setEmail('');
-    setPassword('');
-    setError('');
-    setSuccessMessage('');
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-    setError('');
-    setSuccessMessage('');
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:3000/auth/login', { email, contrasena: password });
-      const { token, message, tipo } = response.data;
-      localStorage.setItem('token', token); // Almacenar el token en localStorage
-      setSuccessMessage(message);
-      closeModal();
-
-      // Redirigir basado en el tipo de usuario
-      if (tipo === 'estudiante') {
-        navigate('/estudiante/dashboard');
-      } else if (tipo === 'administrador') {
-        navigate('/administrador/dashboard');
-      } else if (tipo === 'arrendador') {
-        navigate('/arrendador/dashboard');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Usuario o contraseña incorrectos');
-    }
+  const handleLoginRedirect = () => {
+    navigate('/login'); // Redirect to login page
   };
 
   return (
     <div>
-      <nav className="navbar">
-        <Link to="/" className="navbar-brand">Arriendos Riobamba</Link>
-        <div className="navbar-buttons">
-          <button className="navbar-button" onClick={openModal}>Login</button>
-          <Link to="/signup" className="navbar-button-link">Signup</Link>
+      <div className="container-fluid bg-dark py-3">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
+              <div className="d-inline-flex align-items-center">
+                
+              </div>
+            </div>
+            <div className="col-md-6 text-center text-lg-right">
+              <div className="d-inline-flex align-items-center">
+                <a className="text-white px-3" href="/">
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+                <a className="text-white px-3" href="/">
+                  <i className="fab fa-twitter"></i>
+                </a>
+                <a className="text-white px-3" href="/">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+                <a className="text-white px-3" href="/">
+                  <i className="fab fa-instagram"></i>
+                </a>
+                <a className="text-white pl-3" href="/">
+                  <i className="fab fa-youtube"></i>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-      </nav>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Login Modal"
-        className="modal"
-        overlayClassName="modal-overlay"
-      >
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+      </div>
+{/* Navbar */}
+      <div className="container-fluid position-relative nav-bar p-0">
+        <div className="container position-relative" style={{ zIndex: 9 }}>
+          <nav className="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
+            <a href="/" className="navbar-brand">
+              <h1 className="m-0 display-5 text-white">
+                <span className="text-primary">a</span>RRIENDOS RIOBAMBA
+              </h1>
+            </a>
+            <button
+              type="button"
+              className="navbar-toggler"
+              data-toggle="collapse"
+              data-target="#navbarCollapse"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div
+              className="collapse navbar-collapse justify-content-between px-3"
+              id="navbarCollapse"
+            >
+              <div className="navbar-nav ml-auto py-0">
+                
+                <div className="nav-item dropdown">
+                  
+                  <div className="dropdown-menu rounded-0 m-0">
+                    
+                  </div>
+                </div>
+                <a href="/login" className="nav-item nav-link">
+                  Login
+                </a>
+                <a href="/signup" className="nav-item nav-link">
+                  Signup
+                </a>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div className="container-fluid bg-white py-3">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-4 text-left mb-3 mb-lg-0">
+              <div className="d-inline-flex text-left">
+                
+                <div className="d-flex flex-column">
+                  
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 text-left text-lg-center mb-3 mb-lg-0">
+              <div className="d-inline-flex text-left">
+                
+                <div className="d-flex flex-column">
+                  
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-4 text-left text-lg-right mb-3 mb-lg-0">
+              <div className="d-inline-flex text-left">
+                
+                <div className="d-flex flex-column">
+                  
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <button type="submit" className="modal-button">Login</button>
-          <button type="button" className="modal-button" onClick={closeModal}>Cerrar</button>
-        </form>
-      </Modal>
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        </div>
+      </div>
     </div>
   );
 };

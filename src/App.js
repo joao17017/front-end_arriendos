@@ -11,8 +11,8 @@ import EstudianteDashboard from "./components/EstudianteDashboard";
 import AdministradorDashboard from "./components/AdministradorDashboard";
 import ArrendadorDashboard from "./components/ArrendadorDashboard";
 import AnunciosPorActivar from "./components/AnunciosPorActivar";
-import MisDepartamentos from "./components/MisDepartamentos";
 import AnunciosActivados from "./components/AnunciosActivados";
+import MisDepartamentos from "./components/MisDepartamentos";
 import SolicitudesVisita from "./components/SolicitudesVisita";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
@@ -20,7 +20,12 @@ import EditarDepartamento from "./components/EditarDepartamento";
 import ArrendadorProfile from './components/ArrendadorProfile';
 import EstudianteProfile from './components/EstudianteProfile';
 import AdministradorProfile from './components/AdministradorProfile';
+import CrearDepartamento from "./components/CrearDepartamento";
 import MisFavoritos from "./components/MisFavoritos";
+import AdminSolicitudesActivacion from "./components/AdminSolicitudesActivacion";
+import SolicitudesVisitaArrendador from "./components/SolicitudesVisitaArrendador";
+import BuscarDepartamentos from "./components/BuscarDepartamentos";
+import ListaSolicitudesVisita from "./components/ListaSolicitudesVisita";
 import "./App.css";
 
 function App() {
@@ -33,6 +38,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/test-axios" element={<TestAxios />} />
           <Route path="/arrendatarios" element={<Arrendatarios />} />
+          <Route
+            path="/arrendador/anuncios-activados"
+            element={<AnunciosActivados />}
+          />
           <Route
             path="/arrendador/anuncios-por-activar"
             element={<AnunciosPorActivar />}
@@ -69,8 +78,9 @@ function App() {
             path="/administrador/dashboard"
             element={
               //<PrivateRoute allowedRoles={["administrador"]}>
+              <PrivateRoute allowedRoles={["administrador"]}>
                 <AdministradorDashboard />
-              //</PrivateRoute>
+              </PrivateRoute>
             }
           />
           <Route
@@ -78,6 +88,14 @@ function App() {
             element={
               <PrivateRoute allowedRoles={["administrador"]}>
                 <AdministradorProfile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/administrador/lista-solicitudes"
+            element={
+              <PrivateRoute allowedRoles={["administrador"]}>
+                <AdminSolicitudesActivacion />
               </PrivateRoute>
             }
           />
@@ -100,12 +118,13 @@ function App() {
           <Route
             path="/departamentos/:id"
             element={
-              <PrivateRoute allowedRoles={["estudiante","arrendador"]}>
+              <PrivateRoute allowedRoles={["estudiante", "arrendador","administrador"]}>
                 <DepartamentoDetalles />
               </PrivateRoute>
             }
           />
-          
+          <Route path="/mis-solicitudes" element={<ListaSolicitudesVisita />} />
+
           <Route
             path="/departamentos/editar/:id_departamento"
             element={
@@ -113,6 +132,19 @@ function App() {
                 <EditarDepartamento />
               </PrivateRoute>
             }
+          />
+          <Route
+            path="/arrendador/crear-departamento"
+            element={
+              <PrivateRoute allowedRoles={["arrendador"]}>
+                <CrearDepartamento />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/arrendador/solicitudes-visita" element={<SolicitudesVisitaArrendador />} />
+          <Route
+            path="/estudiante/BuscarDepartamentos"
+            element={<BuscarDepartamentos />}
           />
         </Routes>
       </div>

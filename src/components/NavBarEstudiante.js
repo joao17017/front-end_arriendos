@@ -1,3 +1,4 @@
+// src/components/NavBarEstudiante.js
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Modal from "react-modal";
@@ -28,7 +29,7 @@ const NavBarEstudiante = () => {
 
   const handleSearch = async (e) => {
     if (e.key === "Enter") {
-      navigate(`/buscar?query=${searchQuery}`);
+      navigate(`/estudiante/dashboard?query=${searchQuery}`);
     }
   };
 
@@ -67,7 +68,7 @@ const NavBarEstudiante = () => {
           </button>
           <button
             className="navbar-button"
-            onClick={() => navigate("/solicitudes-visita")}
+            onClick={() => navigate("/mis-solicitudes")}
           >
             Solicitud de Visita
           </button>

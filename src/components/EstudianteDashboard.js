@@ -1,7 +1,7 @@
 // src/components/EstudianteDashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import NavBarEstudiante from './NavBarEstudiante';
 import Filters from './Filters';
 import './EstudianteDashboard.css';
@@ -26,21 +26,29 @@ const EstudianteDashboard = () => {
     tamanoMax: '',
   });
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const fetchDepartamentos = async () => {
+    const fetchDepartamentosActivos = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/departamentos');
-        setDepartamentos(response.data);
-        setFilteredDepartamentos(response.data);
+        const queryParams = new URLSearchParams(location.search);
+        const query = queryParams.get('query') || '';
+        let response;
+        if (query) {
+          response = await axios.get(`http://localhost:3000/bot/search?query=${query}`);
+        } else {
+          response = await axios.get('http://localhost:3000/departamentos-activos');
+        }
+        const departamentosActivos = response.data.map(da => da.Departamento || da);
+        setDepartamentos(departamentosActivos);
       } catch (err) {
-        setError('Error al obtener los departamentos');
+        setError('Error al obtener los departamentos activos');
         console.error(err);
       }
     };
 
-    fetchDepartamentos();
-  }, []);
+    fetchDepartamentosActivos();
+  }, [location.search]);
 
   useEffect(() => {
     const applyFilters = () => {
@@ -104,7 +112,11 @@ const EstudianteDashboard = () => {
               key={departamento.id_departamento}
               onClick={() => handleDepartamentoClick(departamento.id_departamento)}
             >
-              <img src={departamento.imagen || '/images/image.png'} alt={departamento.nombre} className="card-image" />
+              <img 
+                src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/default-image.png'} 
+                alt={departamento.nombre} 
+                className="card-image" 
+              />
               <div className="card-content">
                 <h3>{departamento.nombre}</h3>
                 <p>{departamento.direccion}</p>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import NavBarArrendador from './NavBarArrendador';
 import './EditarDepartamento.css';
 
@@ -98,92 +98,85 @@ const EditarDepartamento = () => {
   return (
     <div>
       <NavBarArrendador />
-      <div className="edit-container">
-        <h1>Editar Departamento</h1>
+      <div className="edit-container col-lg-8 col-md-10 mb-5 mx-auto" style={{ backgroundColor: '#252531', padding: '20px', borderRadius: '10px', color: 'white' }}>
+        <h4 className="text-primary mb-4">Editar Departamento</h4>
         <form onSubmit={handleSubmit} className="edit-form">
           <input type="hidden" name="id_departamento" value={departamento.id_departamento} />
           <input type="hidden" name="id_arrendador" value={departamento.id_arrendador} />
 
           <div className="form-group">
-            <label>Nombre</label>
-            <input type="text" name="nombre" value={departamento.nombre} onChange={handleChange} required />
+            <input type="text" className="form-control border-0" placeholder="Nombre" name="nombre" value={departamento.nombre} onChange={handleChange} required />
           </div>
           <div className="form-group">
-            <label>Dirección</label>
-            <input type="text" name="direccion" value={departamento.direccion} onChange={handleChange} required />
+            <input type="text" className="form-control border-0" placeholder="Dirección" name="direccion" value={departamento.direccion} onChange={handleChange} required />
           </div>
           <div className="form-group">
-            <label>Precio</label>
-            <input type="number" name="precio" value={departamento.precio} onChange={handleChange} required />
+            <input type="number" className="form-control border-0" placeholder="Precio" name="precio" value={departamento.precio} onChange={handleChange} required />
           </div>
           <div className="form-group">
-            <label>Descripción</label>
-            <textarea name="descripcion" value={departamento.descripcion} onChange={handleChange} required />
+            <textarea className="form-control border-0" placeholder="Descripción" name="descripcion" value={departamento.descripcion} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label>
-              <input type="checkbox" name="incluye_luz" checked={departamento.incluye_luz} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="incluye_luz" checked={departamento.incluye_luz} onChange={handleChange} />
               Incluye Luz
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="todos_los_servicios_basicos" checked={departamento.todos_los_servicios_basicos} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="todos_los_servicios_basicos" checked={departamento.todos_los_servicios_basicos} onChange={handleChange} />
               Todos los Servicios Básicos
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="incluye_agua" checked={departamento.incluye_agua} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="incluye_agua" checked={departamento.incluye_agua} onChange={handleChange} />
               Incluye Agua
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="incluye_telefono" checked={departamento.incluye_telefono} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="incluye_telefono" checked={departamento.incluye_telefono} onChange={handleChange} />
               Incluye Teléfono
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="incluye_internet" checked={departamento.incluye_internet} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="incluye_internet" checked={departamento.incluye_internet} onChange={handleChange} />
               Incluye Internet
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="incluye_garaje" checked={departamento.incluye_garaje} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="incluye_garaje" checked={departamento.incluye_garaje} onChange={handleChange} />
               Incluye Garaje
             </label>
           </div>
           <div className="form-group">
-            <label>Número de Baños</label>
-            <input type="number" name="n_banos" value={departamento.n_banos} onChange={handleChange} />
+            <input type="number" className="form-control border-0" placeholder="Número de Baños" name="n_banos" value={departamento.n_banos} onChange={handleChange} />
           </div>
           <div className="form-group">
-            <label>Número de Habitaciones</label>
-            <input type="number" name="n_habitaciones" value={departamento.n_habitaciones} onChange={handleChange} />
+            <input type="number" className="form-control border-0" placeholder="Número de Habitaciones" name="n_habitaciones" value={departamento.n_habitaciones} onChange={handleChange} />
           </div>
           <div className="form-group">
-            <label>Tamaño en m²</label>
-            <input type="number" name="tamano_m_cuadrados" value={departamento.tamano_m_cuadrados} onChange={handleChange} />
+            <input type="number" className="form-control border-0" placeholder="Tamaño en m²" name="tamano_m_cuadrados" value={departamento.tamano_m_cuadrados} onChange={handleChange} />
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="aceptan_gatos" checked={departamento.aceptan_gatos} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="aceptan_gatos" checked={departamento.aceptan_gatos} onChange={handleChange} />
               Aceptan Gatos
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="aceptan_perros" checked={departamento.aceptan_perros} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="aceptan_perros" checked={departamento.aceptan_perros} onChange={handleChange} />
               Aceptan Perros
             </label>
           </div>
           <div className="form-group">
             <label>
-              <input type="checkbox" name="lavanderia" checked={departamento.lavanderia} onChange={handleChange} />
+              <input type="checkbox" className="form-control border-0" name="lavanderia" checked={departamento.lavanderia} onChange={handleChange} />
               Lavandería
             </label>
           </div>
@@ -200,10 +193,10 @@ const EditarDepartamento = () => {
           </div>
           <div className="form-group">
             <label>Nueva Imagen</label>
-            <input type="file" name="imagen" onChange={handleImageChange} />
+            <input type="file" className="form-control border-0" name="imagen" onChange={handleImageChange} />
           </div>
 
-          <button type="submit" className="submit-button">Guardar Cambios</button>
+          <button type="submit" className="btn btn-lg btn-primary btn-block border-0 text-white">Guardar Cambios</button>
         </form>
       </div>
     </div>
