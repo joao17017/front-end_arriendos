@@ -67,8 +67,8 @@ const MisDepartamentos = () => {
   };
   
 
-  const handleDepartamentoClick = (id) => {
-    navigate(`./${id}`);
+  const handleDepartamentoClick = (id_departamento_activo) => {
+    navigate(`/departamentos/${id_departamento_activo}`);
   };
 
     return (

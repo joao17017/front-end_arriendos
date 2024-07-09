@@ -1,3 +1,4 @@
+//src/components/EstudianteDashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';

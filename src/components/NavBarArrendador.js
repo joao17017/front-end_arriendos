@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
-
+import './NavBar.css'; // Asegúrate de importar el archivo CSS para los estilos
 
 const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -27,7 +27,7 @@ const NavBar = () => {
       <nav className="navbar">
         <Link to="/arrendador/dashboard" className="navbar-brand">Arriendos Riobamba</Link>
         <div className="navbar-buttons">
-        <button className="navbar-button" onClick={() => navigate('/arrendador/crear-departamento')}>Crear Departamento</button>
+          <button className="navbar-button" onClick={() => navigate('/arrendador/crear-departamento')}>Crear Departamento</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/mis-departamentos')}>Departamentos</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/anuncios-por-activar')}>Anuncios por Activar</button>
           <button className="navbar-button" onClick={() => navigate('/arrendador/anuncios-activados')}>Anuncios Activados</button>
@@ -40,10 +40,10 @@ const NavBar = () => {
                 <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>Mi Perfil</button>
                 <button className="dropdown-item" onClick={handleLogout}>Salir</button>
               </div>
-            </div>
+            )}
           </div>
         </div>
-      </div>
+      </nav>
     </div>
   );
 };
