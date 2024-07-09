@@ -1,16 +1,11 @@
-// src/components/NavBarArrendador.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Modal from 'react-modal';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
-import './NavBarEstudiante.css';
 
-Modal.setAppElement('#root');
 
-const NavBarArrendador = () => {
+const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -24,12 +19,6 @@ const NavBarArrendador = () => {
       navigate('/'); // Redirigir a la página de inicio
     } catch (err) {
       console.error('Error al cerrar sesión:', err);
-    }
-  };
-
-  const handleSearch = async (e) => {
-    if (e.key === 'Enter') {
-      navigate(`/buscar?query=${searchQuery}`);
     }
   };
 
@@ -51,12 +40,12 @@ const NavBarArrendador = () => {
                 <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>Mi Perfil</button>
                 <button className="dropdown-item" onClick={handleLogout}>Salir</button>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </nav>
+      </div>
     </div>
   );
 };
 
-export default NavBarArrendador;
+export default NavBar;

@@ -97,3 +97,8 @@
 .modal-button:hover {
   background-color: #0056b3;
 }
+
+.logo-image {
+  height: 40px; /* Ajusta la altura según tus necesidades */
+  /* Puedes añadir más estilos como margen, alineación, etc. */
+}
