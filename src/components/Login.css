@@ -45,8 +45,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.login-image {
+    max-width: 100%;
+    max-height: 100%;
     transition: opacity 0.3s ease; /* Suaviza la transición de opacidad */
-    opacity: 1; /* Asegura que la imagen sea visible por defecto */
 }
 
 .title {
@@ -135,6 +139,14 @@ body {
     color: var(--light-pink);
     font-weight: 600;
     cursor: pointer;
+}
+
+.span:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
 }
 
 @media screen and (max-width: 1000px) {

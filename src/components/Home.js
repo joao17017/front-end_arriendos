@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
-import './Home.css'; // Asegúrate de importar el archivo CSS para los estilos
+import './Home.css'; // Importa el archivo CSS para los estilos
 
 const Home = () => {
   const [departamentos, setDepartamentos] = useState([]);

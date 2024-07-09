@@ -72,7 +72,7 @@ const MisFavoritos = () => {
                     <h2>{favorito.DepartamentoActivo.Departamento.nombre}</h2>
                     <p>{favorito.DepartamentoActivo.Departamento.descripcion}</p>
                     <div className="favorito-buttons">
-                      <button onClick={() => handleVer(favorito.DepartamentoActivo.id_departamento)} className="button button-view">Ver</button>
+                      <button onClick={() => handleVer(favorito.id_departamento_activo)} className="button button-view">Ver</button>
                       <button onClick={() => handleEliminar(favorito.id_favorito)} className="button button-delete">Eliminar</button>
                     </div>
                   </div>

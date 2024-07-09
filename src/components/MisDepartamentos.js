@@ -106,7 +106,7 @@ const MisDepartamentos = () => {
                                             Eliminar
                                         </Link>
                                         <Link
-                                            to={`/departamentos/${departamento.id_departamento}`}
+                                            to={`./${departamento.id_departamento}`}
                                             className="nav-link text-white small"
                                         >
                                             Ver
