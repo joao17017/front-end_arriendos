@@ -1,74 +1,104 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-/* Ajustes específicos para el espacio debajo del contenedor del título "RIOARRIENDOS" */
-.nav-bar-container {
-  margin-bottom: 20px; /* Añade un margen inferior específico al contenedor del título */
-  position: relative;
-  top: -50px; /* Ajusta esto según sea necesario para mantener la superposición */
-  z-index: 10; /* Asegura que esté encima del cuadro de iconos */
-}
-=======
-=======
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
-/* NavBar.css */
+/* src/components/NavBar.css */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #333;
-  padding: 10px;
+  padding: 10px 20px;
 }
 
-.navbar-brand {
-  color: #fff;
+.navbar-brand, .navbar-button-link {
+  color: white;
+  font-size: 1.5em;
   text-decoration: none;
-  font-size: 24px;
 }
 
 .navbar-buttons {
   display: flex;
-  align-items: center;
 }
 
 .navbar-button {
-  background: none;
-  color: #fff;
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
   border: none;
-  margin: 0 10px;
+  color: white;
   cursor: pointer;
+  font-size: 1em;
 }
 
 .navbar-button:hover {
-  text-decoration: underline;
+  background-color: #0056b3;
 }
 
-.navbar-account {
-  position: relative;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-.dropdown-item {
-  background: none;
+.navbar-button-link {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
   border: none;
-  padding: 5px 10px;
+  color: white;
   cursor: pointer;
-  width: 100%;
-  text-align: left;
+  font-size: 1em;
+  text-decoration: none;
 }
 
-.dropdown-item:hover {
-  background-color: #f0f0f0;
+.navbar-button-link:hover {
+  background-color: #0056b3;
 }
-<<<<<<< HEAD
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
-=======
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
+
+/* Estilos para el modal */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.modal-button:hover {
+  background-color: #0056b3;
+}
+
+.logo-image {
+  height: 40px; /* Ajusta la altura según tus necesidades */
+  /* Puedes añadir más estilos como margen, alineación, etc. */
+}
