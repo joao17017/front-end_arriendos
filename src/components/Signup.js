@@ -45,15 +45,13 @@ const Signup = () => {
         {submitted ? (
           <div className="confirmation-message">
             <h2>Cuenta creada exitosamente</h2>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
             <p>Se ha enviado a su correo electrónico de confirmacion.</p>
-=======
+
             <p>Se ha enviado a su correo electrónico de confirmación.</p>
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
-=======
+
             <p>Se ha enviado a su correo electrónico de confirmación.</p>
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
+
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -66,8 +64,7 @@ const Signup = () => {
                 <option value="arrendador">Arrendador</option>
               </select>
             </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
             <div className="form-section">
               <div className="personal-data">
                 <h3>Datos Personales</h3>
@@ -116,9 +113,7 @@ const Signup = () => {
                 </div>
               </div>
             </div>
-=======
-=======
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
+
             <div className="form-group">
               <label>Nombres:</label>
               <input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
@@ -159,10 +154,6 @@ const Signup = () => {
                 </div>
               </>
             )}
-<<<<<<< HEAD
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
-=======
->>>>>>> 29d79fe15d4b631243b2c98dd1782a06b87e18a9
             <button type="submit" className="signup-button">Signup</button>
           </form>
         )}
