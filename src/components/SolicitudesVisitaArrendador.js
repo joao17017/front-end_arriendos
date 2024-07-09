@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBarArrendador from './NavBarArrendador';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import './SolicitudesVisitaArrendador.css';
 
 const SolicitudesVisitaArrendador = () => {
@@ -46,7 +46,7 @@ const SolicitudesVisitaArrendador = () => {
         },
       });
 
-      setSolicitudes(solicitudes.map(solicitud => 
+      setSolicitudes(solicitudes.map(solicitud =>
         solicitud.id_solicitud_visita === id ? { ...solicitud, estado: 'aprobada' } : solicitud
       ));
     } catch (err) {
@@ -78,7 +78,7 @@ const SolicitudesVisitaArrendador = () => {
         },
       });
 
-      setSolicitudes(solicitudes.map(solicitud => 
+      setSolicitudes(solicitudes.map(solicitud =>
         solicitud.id_solicitud_visita === id ? { ...solicitud, estado: 'rechazada' } : solicitud
       ));
     } catch (err) {
@@ -95,7 +95,7 @@ const SolicitudesVisitaArrendador = () => {
         },
       });
 
-      setSolicitudes(solicitudes.map(solicitud => 
+      setSolicitudes(solicitudes.map(solicitud =>
         solicitud.id_solicitud_visita === id ? { ...solicitud, estado: 'postergada' } : solicitud
       ));
     } catch (err) {
@@ -112,7 +112,7 @@ const SolicitudesVisitaArrendador = () => {
         },
       });
 
-      setSolicitudes(solicitudes.map(solicitud => 
+      setSolicitudes(solicitudes.map(solicitud =>
         solicitud.id_solicitud_visita === id ? { ...solicitud, fecha_solicitada: nuevaFecha } : solicitud
       ));
     } catch (err) {
@@ -123,45 +123,56 @@ const SolicitudesVisitaArrendador = () => {
   return (
     <div>
       <NavBarArrendador />
-      <div className="dashboard">
-        <h1>Solicitudes de Visita Recibidas</h1>
+      <div className="container mt-4">
+        <h1 className="mb-4">Solicitudes de Visita Recibidas</h1>
         <p>Estas son las solicitudes de visita que has recibido para tus departamentos.</p>
-        <div className="cards-container">
+        <div className="row">
           {solicitudes.map(solicitud => (
-            <div className={`card ${solicitud.estado === 'aprobada' ? 'aprobada' : ''}`} key={solicitud.id_solicitud_visita}>
-              {solicitud.Departamento ? (
-                <>
-                  <h3>{solicitud.Departamento.nombre}</h3>
-                  <p>{solicitud.Departamento.descripcion}</p>
-                  <p><strong>Estado:</strong> {solicitud.estado}</p>
-                  <p><strong>Fecha Solicitada:</strong> {new Date(solicitud.fecha_solicitada).toLocaleDateString()}</p>
-                  <p><strong>Comentario:</strong> {solicitud.comentario}</p>
-                  {solicitud.Departamento.imagen && (
-                    <img src={`http://localhost:3000/${solicitud.Departamento.imagen}`} alt={solicitud.Departamento.nombre} className="card-image" />
-                  )}
-                  {solicitud.estado === 'pendiente' && (
-                    <>
-                      <button onClick={() => handleAprobar(solicitud.id_solicitud_visita)} className="button aprobar-button">
-                        Aprobar Solicitud
-                      </button>
-                      <button onClick={() => handleReprogramar(solicitud.id_solicitud_visita, prompt("Ingrese la nueva fecha de visita"))} className="button reprogramar-button">
-                        Reprogramar Solicitud
-                      </button>
-                      <button onClick={() => handlePostergar(solicitud.id_solicitud_visita)} className="button postergar-button">
-                        Postergar Solicitud
-                      </button>
-                      <button onClick={() => handleRechazar(solicitud.id_solicitud_visita)} className="button rechazar-button">
-                        Rechazar Solicitud
-                      </button>
-                      <button onClick={() => handleEliminar(solicitud.id_solicitud_visita)} className="button eliminar-button">
-                        Eliminar Solicitud
-                      </button>
-                    </>
-                  )}
-                </>
-              ) : (
-                <p>Departamento no encontrado</p>
-              )}
+            <div className="col-md-4 mb-4" key={solicitud.id_solicitud_visita}>
+              <div className={`card text-white`} style={{ backgroundColor: '#DFB163', border: '2px solid black' }}>
+                {solicitud.Departamento ? (
+                  <>
+                    <img
+                      src={solicitud.Departamento.imagen ? `http://localhost:3000/${solicitud.Departamento.imagen}` : "/images/default-image.png"}
+                      alt={solicitud.Departamento.nombre}
+                      className="card-img-top"
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{solicitud.Departamento.nombre}</h5>
+                      <p className="card-text">{solicitud.Departamento.descripcion}</p>
+                      <p><strong>Estado:</strong> {solicitud.estado}</p>
+                      <p><strong>Fecha Solicitada:</strong> {new Date(solicitud.fecha_solicitada).toLocaleDateString()}</p>
+                      <p><strong>Comentario:</strong> {solicitud.comentario}</p>
+                    </div>
+
+                    <div className="card-footer" style={{ backgroundColor: '#252531' }}>
+                      <nav className="nav justify-content-around">
+                        {solicitud.estado === 'pendiente' && (
+                          <>
+                            <button onClick={() => handleAprobar(solicitud.id_solicitud_visita)} className="nav-link text-white small">
+                              Aprobar
+                            </button>
+                            <button onClick={() => handleReprogramar(solicitud.id_solicitud_visita, prompt("Ingrese la nueva fecha de visita"))} className="nav-link text-white small">
+                              Reprogramar
+                            </button>
+                            <button onClick={() => handlePostergar(solicitud.id_solicitud_visita)} className="nav-link text-white small">
+                              Postergar
+                            </button>
+                            <button onClick={() => handleRechazar(solicitud.id_solicitud_visita)} className="nav-link text-white small">
+                              Rechazar
+                            </button>
+                            <button onClick={() => handleEliminar(solicitud.id_solicitud_visita)} className="nav-link text-white small">
+                              Eliminar
+                            </button>
+                          </>
+                        )}
+                      </nav>
+                    </div>
+                  </>
+                ) : (
+                  <p>Departamento no encontrado</p>
+                )}
+              </div>
             </div>
           ))}
         </div>
