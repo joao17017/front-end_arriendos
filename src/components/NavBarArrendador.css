@@ -1,0 +1,48 @@
+/* NavBar.css */
+
+/* Ajustar el tamaño de la letra de los enlaces */
+.nav-item.nav-link {
+    font-size: 10px; /* Cambia esto al tamaño que prefieras */
+  }
+  
+  /* Ajustar el espacio (padding) de la navbar superior */
+  .container{
+    padding-top: 0px; /* Ajusta estos valores según tus necesidades */
+    padding-bottom: 0px;
+  }
+  
+  /* Ajustar el espacio (padding) de la navbar inferior */
+  .navbar.navbar-expand-lg.bg-secondary.navbar-dark.py-3 {
+    padding-top: 10px; /* Ajusta estos valores según tus necesidades */
+    padding-bottom: 10px;
+  }
+  
+  /* Ajustar el tamaño del título RIOARRIENDOS */
+  .rioarriendos-title {
+    font-size: 24px; /* Cambia esto al tamaño que prefieras */
+  }
+  
+  /* Estilos para el menú desplegable */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: rgb(7, 7, 7);
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+  }
+  
+  .dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    color:aliceblue;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #DFB163;
+  }
+  
