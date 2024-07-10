@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
-import NavBarArrendador from "./NavBarArrendador";
+import NavBarEstudiante from "./NavBarEstudiante";
 
 
 const DepartamentosArrendados = () => {
@@ -43,7 +43,7 @@ const DepartamentosArrendados = () => {
 
   return (
     <div>
-      <NavBarArrendador />
+      <NavBarEstudiante />
       <div className="dashboard">
         <h1>Departamentos Arrendados</h1>
         <div className="cards-container">
@@ -52,7 +52,6 @@ const DepartamentosArrendados = () => {
               <h3>Departamento ID: {departamento.id_departamento}</h3>
               <p><strong>Usuario ID:</strong> {departamento.id_usuario}</p>
               <p><strong>Arrendador ID:</strong> {departamento.id_arrendador}</p>
-              <p><strong>Descripción:</strong> {departamento.Departamento.descripcion}</p>
               <p><strong>Descripción:</strong> {departamento.Departamento.descripcion}</p>
               <p><strong>Dirección:</strong> {departamento.Departamento.direccion}</p>
               <p><strong>Arrendado a:</strong> {departamento.Usuario.nombres}</p>
