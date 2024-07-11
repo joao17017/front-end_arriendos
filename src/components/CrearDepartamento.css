@@ -1,0 +1,164 @@
+/* Estilos generales del contenedor del formulario */
+.edit-container {
+    background-color: #252531;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: white;
+    max-width: 1000px; /* Aumentar el ancho máximo */
+    margin: auto;
+    border-top: none; /* Eliminar el borde externo superior del formulario */
+  }
+  
+  /* Estilos para el título del formulario */
+  .edit-container h1 {
+    color: #DFB163;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  /* Estilos para hacer el formulario una cuadrícula de dos columnas */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  
+  /* Estilos para las columnas izquierda y derecha */
+  .form-left, .form-right {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos dentro de las columnas se apilen verticalmente */
+  }
+  
+  /* Estilos para los grupos de formularios */
+  .form-group {
+    margin-bottom: 1.5rem; /* Ajustar el margen entre los elementos */
+  }
+  
+  /* Estilos para las etiquetas de los formularios */
+  .form-label {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-align: left; /* Asegura que las etiquetas estén justificadas a la izquierda */
+  }
+  
+  /* Estilos para los campos de entrada de los formularios */
+  .form-control {
+    background-color: #ffffff;
+    color: black; /* Corregir el color del texto en los campos de entrada */
+    border: 3px solid #DFB163;
+    border-radius: 4px;
+  }
+  
+  /* Ajustes para el focus en los campos de entrada */
+  .form-control:focus {
+    background-color: #ffffff;
+    color: black; /* Corregir el color del texto en los campos de entrada */
+    border-color: #DFB163;
+  }
+  
+  /* Estilos para el textarea de la descripción */
+  .descripcion-textarea {
+    height: 150px; /* Hacer el área de descripción más grande */
+  }
+  
+  /* Estilos para los botones de enviar */
+  .submit-button {
+    background-color: #DFB163;
+    color: black;
+    padding: 0.5rem 1rem; /* Hacer el botón más pequeño */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+  }
+  
+  /* Estilos para el hover en los botones de enviar */
+  .submit-button:hover {
+    background-color: #CF9A53; /* Color de hover ligeramente diferente */
+  }
+  
+  /* Estilos para los checkboxes */
+  .form-check-group {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos dentro de los servicios básicos estén apilados verticalmente */
+  }
+  
+  /* Asegura que los checkboxes estén antes del texto */
+  .form-check {
+    display: flex;
+    align-items: center; /* Alinea el checkbox y el texto */
+  }
+  
+  /* Estilos del checkbox */
+  .form-check-input {
+    border-color: #DFB163; /* Color del borde del checkbox */
+    background-color: #252531; /* Color de fondo cuando no está marcado */
+    accent-color: #DFB163; /* Cambia el color del checkmark a amarillo */
+    margin-right: 0.5rem; /* Espacio entre el checkbox y el texto */
+  }
+  
+  /* Asegura que el texto del checkbox sea blanco */
+  .form-check-label {
+    color: white;
+  }
+  
+  /* Asegura que los inputs de número tengan un tamaño adecuado */
+  .form-control[type="number"] {
+    width: 100%;
+  }
+  
+  /* Asegura que la imagen tenga el mismo tamaño que los inputs de texto */
+  .form-control[type="file"] {
+    padding: 0.5rem;
+  }
+  
+  /* Asegura que las columnas de número de baños y habitaciones estén una al lado de la otra */
+  .row {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  /* Asegura que las columnas de número de baños y habitaciones ocupen la mitad del ancho */
+  .col-md-6 {
+    flex: 1; /* Las columnas tienen el mismo ancho */
+  }
+  
+  /* Asegura que las columnas de número de baños y habitaciones estén alineadas verticalmente */
+  .row .col-md-6 {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Estilos para hacer el formulario responsivo */
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr; /* Colapsar en una sola columna en pantallas pequeñas */
+    }
+  }
+  
+  /* Parte Derecha */
+  .form-right {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos dentro de la parte derecha se apilen verticalmente */
+  }
+  
+  /* Asegura que los campos de tamaño e imagen estén uno al lado del otro */
+  .form-bottom-row {
+    display: flex;
+    gap: 1rem; /* Espacio entre el tamaño e imagen */
+    margin-top: 1rem; /* Espacio superior entre los servicios básicos y el tamaño e imagen */
+  }
+  
+  /* Asegura que los campos de tamaño e imagen ocupen el mismo ancho */
+  .form-bottom-row .form-group {
+    flex: 1; /* Los campos ocupan el mismo ancho */
+  }
+  
+  /* Estilos para hacer que la etiqueta del tamaño y la imagen se alineen horizontalmente */
+  .form-bottom-row .form-group .form-label {
+    margin-right: 0.5rem; /* Espacio entre la etiqueta y el campo de entrada */
+  }
+  
