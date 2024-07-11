@@ -78,36 +78,8 @@ const NavBar = () => {
         </div>
       </div>
 
-      <div className="container-fluid bg-white py-3">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-4 text-left mb-3 mb-lg-0">
-              <div className="d-inline-flex text-left">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-                <div className="d-flex flex-column">
-                  {/* Contenido adicional */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 text-left text-lg-center mb-3 mb-lg-0">
-              <div className="d-inline-flex text-left">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-                <div className="d-flex flex-column">
-                  {/* Contenido adicional */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 text-left text-lg-right mb-3 mb-lg-0">
-              <div className="d-inline-flex text-left">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-                <div className="d-flex flex-column">
-                  {/* Contenido adicional */}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
+      
     </div>
   );
 };
