@@ -102,3 +102,11 @@
   height: 40px; /* Ajusta la altura según tus necesidades */
   /* Puedes añadir más estilos como margen, alineación, etc. */
 }
+
+/* Ajustes específicos para el espacio debajo del contenedor del título "RIOARRIENDOS" */
+.nav-bar-container {
+  margin-bottom: 20px; /* Añade un margen inferior específico al contenedor del título */
+  position: relative;
+  top: -50px; /* Ajusta esto según sea necesario para mantener la superposición */
+  z-index: 10; /* Asegura que esté encima del cuadro de iconos */
+}
