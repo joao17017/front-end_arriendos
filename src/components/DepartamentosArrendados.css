@@ -1,68 +1,56 @@
-.dashboard {
-    padding: 20px;
-  }
-  
-  .cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .card {
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card h3 {
-    margin-top: 0;
-  }
-  
-  .card img {
-    max-width: 100%;
-    border-radius: 10px;
-    margin-top: 10px;
-  }
-  
-  .button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    margin-right: 5px;
-  }
-  
-  .button:hover {
-    background-color: #45a049;
-  }
-  
-  .eliminar-button {
-    background-color: #F44336;
-  }
-  
-  .eliminar-button:hover {
-    background-color: #d32f2f;
-  }
-  
-  .desocupar-button {
-    background-color: #FFC107;
-  }
-  
-  .desocupar-button:hover {
-    background-color: #ffa000;
-  }
-  
-  .comentar-button {
-    background-color: #2196F3;
-  }
-  
-  .comentar-button:hover {
-    background-color: #0b7dda;
-  }
-  
+/* Asegúrate de ajustar los estilos según tus necesidades */
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.text-primary {
+  color: #DFB163 !important;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background-color: #DFB163;
+  border-color: #000000;
+}
+
+.btn-danger {
+  background-color: #DFB163;
+  border-color: #000000;
+}
+
+.btn-warning {
+  background-color: #DFB163;
+  border-color: #DFB163;
+}
+
+img {
+  border-radius: 5px;
+}
+
+h1, h5 {
+  margin: 0;
+}
+
+:root {
+  --custom-color: #DFB163; /* Cambia este valor al color que desees */
+}
+.btn-danger:hover {
+  background-color: #030303; /* Color de fondo al pasar el ratón */
+  border-color: #DFB163; /* Color del borde al pasar el ratón */
+}
+
+.btn-warning:hover {
+  background-color: #000000; /* Color de fondo al pasar el ratón */
+  border-color: #DFB163; /* Color del borde al pasar el ratón */
+}
+
+.btn-primary:hover {
+  background-color: #000000; /* Color de fondo al pasar el ratón */
+  border-color: #DFB163; /* Color del borde al pasar el ratón */
+}
