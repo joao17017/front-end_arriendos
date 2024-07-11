@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa';
-import './NavBar.css'; // Asegúrate de importar el archivo CSS para los estilos
+import './NavBar.css';  // Asegúrate de tener los estilos CSS aplicados
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -17,16 +16,16 @@ const NavBar = () => {
           <div className="row">
             <div className="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
               <div className="d-inline-flex align-items-center">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
+                {/* Contenido */}
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
-      <div className="container-fluid position-relative nav-bar p-0">
-        <div className="container position-relative" style={{ zIndex: 9 }}>
+      {/* Navbar */}
+      <div className="container-fluid position-relative nav-bar-container p-0">  {/* Cambié la clase aquí */}
+        <div className="container position-relative" style={{ zIndex: 9, padding: '0 15px' }}>
           <nav className="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
             <a href="/" className="navbar-brand">
               <h1 className="m-0 display-5 text-white">
@@ -55,37 +54,6 @@ const NavBar = () => {
               </div>
             </div>
           </nav>
-        </div>
-      </div>
-
-      <div className="container-fluid bg-white py-3">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-4 text-left mb-3 mb-lg-0">
-              <div className="d-inline-flex text-left">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-                <div className="d-flex flex-column">
-                  {/* Contenido adicional */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 text-left text-lg-center mb-3 mb-lg-0">
-              <div className="d-inline-flex text-left">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-                <div className="d-flex flex-column">
-                  {/* Contenido adicional */}
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 text-left text-lg-right mb-3 mb-lg-0">
-              <div className="d-inline-flex text-left">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-                <div className="d-flex flex-column">
-                  {/* Contenido adicional */}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
