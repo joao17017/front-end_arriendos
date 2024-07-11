@@ -3,6 +3,8 @@ import axios from "axios";
 import NavBarArrendador from "./NavBarArrendador";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
+import { FaEye, FaEdit, FaTrashAlt, FaRegPaperPlane } from 'react-icons/fa';
+import './MisDepartamentos.css';
 
 const MisDepartamentos = () => {
     const [departamentos, setDepartamentos] = useState([]);
@@ -38,87 +40,85 @@ const MisDepartamentos = () => {
         }
     };
 
-  const handleSolicitarActivacion = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      const decoded = jwtDecode(token);
-      const id_arrendador = decoded.id;
-  
-      await axios.post(
-        "http://localhost:3000/solicitudes-activacion",
-        { id_arrendador, id_departamento: id },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      alert("Solicitud de activación enviada");
-    } catch (err) {
-      console.error("Error al solicitar activación:", err);
-  
-      // Mostrar el mensaje de error si existe
-      if (err.response && err.response.data && err.response.data.error) {
-        alert(`Error: ${err.response.data.error}`);
-      } else {
-        alert("Error al solicitar activación");
-      }
-    }
-  };
-  
+    const handleSolicitarActivacion = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+            const decoded = jwtDecode(token);
+            const id_arrendador = decoded.id;
 
-  const handleDepartamentoClick = (id_departamento_activo) => {
-    navigate(`/departamentos/${id_departamento_activo}`);
-  };
+            await axios.post(
+                "http://localhost:3000/solicitudes-activacion",
+                { id_arrendador, id_departamento: id },
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            );
+            alert("Solicitud de activación enviada");
+        } catch (err) {
+            console.error("Error al solicitar activación:", err);
+
+            // Mostrar el mensaje de error si existe
+            if (err.response && err.response.data && err.response.data.error) {
+                alert(`Error: ${err.response.data.error}`);
+            } else {
+                alert("Error al solicitar activación");
+            }
+        }
+    };
+
+    const handleDepartamentoClick = (id_departamento_activo) => {
+        navigate(`/departamentos/${id_departamento_activo}`);
+    };
 
     return (
         <div>
             <NavBarArrendador />
             <div className="container mt-4">
                 <h1 className="mb-4">Mis Departamentos</h1>
-                <div className="row">
+                <div className="row mx-1 portfolio-container">
                     {departamentos.map((departamento) => (
-                        <div className="col-md-4 mb-4" key={departamento.id_departamento}>
-                            <div className="card text-white" style={{ backgroundColor: '#DFB163', border: '2px solid black' }}>
-                                <img
-                                    src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : "/images/default-image.png"}
-                                    alt={departamento.nombre}
-                                    className="card-img-top"
-                                />
-                                <div className="card-body">
-                                    <h5 className="card-title">{departamento.nombre}</h5>
-                                    <p className="card-text">{departamento.descripcion}</p>
+                        <div className="col-lg-4 col-md-6 col-sm-12 p-0 portfolio-item" key={departamento.id_departamento}>
+                            <div className="position-relative overflow-hidden">
+                                <div className="portfolio-img d-flex align-items-center justify-content-center">
+                                    <img
+                                        src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : "/images/default-image.png"}
+                                        alt={departamento.nombre}
+                                        className="img-fluid"
+                                        style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                                    />
                                 </div>
-
-                                <div className="card-footer" style={{ backgroundColor: '#252531' }}> 
-                                    <nav className="nav justify-content-around">
-                                        <Link
-                                            to={`/departamentos/editar/${departamento.id_departamento}`}
-                                            className="nav-link text-white small"
-                                        >
-                                            Editar
-                                        </Link>
-                                        <Link
-                                            to="#"
-                                            className="nav-link text-white small"
-                                            onClick={() => handleDelete(departamento.id_departamento)}
-                                        >
-                                            Eliminar
-                                        </Link>
+                                <div className="portfolio-text bg-secondary d-flex flex-column align-items-center justify-content-center">
+                                    <h4 className="text-white mb-4">{departamento.nombre}</h4>
+                                    <div className="d-flex align-items-center justify-content-center">
                                         <Link
                                             to={`./${departamento.id_departamento}`}
-                                            className="nav-link text-white small"
+                                            className="btn btn-outline-primary m-1"
                                         >
-                                            Ver
+                                            <FaEye />
                                         </Link>
                                         <Link
-                                            to="#"
-                                            className="nav-link text-white small"
+                                            to={`/departamentos/editar/${departamento.id_departamento}`}
+                                            className="btn btn-outline-primary m-1"
+                                        >
+                                            <FaEdit />
+                                        </Link>
+                                        <a
+                                            className="btn btn-outline-primary m-1"
+                                            href="#"
+                                            onClick={() => handleDelete(departamento.id_departamento)}
+                                        >
+                                            <FaTrashAlt />
+                                        </a>
+                                        <a
+                                            className="btn btn-outline-primary m-1"
+                                            href="#"
                                             onClick={() => handleSolicitarActivacion(departamento.id_departamento)}
                                         >
-                                            Solicitar
-                                        </Link>
-                                    </nav>
+                                            <FaRegPaperPlane />
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
