@@ -1,0 +1,30 @@
+.estado-texto {
+    background: none; /* Elimina cualquier fondo */
+    color: #D8A143; /* Cambia este valor al color que desees */
+    padding: 0; /* Elimina el padding para que no haya recuadro */
+    border: none; /* Elimina cualquier borde */
+    display: flex;
+    align-items: center;
+    font-size: 1.2em; /* Ajusta el tamaño de la fuente si es necesario */
+  }
+  
+  .estado-icono {
+    color: #D8A143; /* Cambia este valor al color que desees */
+    margin-right: 5px; /* Espacio entre el ícono y el texto */
+  }
+  
+  .portfolio-text {
+    background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente negro al pasar el puntero */
+    color: white;
+    padding: 10px;
+    transition: all 0.3s;
+  }
+  
+  .portfolio-img {
+    transition: transform 0.3s;
+  }
+  
+  .portfolio-item:hover .portfolio-img {
+    transform: scale(1.1);
+  }
+  
