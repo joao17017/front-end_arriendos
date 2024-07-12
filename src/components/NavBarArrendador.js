@@ -2,14 +2,135 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
-import './NavBarArrendador.css'; // Asegúrate de importar el archivo CSS para los estilos
+import styled from 'styled-components';
 
-const NavBar = () => {
+const NavbarContainer = styled.div`
+  .navbar-bottom {
+    background-color: #6c757d;
+    padding: 10px 0;
+  }
+
+  @media (max-width: 992px) {
+    .navbar-bottom {
+      padding: 15px 10px;
+    }
+  }
+`;
+
+const NavbarBottom = styled.nav`
+  background-color: #6c757d;
+  padding: 10px 0;
+`;
+
+const Brand = styled(Link)`
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+
+  span {
+    color: #007bff;
+  }
+
+  @media (max-width: 992px) {
+    font-size: 1.25rem;
+  }
+`;
+
+const Toggler = styled.button`
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  display: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (max-width: 992px) {
+    display: block;
+  }
+`;
+
+const Collapse = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+const NavMenu = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 992px) {
+    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+    flex-direction: column;
+    width: 100%;
+  }
+`;
+
+const NavItem = styled(Link)`
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 15px;
+  font-size: 1rem;
+
+  &:hover {
+    color: #007bff;
+  }
+
+  @media (max-width: 992px) {
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+  }
+`;
+
+const DropdownContainer = styled.div`
+  position: relative;
+  display: inline-block;
+
+  .dropdown-menu {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    position: absolute;
+    background-color: #252531;
+    min-width: 160px;
+    z-index: 1;
+    right: 0;
+  }
+
+  .dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #fff;
+    background-color: #252531;
+    border: none;
+    width: 100%;
+    text-align: left;
+
+    &:hover {
+      background-color: #1c1c28;
+    }
+  }
+`;
+
+const NavBarArrendador = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
   const handleLogout = async () => {
@@ -23,65 +144,45 @@ const NavBar = () => {
   };
 
   return (
-    <div>
-      <div className="container-fluid bg-dark py-3 navbar-top" >
-        <div className="container" style={{ paddingTop: '5px', paddingBottom: '5px' }}>
-          <div className="row">
-            <div className="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-              <div className="d-inline-flex align-items-center">
-                {/* Aquí puedes añadir contenido adicional si es necesario */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container-fluid position-relative nav-bar p-0">
-        <div className="container position-relative" style={{ zIndex: 9 }}>
-          <nav className="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5 navbar-bottom">
-            <Link to="/arrendador/dashboard" className="navbar-brand">
-              <h1 className="m-0 display-5 text-white rioarriendos-title">
-                <span className="text-primary">RIO</span>ARRIENDOS
-              </h1>
-            </Link>
-            <button
-              type="button"
-              className="navbar-toggler"
-              data-toggle="collapse"
-              data-target="#navbarCollapse"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div
-              className="collapse navbar-collapse justify-content-between px-3"
-              id="navbarCollapse"
-            >
-              <div className="navbar-nav ml-auto py-0">
-                <Link to="/arrendador/crear-departamento" className="nav-item nav-link">Crear Departamento</Link>
-                <Link to="/arrendador/mis-departamentos" className="nav-item nav-link">Departamentos</Link>
-                <Link to="/arrendador/anuncios-por-activar" className="nav-item nav-link">Anuncios por Activar</Link>
-                <Link to="/arrendador/anuncios-activados" className="nav-item nav-link">Anuncios Activados</Link>
-                <Link to="/arrendador/solicitudes-visita" className="nav-item nav-link">Solicitudes de Visita</Link>
-                <Link to="/arrendador/departamentos-arrendados" className="nav-item nav-link">Departamentos Arrendados</Link>
-                <div className="nav-item nav-link dropdown">
-                  <FaUserCircle size={24} onClick={toggleDropdown} />
-                  {dropdownOpen && (
-                    <div className="dropdown-menu show">
-                      <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>Mi Perfil</button>
-                      <button className="dropdown-item" onClick={handleLogout}>Salir</button>
-                    </div>
-                  )}
+    <NavbarContainer>
+      <NavbarBottom className="navbar navbar-expand-lg navbar-bottom">
+        <div className="container d-flex justify-content-between align-items-center">
+          <Brand to="/arrendador/dashboard">
+            <span>RIO</span>ARRIENDOS
+          </Brand>
+          <Toggler
+            type="button"
+            onClick={toggleMenu}
+            aria-controls="navbarCollapse"
+            aria-expanded={isOpen}
+          >
+            <i className="fas fa-bars"></i>
+          </Toggler>
+          <Collapse className={`collapse navbar-collapse`} id="navbarCollapse">
+            <NavMenu isOpen={isOpen}>
+              <NavItem to="/arrendador/crear-departamento">Crear Departamento</NavItem>
+              <NavItem to="/arrendador/mis-departamentos">Departamentos</NavItem>
+              <NavItem to="/arrendador/anuncios-por-activar">Anuncios por Activar</NavItem>
+              <NavItem to="/arrendador/anuncios-activados">Anuncios Activados</NavItem>
+              <NavItem to="/arrendador/solicitudes-visita">Solicitudes de Visita</NavItem>
+              <NavItem to="/arrendador/departamentos-arrendados">Departamentos Arrendados</NavItem>
+              <DropdownContainer isOpen={dropdownOpen}>
+                <FaUserCircle size={24} onClick={toggleDropdown} />
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>
+                    Mi Perfil
+                  </button>
+                  <button className="dropdown-item" onClick={handleLogout}>
+                    Salir
+                  </button>
                 </div>
-              </div>
-            </div>
-          </nav>
+              </DropdownContainer>
+            </NavMenu>
+          </Collapse>
         </div>
-      </div>
-
-      
-      
-    </div>
+      </NavbarBottom>
+    </NavbarContainer>
   );
 };
 
-export default NavBar;
+export default NavBarArrendador;

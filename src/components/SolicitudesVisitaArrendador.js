@@ -1,10 +1,207 @@
-//src/components/SolicitudesVisitaArrendador.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import NavBarArrendador from "./NavBarArrendador";
-import "./SolicitudesVisitaArrendador.css";
+import styled from 'styled-components';
+
+const estadoColores = {
+  aprobada: "#c8e6c9", // Verde claro para aprobada
+  rechazada: "#ffcdd2", // Rojo claro para rechazada
+  postergada: "#fff9c4", // Amarillo claro para postergada
+  reprogramada: "#bbdefb", // Azul claro para reprogramada
+  default: "#fff" // Blanco para cualquier otro estado
+};
+
+const Container = styled.div`
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+`;
+
+const Col = styled.div`
+  flex: 1 1 300px;
+  max-width: 300px;
+`;
+
+const Card = styled.div`
+  background-color: ${props => estadoColores[props.estado] || estadoColores.default};
+  border: 2px solid black;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid black;
+  }
+
+  .card-body {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h5 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      flex: 1;
+    }
+  }
+
+  .card-footer {
+    background-color: #252531;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+`;
+
+const Button = styled.button`
+  color: white;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+  text-align: center;
+
+  &.aprobar-button {
+    background-color: #4caf50;
+
+    &:hover {
+      background-color: #388e3c;
+    }
+  }
+
+  &.rechazar-button {
+    background-color: #f44336;
+
+    &:hover {
+      background-color: #d32f2f;
+    }
+  }
+
+  &.postergar-button {
+    background-color: #ff9800;
+
+    &:hover {
+      background-color: #f57c00;
+    }
+  }
+
+  &.reprogramar-button {
+    background-color: #03a9f4;
+
+    &:hover {
+      background-color: #0288d1;
+    }
+  }
+
+  &.eliminar-button {
+    background-color: #9e9e9e;
+
+    &:hover {
+      background-color: #757575;
+    }
+  }
+
+  &.arrendar-button {
+    background-color: #8bc34a;
+
+    &:hover {
+      background-color: #689f38;
+    }
+  }
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+
+  h2 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, textarea {
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+    }
+
+    .button {
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+
+      &.cancel-button {
+        background-color: #f44336;
+
+        &:hover {
+          background-color: #d32f2f;
+        }
+      }
+    }
+  }
+`;
 
 const SolicitudesVisitaArrendador = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -154,120 +351,61 @@ const SolicitudesVisitaArrendador = () => {
     setNuevaFecha("");
   };
 
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+
   return (
     <div>
       <NavBarArrendador />
-      <div className="dashboard">
-        <h1>Solicitudes de Visita Recibidas</h1>
-        <p>
-          Estas son las solicitudes de visita que has recibido para tus
-          departamentos.
-        </p>
-        <div className="cards-container">
+      <Container>
+        <Title>Solicitudes de Visita Recibidas</Title>
+        <Row>
           {solicitudes.map((solicitud) => (
-            <div
-              className={`card ${
-                solicitud.estado === "aprobada" ? "aprobada" : ""
-              }`}
-              key={solicitud.id_solicitud_visita}
-            >
-              {solicitud.DepartamentoActivo ? (
-                <>
-                  <h3>{solicitud.DepartamentoActivo.Departamento.nombre}</h3>
-                  <p>
-                    <strong>Descripción:</strong>
-                    {solicitud.DepartamentoActivo.Departamento.descripcion}
-                  </p>
-                  <p>
-                    <strong>Departamento:</strong>{" "}
-                    {solicitud.DepartamentoActivo.id_departamento}
-                  </p>
-                  <p>
-                    <strong>Nombre Usuario:</strong> {solicitud.Usuario.nombres}
-                  </p>
-                  <p>
-                    <strong>Estado:</strong> {solicitud.estado}
-                  </p>
-                  <p>
-                    <strong>Fecha Solicitada:</strong>{" "}
-                    {new Date(solicitud.fecha_solicitada).toLocaleDateString()}
-                  </p>
-
-                  <p>
-                    <strong>Comentario Usuario:</strong> {solicitud.comentario}
-                  </p>
-                  <p>
-                    <strong>Comentario Arrendador:</strong>{" "}
-                    {solicitud.comentario_arrendador}
-                  </p>
-                  {solicitud.DepartamentoActivo.Departamento.imagen && (
+            <Col key={solicitud.id_solicitud_visita}>
+              <Card estado={solicitud.estado}>
+                {solicitud.DepartamentoActivo ? (
+                  <>
                     <img
-                      src={`http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`}
+                      src={solicitud.DepartamentoActivo.Departamento.imagen ? `http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}` : defaultImageUrl}
                       alt={solicitud.DepartamentoActivo.Departamento.nombre}
-                      className="card-image"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = defaultImageUrl;
+                      }}
                     />
-                  )}
-                  {solicitud.estado !== "aprobada" && (
-                    <button
-                      onClick={() => openModal(solicitud, "aprobar")}
-                      className="button aprobar-button"
-                    >
-                      Aprobar Solicitud
-                    </button>
-                  )}
-                  {solicitud.estado !== "rechazada" && (
-                    <button
-                      onClick={() => openModal(solicitud, "rechazar")}
-                      className="button rechazar-button"
-                    >
-                      Rechazar Solicitud
-                    </button>
-                  )}
-                  {solicitud.estado !== "postergada" && (
-                    <button
-                      onClick={() => openModal(solicitud, "postergar")}
-                      className="button postergar-button"
-                    >
-                      Postergar Solicitud
-                    </button>
-                  )}
-                  <button
-                    onClick={() => openModal(solicitud, "reprogramar")}
-                    className="button reprogramar-button"
-                  >
-                    Reprogramar Solicitud
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleEliminar(solicitud.id_solicitud_visita)
-                    }
-                    className="button eliminar-button"
-                  >
-                    Eliminar Solicitud
-                  </button>
-                  {solicitud.estado === "aprobada" && (
-                    <button
-                      onClick={() => handleArrendar(solicitud)}
-                      className="button arrendar-button"
-                    >
-                      Arrendar Departamento
-                    </button>
-                  )}
-                </>
-              ) : (
-                <p>Departamento no encontrado</p>
-              )}
-            </div>
+                    <div className="card-body">
+                      <h5>{solicitud.DepartamentoActivo.Departamento.nombre}</h5>
+                      <p><strong>Descripción:</strong> {solicitud.DepartamentoActivo.Departamento.descripcion}</p>
+                      <p><strong>Departamento:</strong> {solicitud.DepartamentoActivo.id_departamento}</p>
+                      <p><strong>Nombre Usuario:</strong> {solicitud.Usuario.nombres}</p>
+                      <p><strong>Estado:</strong> {solicitud.estado}</p>
+                      <p><strong>Fecha Solicitada:</strong> {new Date(solicitud.fecha_solicitada).toLocaleDateString()}</p>
+                      <p><strong>Comentario Usuario:</strong> {solicitud.comentario}</p>
+                      <p><strong>Comentario Arrendador:</strong> {solicitud.comentario_arrendador}</p>
+                    </div>
+                    <div className="card-footer">
+                      <Button className="aprobar-button" onClick={() => openModal(solicitud, "aprobar")}>Aprobar</Button>
+                      <Button className="rechazar-button" onClick={() => openModal(solicitud, "rechazar")}>Rechazar</Button>
+                      <Button className="postergar-button" onClick={() => openModal(solicitud, "postergar")}>Postergar</Button>
+                      <Button className="reprogramar-button" onClick={() => openModal(solicitud, "reprogramar")}>Reprogramar</Button>
+                      <Button className="eliminar-button" onClick={() => handleEliminar(solicitud.id_solicitud_visita)}>Eliminar</Button>
+                      {solicitud.estado === "aprobada" && (
+                        <Button className="arrendar-button" onClick={() => handleArrendar(solicitud)}>Arrendar</Button>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <p>Departamento no encontrado</p>
+                )}
+              </Card>
+            </Col>
           ))}
-        </div>
-      </div>
+        </Row>
+      </Container>
 
       {selectedSolicitud && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>
-              {modalType.charAt(0).toUpperCase() + modalType.slice(1)} Solicitud
-            </h2>
+        <Modal>
+          <ModalContent>
+            <h2>{modalType.charAt(0).toUpperCase() + modalType.slice(1)} Solicitud</h2>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -293,15 +431,11 @@ const SolicitudesVisitaArrendador = () => {
                 onChange={(e) => setComentarioArrendador(e.target.value)}
                 required
               ></textarea>
-              <button type="submit" className="button">
-                Confirmar
-              </button>
-              <button type="button" onClick={closeModal} className="button">
-                Cancelar
-              </button>
+              <button type="submit" className="button">Confirmar</button>
+              <button type="button" onClick={closeModal} className="button cancel-button">Cancelar</button>
             </form>
-          </div>
-        </div>
+          </ModalContent>
+        </Modal>
       )}
     </div>
   );

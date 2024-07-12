@@ -1,12 +1,136 @@
+// src/components/AnunciosPorActivar.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import NavBarArrendador from './NavBarArrendador';
 import { jwtDecode } from 'jwt-decode';
-import './MisDepartamentos.css';
-import './AnunciosPorActivar.css';
+import styled from 'styled-components';
 import { FaInfoCircle } from 'react-icons/fa';
 
+const Container = styled.div`
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+`;
+
+const Col = styled.div`
+  flex: 1 1 300px;
+  max-width: 300px;
+`;
+
+const Card = styled.div`
+  background-color: #DFB163;
+  border: 2px solid black;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid black;
+  }
+
+  .card-body {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h5 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      flex: 1;
+    }
+  }
+
+  .card-footer {
+    background-color: #252531;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+`;
+
+const ButtonRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  button, .nav-link {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &.btn-primary {
+      background-color: #007bff;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    &.btn-danger {
+      background-color: #dc3545;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+
+    &.btn-warning {
+      background-color: #ffc107;
+      color: black;
+
+      &:hover {
+        background-color: #e0a800;
+      }
+    }
+  }
+`;
+
+const EstadoTexto = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-color: #252531;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+
+  .estado-icono {
+    margin-right: 5px;
+  }
+`;
 
 const AnunciosPorActivar = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -41,36 +165,52 @@ const AnunciosPorActivar = () => {
     fetchSolicitudes();
   }, [navigate]);
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/departamentos/${id}`);
+      setSolicitudes(solicitudes.filter(solicitud => solicitud.Departamento.id_departamento !== id));
+    } catch (err) {
+      console.error('Error deleting departamento:', err);
+    }
+  };
+
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+
   return (
     <div>
       <NavBarArrendador />
-      <div className="container mt-4">
-        <h1 className="mb-4">Anuncios por Activar de Arrendador</h1>
-        <div className="row mx-1 portfolio-container">
+      <Container>
+        <Title>Anuncios por Activar de Arrendador</Title>
+        <Row>
           {solicitudes.map(solicitud => (
-            <div className="col-lg-4 col-md-6 col-sm-12 p-0 portfolio-item" key={solicitud.id_solicitud}>
-              <div className="position-relative overflow-hidden">
-                <div className="portfolio-img d-flex align-items-center justify-content-center">
-                  <img
-                    src={solicitud.Departamento && solicitud.Departamento.imagen ? `http://localhost:3000/${solicitud.Departamento.imagen}` : "/images/default-image.png"}
-                    alt={solicitud.Departamento ? solicitud.Departamento.nombre : 'Imagen no disponible'}
-                    className="img-fluid"
-                    style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                  />
+            <Col key={solicitud.id_solicitud}>
+              <Card>
+                <EstadoTexto>
+                  <FaInfoCircle className="estado-icono" /> {solicitud.estado}
+                </EstadoTexto>
+                <img
+                  src={solicitud.Departamento && solicitud.Departamento.imagen ? `http://localhost:3000/${solicitud.Departamento.imagen}` : defaultImageUrl}
+                  alt={solicitud.Departamento ? solicitud.Departamento.nombre : 'Imagen no disponible'}
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = defaultImageUrl;
+                  }}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{solicitud.Departamento ? solicitud.Departamento.nombre : 'Departamento no encontrado'}</h5>
                 </div>
-                <div className="portfolio-text bg-secondary d-flex flex-column align-items-center justify-content-center">
-                  <h4 className="text-white mb-4">{solicitud.Departamento ? solicitud.Departamento.nombre : 'Departamento no encontrado'}</h4>
-                  <div className="d-flex align-items-center justify-content-center">
-                    <span className="estado-texto">
-                      <FaInfoCircle className="estado-icono" /> {solicitud.estado}
-                    </span>
-                  </div>
+                <div className="card-footer">
+                  <ButtonRow>
+                    <Link to={`/departamentos/editar/${solicitud.Departamento.id_departamento}`} className="nav-link btn-warning">Editar</Link>
+                    <button className="nav-button btn-danger" onClick={() => handleDelete(solicitud.Departamento.id_departamento)}>Eliminar</button>
+                    <Link to={`/arrendador/mis-departamentos/${solicitud.Departamento.id_departamento}`} className="nav-link btn-primary">Ver</Link>
+                  </ButtonRow>
                 </div>
-              </div>
-            </div>
+              </Card>
+            </Col>
           ))}
-        </div>
-      </div>
+        </Row>
+      </Container>
     </div>
   );
 };

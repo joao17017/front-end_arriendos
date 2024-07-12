@@ -1,62 +1,119 @@
+// src/components/NavBar.js
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './NavBar.css';  // Asegúrate de tener los estilos CSS aplicados
+import styled from 'styled-components';
+
+// Styled components
+const NavBarContainer = styled.div`
+  background-color: #343a40;
+  padding: 0.5rem 1rem;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Brand = styled(Link)`
+  font-size: 2rem;
+  color: white;
+  text-decoration: none;
+
+  .text-primary {
+    color: #007bff;
+  }
+`;
+
+const NavbarToggler = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (min-width: 992px) {
+    display: none;
+  }
+`;
+
+const NavItems = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 991px) {
+    display: none;
+  }
+`;
+
+const NavItem = styled(Link)`
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+
+  &:hover {
+    color: #007bff;
+  }
+`;
+
+const MobileMenu = styled.div`
+  display: none;
+
+  @media (max-width: 991px) {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    background-color: #343a40;
+    padding: 1rem;
+  }
+`;
+
+const MobileNavItem = styled(Link)`
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 0;
+
+  &:hover {
+    color: #007bff;
+  }
+`;
 
 const NavBar = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   const handleLoginRedirect = () => {
     navigate('/login'); // Redirect to login page
   };
 
   return (
-    <div>
-      <div className="container-fluid bg-dark py-3">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-              <div className="d-inline-flex align-items-center">
-                {/* Contenido */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Navbar */}
-      <div className="container-fluid position-relative nav-bar-container p-0">  {/* Cambié la clase aquí */}
-        <div className="container position-relative" style={{ zIndex: 9, padding: '0 15px' }}>
-          <nav className="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
-            <a href="/" className="navbar-brand">
-              <h1 className="m-0 display-5 text-white">
-                <span className="text-primary">RIO</span>ARRIENDOS
-              </h1>
-            </a>
-            <button
-              type="button"
-              className="navbar-toggler"
-              data-toggle="collapse"
-              data-target="#navbarCollapse"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div
-              className="collapse navbar-collapse justify-content-between px-3"
-              id="navbarCollapse"
-            >
-              <div className="navbar-nav ml-auto py-0">
-                <a href="/login" className="nav-item nav-link">
-                  Login
-                </a>
-                <a href="/signup" className="nav-item nav-link">
-                  Signup
-                </a>
-              </div>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </div>
+    <NavBarContainer>
+      <Container>
+        <Brand to="/">
+          <span className="text-primary">RIO</span>ARRIENDOS
+        </Brand>
+        <NavbarToggler onClick={toggleMenu}>
+          <i className="fas fa-bars"></i>
+        </NavbarToggler>
+        <NavItems>
+          <NavItem to="/login">Login</NavItem>
+          <NavItem to="/signup">Signup</NavItem>
+        </NavItems>
+      </Container>
+      <MobileMenu isOpen={isOpen}>
+        <MobileNavItem to="/login" onClick={toggleMenu}>Login</MobileNavItem>
+        <MobileNavItem to="/signup" onClick={toggleMenu}>Signup</MobileNavItem>
+      </MobileMenu>
+    </NavBarContainer>
   );
 };
 

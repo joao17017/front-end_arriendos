@@ -1,12 +1,35 @@
+// src/components/Home.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
-import './Home.css'; // Importa el archivo CSS para los estilos
+import styled from 'styled-components';
+
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+`;
+
+const Button = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+`;
 
 const Home = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [departamentosPerPage] = useState(10);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +53,20 @@ const Home = () => {
   const handleDepartamentoClick = () => {
     navigate('/login');
   };
+
+  const indexOfLastDepartamento = currentPage * departamentosPerPage;
+  const indexOfFirstDepartamento = indexOfLastDepartamento - departamentosPerPage;
+  const currentDepartamentos = departamentos.slice(indexOfFirstDepartamento, indexOfLastDepartamento);
+
+  const handleNextPage = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prevPage => prevPage - 1);
+  };
+
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
   return (
     <div>
@@ -73,7 +110,7 @@ const Home = () => {
         {error && <p className="error-message">{error}</p>}
         <div className="container">
           <div className="row">
-            {departamentos.map((departamento) => (
+            {currentDepartamentos.map((departamento) => (
               <div className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
                 <div
                   className="card"
@@ -83,6 +120,10 @@ const Home = () => {
                     src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/default-image.png'} 
                     alt={departamento.nombre} 
                     className="card-img-top" 
+                    onError={(e) => {
+                      e.target.onerror = null; 
+                      e.target.src = defaultImageUrl;
+                    }}
                   />
                   <div className="card-body bg-white p-4">
                     <div className="d-flex align-items-center mb-3">
@@ -96,6 +137,10 @@ const Home = () => {
               </div>
             ))}
           </div>
+          <PaginationContainer>
+            <Button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</Button>
+            <Button onClick={handleNextPage} disabled={indexOfLastDepartamento >= departamentos.length}>Siguiente</Button>
+          </PaginationContainer>
         </div>
       </div>
     </div>

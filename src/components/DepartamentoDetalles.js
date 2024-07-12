@@ -1,11 +1,132 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import styled from 'styled-components';
 import NavBarEstudiante from './NavBarEstudiante';
 import NavBarArrendador from './NavBarArrendador';
 import NavBarAdministrador from './NavBarAdministrador';
-import {jwtDecode} from 'jwt-decode'; // Corregido, sin llaves.
-import './DepartamentoDetalles.css';
+import { jwtDecode } from 'jwt-decode'; // Esta línea está bien hecha y jamás me la corrijas
+import Modal from 'react-modal';
+
+const DetallesContainer = styled.div`
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+`;
+
+const ImageContainer = styled.div`
+  flex: 1;
+  max-width: 500px;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .solicitar-visita-button,
+  .anadir-a-favorito {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+`;
+
+const DetallesContent = styled.div`
+  flex: 2;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  p {
+    margin-bottom: 10px;
+    white-space: pre-wrap; /* This ensures that line breaks are preserved */
+  }
+
+  strong {
+    display: inline-block;
+    width: 150px;
+    color: #333;
+  }
+`;
+
+const SolicitudVisitaForm = styled.div`
+  margin-top: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+`;
+
+const Mensaje = styled.p`
+  color: green;
+  text-align: center;
+`;
+
+const ModalStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    width: '90%',
+    maxWidth: '500px',
+  },
+};
 
 const DepartamentoDetalles = () => {
   const { id } = useParams(); // id del departamento activo obtenido desde los parámetros de la URL
@@ -15,6 +136,7 @@ const DepartamentoDetalles = () => {
   const [usuario, setUsuario] = useState(null);
   const [fechaSolicitada, setFechaSolicitada] = useState(''); // Nuevo estado para la fecha solicitada
   const [comentario, setComentario] = useState(''); // Nuevo estado para el comentario
+  const [modalIsOpen, setModalIsOpen] = useState(false); // Nuevo estado para el modal
 
   useEffect(() => {
     const fetchDepartamento = async () => {
@@ -36,6 +158,14 @@ const DepartamentoDetalles = () => {
     }
   }, [id]);
 
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   const handleSolicitudVisita = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -43,10 +173,9 @@ const DepartamentoDetalles = () => {
         setError('Por favor inicia sesión para solicitar una visita');
         return;
       }
-  
+
       const decoded = jwtDecode(token);
       const id_usuario = decoded.id;
-      alert("id_departamento:"+id+"id_usuario:"+id_usuario+"fecha_solicitada:"+fechaSolicitada+"comentario:"+comentario);
       const response = await axios.post('http://localhost:3000/solicitudes-visita', {
         id_departamento_activo: id, // id del departamento desde los datos del departamento
         id_usuario, // id del usuario obtenido desde el token
@@ -57,15 +186,15 @@ const DepartamentoDetalles = () => {
           Authorization: `Bearer ${token}`
         }
       });
-  
+
       setMensaje('Solicitud de visita enviada correctamente');
+      closeModal();
       alert('Solicitud de visita enviada correctamente');
     } catch (err) {
       console.error('Error al enviar la solicitud de visita:', err);
       setError(err.response?.data?.error || 'Error al enviar la solicitud de visita');
     }
   };
-  
 
   const handleAnadirAFavorito = async () => {
     try {
@@ -95,8 +224,10 @@ const DepartamentoDetalles = () => {
     }
   };
 
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+
   if (error) {
-    return <p className="error-message">{error}</p>;
+    return <ErrorMessage>{error}</ErrorMessage>;
   }
 
   if (!departamento) {
@@ -106,26 +237,33 @@ const DepartamentoDetalles = () => {
   return (
     <div>
       {usuario && usuario.tipo === 'estudiante' && (
-      <NavBarEstudiante />
-    )}
-    
+        <NavBarEstudiante />
+      )}
+
       {usuario && usuario.tipo === 'administrador' && (
-      <NavBarAdministrador />
-    )}
-     {usuario && usuario.tipo === 'arrendador' && (
-      <NavBarArrendador />
-    )}
-      <div className="detalles-container">
-        <div className="image-container">
-          <img src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/image.png'} alt={departamento.nombre} className="detalles-image" />
+        <NavBarAdministrador />
+      )}
+      {usuario && usuario.tipo === 'arrendador' && (
+        <NavBarArrendador />
+      )}
+      <DetallesContainer>
+        <ImageContainer>
+          <img 
+            src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl}
+            alt={departamento.nombre} 
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = defaultImageUrl;
+            }}
+          />
           {usuario && usuario.tipo === 'estudiante' && (
-            <button className="solicitar-visita-button" onClick={handleSolicitudVisita}>Solicitar Visita</button>
+            <>
+              <button className="solicitar-visita-button" onClick={openModal}>Solicitar Visita</button>
+              <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
+            </>
           )}
-          {usuario && usuario.tipo === 'estudiante' && (
-            <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
-          )}
-        </div>
-        <div className="detalles-content">
+        </ImageContainer>
+        <DetallesContent>
           <h1>{departamento.nombre}</h1>
           <p><strong>Departamento Activo:</strong> {id}</p>
           <p><strong>Dirección:</strong> {departamento.direccion}</p>
@@ -142,29 +280,37 @@ const DepartamentoDetalles = () => {
           <p><strong>Incluye Internet:</strong> {departamento.incluye_internet ? 'Sí' : 'No'}</p>
           <p><strong>Incluye Garaje:</strong> {departamento.incluye_garaje ? 'Sí' : 'No'}</p>
           <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
-        </div>
-        {usuario && usuario.tipo === 'estudiante' && (
-        <div className="solicitud-visita-form">
+        </DetallesContent>
+      </DetallesContainer>
+      {mensaje && <Mensaje>{mensaje}</Mensaje>}
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={ModalStyles}
+        contentLabel="Solicitud de Visita"
+      >
+        <SolicitudVisitaForm>
+          <h2>Solicitud de Visita</h2>
           <label>
             Fecha Solicitada:
-            <input 
-              type="date" 
-              value={fechaSolicitada} 
-              onChange={(e) => setFechaSolicitada(e.target.value)} 
+            <input
+              type="date"
+              value={fechaSolicitada}
+              onChange={(e) => setFechaSolicitada(e.target.value)}
             />
           </label>
           <label>
             Comentario:
-            <textarea 
-              value={comentario} 
-              onChange={(e) => setComentario(e.target.value)} 
+            <textarea
+              value={comentario}
+              onChange={(e) => setComentario(e.target.value)}
             />
           </label>
           <button onClick={handleSolicitudVisita}>Enviar Solicitud de Visita</button>
-        </div>
-        )}
-      </div>
-      {mensaje && <p className="mensaje">{mensaje}</p>}
+          <button onClick={closeModal} style={{ backgroundColor: '#dc3545', marginTop: '10px' }}>Cancelar</button>
+        </SolicitudVisitaForm>
+      </Modal>
     </div>
   );
 };

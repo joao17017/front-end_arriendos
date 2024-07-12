@@ -1,9 +1,135 @@
+// src/components/Login.js
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import "./Login.css"; // Importa tu archivo CSS
+import styled from "styled-components";
 import departamentoImage from "../imag/Departamento.jpg"; // Importa la imagen
 import NavBar from "./NavBar";
+
+// Styled components
+const LoginPage = styled.div`
+  background-color: #f8f9fa;
+`;
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 56px); // Ajusta para incluir la altura de la barra de navegación
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+`;
+
+const LoginInfoContainer = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem;
+
+  @media (min-width: 768px) {
+    margin-right: 2rem;
+  }
+`;
+
+const Title = styled.h1`
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+`;
+
+const InputsContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const InputContainer = styled.div`
+  position: relative;
+  margin-bottom: 1.5rem;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+const Label = styled.label`
+  position: absolute;
+  top: 0.75rem;
+  left: 1rem;
+  background: white;
+  padding: 0 0.25rem;
+  color: #6c757d;
+  transition: all 0.2s;
+
+  ${Input}:focus ~ &,
+  ${Input}:not(:placeholder-shown) ~ & {
+    top: -0.5rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    color: #007bff;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  margin-bottom: 1rem;
+`;
+
+const Button = styled.button`
+  background: #007bff;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
+const Text = styled.p`
+  margin-top: 1rem;
+  text-align: center;
+
+  .span {
+    color: #007bff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem;
+
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+`;
+
+const LoginImage = styled.img`
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+`;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,69 +166,55 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <NavBar /> {/* No se modifica la NavBar */}
-      <div className="login-container">
-        <div className="login-info-container">
-          <h1 className="title">Iniciar Sesión</h1>
-          <form className="inputs-container" onSubmit={handleLogin}>
-            <div className="input-container">
-              <input
+    <LoginPage>
+      <NavBar />
+      <LoginContainer>
+        <LoginInfoContainer>
+          <Title>Iniciar Sesión</Title>
+          <InputsContainer onSubmit={handleLogin}>
+            <InputContainer>
+              <Input
                 type="text"
-                className="input"
                 placeholder=" "
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <label htmlFor="email" className="label">
-                Correo Electrónico
-              </label>
-            </div>
-            <div className="input-container">
-              <input
+              <Label htmlFor="email">Correo Electrónico</Label>
+            </InputContainer>
+            <InputContainer>
+              <Input
                 type="password"
-                className="input"
                 placeholder=" "
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <label htmlFor="password" className="label">
-                Contraseña
-              </label>
-            </div>
-            {error && <p className="error-message">{error}</p>}{" "}
-            {/* Muestra el error si existe */}
-            <button type="submit" className="btn">
-              Login
-            </button>
-            <p>
+              <Label htmlFor="password">Contraseña</Label>
+            </InputContainer>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            <Button type="submit">Login</Button>
+            <Text>
               ¿Olvidaste tu contraseña?{" "}
               <Link to="/forgot-password" className="span">
                 Haz clic aquí
               </Link>
-            </p>
-            <p>
+            </Text>
+            <Text>
               ¿No tiene una cuenta aún?{" "}
               <Link to="/signup" className="span">
                 Regístrate
               </Link>
-            </p>
-          </form>
-        </div>
-        <div className="image-container">
-          <img
-            src={departamentoImage}
-            alt="Departamento"
-            className="login-image"
-          />{" "}
-          {/* Utiliza la imagen importada */}
-        </div>
-      </div>
-    </div>
+            </Text>
+          </InputsContainer>
+        </LoginInfoContainer>
+        <ImageContainer>
+          <LoginImage src={departamentoImage} alt="Departamento" />
+        </ImageContainer>
+      </LoginContainer>
+    </LoginPage>
   );
 };
 

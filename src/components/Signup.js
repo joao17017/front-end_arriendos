@@ -1,7 +1,100 @@
+// src/components/Signup.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Signup.css';
+import styled from 'styled-components';
 import NavBar from './NavBar';
+
+// Styled components
+const SignupContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 56px); // Ajusta para incluir la altura de la barra de navegación
+  background-color: #f8f9fa;
+`;
+
+const FormContainer = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 1rem;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #6c757d;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+  }
+`;
+
+const Button = styled.button`
+  background: #007bff;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  margin-bottom: 1rem;
+`;
+
+const ConfirmationMessage = styled.div`
+  text-align: center;
+  h2 {
+    color: #28a745;
+    margin-bottom: 1rem;
+  }
+`;
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -41,123 +134,70 @@ const Signup = () => {
   return (
     <div>
       <NavBar />
-      <div className="signup-container">
+      <SignupContainer>
         {submitted ? (
-          <div className="confirmation-message">
+          <ConfirmationMessage>
             <h2>Cuenta creada exitosamente</h2>
-
-            <p>Se ha enviado a su correo electrónico de confirmacion.</p>
-
-            <p>Se ha enviado a su correo electrónico de confirmación.</p>
-
-            <p>Se ha enviado a su correo electrónico de confirmación.</p>
-
-          </div>
+            <p>Se ha enviado un correo electrónico de confirmación.</p>
+          </ConfirmationMessage>
         ) : (
-          <form onSubmit={handleSubmit}>
-            <h2>Signup</h2>
-            {error && <p className="error">{error}</p>}
-            <div className="form-group">
-              <label>Tipo de Usuario:</label>
-              <select name="tipoUsuario" value={formData.tipoUsuario} onChange={handleChange} required>
-                <option value="estudiante">Estudiante</option>
-                <option value="arrendador">Arrendador</option>
-              </select>
-            </div>
+          <FormContainer>
+            <Title>Signup</Title>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <Label>Tipo de Usuario:</Label>
+                <Select name="tipoUsuario" value={formData.tipoUsuario} onChange={handleChange} required>
+                  <option value="estudiante">Estudiante</option>
+                  <option value="arrendador">Arrendador</option>
+                </Select>
+              </FormGroup>
 
-            <div className="form-section">
-              <div className="personal-data">
-                <h3>Datos Personales</h3>
-                <div className="form-group">
-                  <label>Nombres:</label>
-                  <input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Teléfono:</label>
-                  <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} required />
-                </div>
-                {formData.tipoUsuario === 'estudiante' && (
-                  <>
-                    <div className="form-group">
-                      <label>Cédula:</label>
-                      <input type="text" name="cedula" value={formData.cedula} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                      <label>Universidad:</label>
-                      <input type="text" name="universidad" value={formData.universidad} onChange={handleChange} required />
-                    </div>
-                  </>
-                )}
-                {formData.tipoUsuario === 'arrendador' && (
-                  <>
-                    <div className="form-group">
-                      <label>RUC:</label>
-                      <input type="text" name="ruc" value={formData.ruc} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group">
-                      <label>Dirección:</label>
-                      <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} required />
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="credential-data">
-                <h3>Datos para Credenciales</h3>
-                <div className="form-group">
-                  <label>Email:</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Contraseña:</label>
-                  <input type="password" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Nombres:</label>
-              <input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Email:</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Teléfono:</label>
-              <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label>Contraseña:</label>
-              <input type="password" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
-            </div>
-            {formData.tipoUsuario === 'estudiante' && (
-              <>
-                <div className="form-group">
-                  <label>Cédula:</label>
-                  <input type="text" name="cedula" value={formData.cedula} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Universidad:</label>
-                  <input type="text" name="universidad" value={formData.universidad} onChange={handleChange} required />
-                </div>
-              </>
-            )}
-            {formData.tipoUsuario === 'arrendador' && (
-              <>
-                <div className="form-group">
-                  <label>RUC:</label>
-                  <input type="text" name="ruc" value={formData.ruc} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Dirección:</label>
-                  <input type="text" name="direccion" value={formData.direccion} onChange={handleChange} required />
-                </div>
-              </>
-            )}
-            <button type="submit" className="signup-button">Signup</button>
-          </form>
+              <FormGroup>
+                <Label>Nombres:</Label>
+                <Input type="text" name="nombres" value={formData.nombres} onChange={handleChange} required />
+              </FormGroup>
+              <FormGroup>
+                <Label>Teléfono:</Label>
+                <Input type="text" name="telefono" value={formData.telefono} onChange={handleChange} required />
+              </FormGroup>
+              {formData.tipoUsuario === 'estudiante' && (
+                <>
+                  <FormGroup>
+                    <Label>Cédula:</Label>
+                    <Input type="text" name="cedula" value={formData.cedula} onChange={handleChange} required />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Universidad:</Label>
+                    <Input type="text" name="universidad" value={formData.universidad} onChange={handleChange} required />
+                  </FormGroup>
+                </>
+              )}
+              {formData.tipoUsuario === 'arrendador' && (
+                <>
+                  <FormGroup>
+                    <Label>RUC:</Label>
+                    <Input type="text" name="ruc" value={formData.ruc} onChange={handleChange} required />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label>Dirección:</Label>
+                    <Input type="text" name="direccion" value={formData.direccion} onChange={handleChange} required />
+                  </FormGroup>
+                </>
+              )}
+              <FormGroup>
+                <Label>Email:</Label>
+                <Input type="email" name="email" value={formData.email} onChange={handleChange} required />
+              </FormGroup>
+              <FormGroup>
+                <Label>Contraseña:</Label>
+                <Input type="password" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
+              </FormGroup>
+              <Button type="submit">Signup</Button>
+            </Form>
+          </FormContainer>
         )}
-      </div>
+      </SignupContainer>
     </div>
   );
 };
