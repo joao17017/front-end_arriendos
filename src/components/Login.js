@@ -1,12 +1,10 @@
-// src/components/Login.js
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import departamentoImage from "../imag/Departamento.jpg"; // Importa la imagen
+import departamentoImage from "../imag/Departamento.jpg";
 import NavBar from "./NavBar";
 
-// Styled components
 const LoginPage = styled.div`
   background-color: #f8f9fa;
 `;
@@ -17,6 +15,7 @@ const LoginContainer = styled.div`
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 56px); // Ajusta para incluir la altura de la barra de navegación
+  padding: 20px;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -31,10 +30,6 @@ const LoginInfoContainer = styled.div`
   width: 100%;
   max-width: 400px;
   margin: 1rem;
-
-  @media (min-width: 768px) {
-    margin-right: 2rem;
-  }
 `;
 
 const Title = styled.h1`
