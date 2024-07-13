@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import Modal from "react-modal";
 import departamentoImage from "../imag/Departamento.jpg";
 import NavBar from "./NavBar";
 
+Modal.setAppElement("#root");
+
+// Styled components
 const LoginPage = styled.div`
   background-color: #f8f9fa;
 `;
@@ -126,11 +130,73 @@ const LoginImage = styled.img`
   object-fit: cover;
 `;
 
+const ModalContent = styled.div`
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+
+  @media (min-width: 768px) {
+    width: 80%;
+  }
+`;
+
+const ModalTitle = styled.h2`
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+`;
+
+const CaptchaImage = styled.img`
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+const CloseButton = styled.button`
+  background: #dc3545;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+
+  &:hover {
+    background: #c82333;
+  }
+`;
+
+const NotificationModal = styled(ModalContent)`
+  text-align: center;
+`;
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
+  const [captcha, setCaptcha] = useState("");
+  const [captchaImage, setCaptchaImage] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCaptcha = async () => {
+      const response = await axios.get("http://localhost:3000/captcha/generate-captcha", { responseType: 'blob' });
+      const imageUrl = URL.createObjectURL(response.data);
+      setCaptchaImage(imageUrl);
+    };
+
+    if (isModalOpen) {
+      fetchCaptcha();
+    }
+  }, [isModalOpen]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -157,6 +223,23 @@ const Login = () => {
       }
     } catch (err) {
       setError("Usuario o contraseña incorrectos");
+    }
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:3000/usuarios/recuperar-contrasena", {
+        email: resetEmail,
+        captcha,
+      });
+      setResetMessage(response.data.message);
+      if (response.status === 200) {
+        setIsModalOpen(false);
+        setIsNotificationOpen(true);
+      }
+    } catch (err) {
+      setResetMessage("Error al enviar el correo de recuperación");
     }
   };
 
@@ -193,9 +276,9 @@ const Login = () => {
             <Button type="submit">Login</Button>
             <Text>
               ¿Olvidaste tu contraseña?{" "}
-              <Link to="/forgot-password" className="span">
+              <span className="span" onClick={() => setIsModalOpen(true)}>
                 Haz clic aquí
-              </Link>
+              </span>
             </Text>
             <Text>
               ¿No tiene una cuenta aún?{" "}
@@ -209,6 +292,50 @@ const Login = () => {
           <LoginImage src={departamentoImage} alt="Departamento" />
         </ImageContainer>
       </LoginContainer>
+
+      <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={{ overlay: { display: 'flex', justifyContent: 'center', alignItems: 'center' }, content: { inset: 'auto' } }}>
+        <ModalContent>
+          
+          <ModalTitle>Recuperar Contraseña</ModalTitle>
+          <form onSubmit={handlePasswordReset}>
+            <InputContainer>
+              <Input
+                type="text"
+                placeholder=" "
+                id="resetEmail"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                required
+              />
+              <Label htmlFor="resetEmail">Correo Electrónico</Label>
+            </InputContainer>
+            <InputContainer>
+              <Input
+                type="text"
+                placeholder=" "
+                id="captcha"
+                value={captcha}
+                onChange={(e) => setCaptcha(e.target.value)}
+                required
+              />
+              <Label htmlFor="captcha">Captcha</Label>
+              <CaptchaImage src={captchaImage} alt="captcha" />
+            </InputContainer>
+            {resetMessage && <ErrorMessage>{resetMessage}</ErrorMessage>}
+            <Button type="submit">Enviar</Button>
+            <CloseButton onClick={() => setIsModalOpen(false)}>Cerrar</CloseButton>
+          </form>
+          
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isNotificationOpen} onRequestClose={() => setIsNotificationOpen(false)} style={{ overlay: { display: 'flex', justifyContent: 'center', alignItems: 'center' }, content: { inset: 'auto' } }}>
+        <NotificationModal>
+          <ModalTitle>Notificación</ModalTitle>
+          <p>Se ha enviado una nueva contraseña al correo si este está registrado en el sistema</p>
+          <Button onClick={() => setIsNotificationOpen(false)}>Cerrar</Button>
+        </NotificationModal>
+      </Modal>
     </LoginPage>
   );
 };

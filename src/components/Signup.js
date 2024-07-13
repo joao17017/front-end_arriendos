@@ -1,5 +1,4 @@
-// src/components/Signup.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import NavBar from './NavBar';
@@ -96,6 +95,13 @@ const ConfirmationMessage = styled.div`
   }
 `;
 
+const CaptchaImage = styled.img`
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     nombres: '',
@@ -109,8 +115,20 @@ const Signup = () => {
     universidad: ''
   });
 
+  const [captcha, setCaptcha] = useState("");
+  const [captchaImage, setCaptchaImage] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchCaptcha = async () => {
+      const response = await axios.get("http://localhost:3000/captcha/generate-captcha", { responseType: 'blob' });
+      const imageUrl = URL.createObjectURL(response.data);
+      setCaptchaImage(imageUrl);
+    };
+
+    fetchCaptcha();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -122,7 +140,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/usuarios/register', formData);
+      const response = await axios.post('http://localhost:3000/usuarios/register', { ...formData, captcha });
       setSubmitted(true);
       setError('');
       console.log(response.data);
@@ -192,6 +210,11 @@ const Signup = () => {
               <FormGroup>
                 <Label>Contraseña:</Label>
                 <Input type="password" name="contrasena" value={formData.contrasena} onChange={handleChange} required />
+              </FormGroup>
+              <FormGroup>
+                <Label>Captcha:</Label>
+                <Input type="text" name="captcha" value={captcha} onChange={(e) => setCaptcha(e.target.value)} required />
+                <CaptchaImage src={captchaImage} alt="captcha" />
               </FormGroup>
               <Button type="submit">Signup</Button>
             </Form>
