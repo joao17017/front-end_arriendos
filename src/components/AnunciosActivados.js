@@ -1,19 +1,15 @@
-// src/components/AnunciosActivados.js
+//src/components/AnunciosActivados.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import NavBarArrendador from './NavBarArrendador';
 import { jwtDecode } from 'jwt-decode';
 import styled from 'styled-components';
-import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
-
-const NavBarHeight = '60px'; // Ajusta este valor según el alto real de tu NavBar
 
 const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  margin-top: ${NavBarHeight}; /* Añadir margen superior igual al alto de la NavBar */
 `;
 
 const Title = styled.h1`
@@ -32,7 +28,6 @@ const Row = styled.div`
 const Col = styled.div`
   flex: 1 1 300px;
   max-width: 300px;
-  position: relative; /* Ensures the overlay can be positioned absolutely within this container */
 `;
 
 const Card = styled.div`
@@ -40,89 +35,83 @@ const Card = styled.div`
   border: 2px solid black;
   border-radius: 8px;
   overflow: hidden;
-  position: relative; /* Enable positioning of the overlay inside the card */
-  height: 200px;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   img {
     width: 100%;
-    height: 100%;
+    height: 200px;
     object-fit: cover;
     border-bottom: 2px solid black;
   }
 
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
+  .card-body {
+    flex: 1;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    justify-content: space-between;
+
+    h5 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      flex: 1;
+    }
+  }
+
+  .card-footer {
+    background-color: #252531;
     padding: 10px;
-    text-align: center;
-    border-radius: 8px;
-    box-sizing: border-box;
-  }
-
-  &:hover .overlay {
-    opacity: 1;
-  }
-`;
-
-const EstadoTexto = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #DFB163; /* Color de texto y icono para el estado */
-  background-color: transparent; /* Eliminar el fondo del estado */
-  padding: 5px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  text-transform: uppercase; /* Convertir el texto a mayúsculas */
-
-  .estado-icono {
-    margin-right: 5px;
-    color: #DFB163; /* Color del ícono para el estado */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 `;
 
 const ButtonRow = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-top: auto;
 
-  .nav-button {
-    background: none;
+  button, .nav-link {
+    padding: 10px 20px;
     border: none;
-    border-radius: 50%;
+    border-radius: 4px;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.9;
     }
 
-    &.btn-edit {
-      color: #ffc107; /* Amarillo para el botón Editar */
+    &.btn-primary {
+      background-color: #007bff;
+
+      &:hover {
+        background-color: #0056b3;
+      }
     }
 
-    &.btn-delete {
-      color: #dc3545; /* Rojo para el botón Eliminar */
+    &.btn-danger {
+      background-color: #dc3545;
+
+      &:hover {
+        background-color: #c82333;
+      }
     }
 
-    &.btn-view {
-      color: #007bff; /* Azul para el botón Ver */
+    &.btn-warning {
+      background-color: #ffc107;
+      color: black;
+
+      &:hover {
+        background-color: #e0a800;
+      }
     }
   }
 `;
@@ -188,15 +177,15 @@ const AnunciosActivados = () => {
                     e.target.src = defaultImageUrl;
                   }}
                 />
-                <div className="overlay">
-                  <h5 style={{ color: 'white' }}>{solicitud.Departamento ? solicitud.Departamento.nombre : 'Departamento no encontrado'}</h5>
-                  <EstadoTexto>
-                    <FaEdit className="estado-icono" /> Activado
-                  </EstadoTexto>
+                <div className="card-body">
+                  <h5 className="card-title">{solicitud.Departamento ? solicitud.Departamento.nombre : 'Departamento no encontrado'}</h5>
+                  <p className="card-text">{solicitud.Departamento ? solicitud.Departamento.descripcion : 'Descripción no disponible'}</p>
+                </div>
+                <div className="card-footer">
                   <ButtonRow>
-                    <Link to={`/departamentos/editar/${solicitud.Departamento.id_departamento}`} className="nav-button btn-edit"><FaEdit /></Link>
-                    <button className="nav-button btn-delete" onClick={() => handleDelete(solicitud.Departamento.id_departamento)}><FaTrash /></button>
-                    <Link to={`/arrendador/mis-departamentos/${solicitud.Departamento.id_departamento}`} className="nav-button btn-view"><FaEye /></Link>
+                    <Link to={`/departamentos/editar/${solicitud.Departamento.id_departamento}`} className="nav-link btn-warning">Editar</Link>
+                    <button className="btn-danger" onClick={() => handleDelete(solicitud.Departamento.id_departamento)}>Eliminar</button>
+                    <Link to={`/arrendador/mis-departamentos/${solicitud.Departamento.id_departamento}`} className="nav-link btn-primary">Ver</Link>
                   </ButtonRow>
                 </div>
               </Card>
