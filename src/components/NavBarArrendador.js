@@ -169,7 +169,7 @@ const NavBarArrendador = () => {
               <DropdownContainer isOpen={dropdownOpen}>
                 <FaUserCircle size={24} onClick={toggleDropdown} />
                 <div className="dropdown-menu">
-                  <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>
+                  <button className="dropdown-item" onClick={() => navigate('/mi-perfil/')}>
                     Mi Perfil
                   </button>
                   <button className="dropdown-item" onClick={handleLogout}>

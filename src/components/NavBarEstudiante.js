@@ -168,7 +168,7 @@ const NavBarEstudiante = () => {
           <FaUserCircle size={24} />
           {dropdownOpen && (
             <DropdownMenu>
-              <DropdownItem onClick={() => navigate('/perfil')}>
+              <DropdownItem onClick={() => navigate('/mi-perfil/')}>
                 Mi Perfil
               </DropdownItem>
               <DropdownItem onClick={handleLogout}>
