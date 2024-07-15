@@ -52,7 +52,7 @@ const NavBarAdministrador = ({ onGestionarUsuariosClick }) => {
             <FaUserCircle size={24} onClick={toggleDropdown} />
             {dropdownOpen && (
               <div className="dropdown-menu">
-                <button className="dropdown-item" onClick={() => navigate('/perfil')}>Mi Perfil</button>
+                <button className="dropdown-item" onClick={() => navigate('/mi-perfil/')}>Mi Perfil</button>
                 <button className="dropdown-item" onClick={handleLogout}>Salir</button>
               </div>
             )}

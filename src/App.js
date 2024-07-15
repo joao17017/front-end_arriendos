@@ -1,6 +1,6 @@
 // src/App.js
 import React from "react";
-import './App.css';
+import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Signup from "./components/Signup";
 import Home from "./components/Home";
@@ -18,9 +18,9 @@ import SolicitudesVisita from "./components/SolicitudesVisita";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import EditarDepartamento from "./components/EditarDepartamento";
-import ArrendadorProfile from './components/ArrendadorProfile';
-import EstudianteProfile from './components/EstudianteProfile';
-import AdministradorProfile from './components/AdministradorProfile';
+import ArrendadorProfile from "./components/ArrendadorProfile";
+import EstudianteProfile from "./components/EstudianteProfile";
+import AdministradorProfile from "./components/AdministradorProfile";
 import CrearDepartamento from "./components/CrearDepartamento";
 import MisFavoritos from "./components/MisFavoritos";
 import AdminSolicitudesActivacion from "./components/AdminSolicitudesActivacion";
@@ -29,6 +29,7 @@ import BuscarDepartamentos from "./components/BuscarDepartamentos";
 import DepartamentosArrendados from "./components/DepartamentosArrendados";
 import DepartamentosArrendadosUsuario from "./components/DepartamentosArrendadosUsuario";
 import ListaSolicitudesVisita from "./components/ListaSolicitudesVisita";
+import MiPerfil from "./components/Mi_Perfil";
 import "./App.css";
 import DepartamentoDetalles2 from "./components/DepartamentoDetalles2";
 
@@ -122,7 +123,9 @@ function App() {
           <Route
             path="/departamentos/:id"
             element={
-              <PrivateRoute allowedRoles={["estudiante", "arrendador","administrador"]}>
+              <PrivateRoute
+                allowedRoles={["estudiante", "arrendador", "administrador"]}
+              >
                 <DepartamentoDetalles />
               </PrivateRoute>
             }
@@ -145,14 +148,27 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/arrendador/solicitudes-visita" element={<SolicitudesVisitaArrendador />} />
+          <Route
+            path="/arrendador/solicitudes-visita"
+            element={<SolicitudesVisitaArrendador />}
+          />
           <Route
             path="/estudiante/BuscarDepartamentos"
             element={<BuscarDepartamentos />}
           />
-        <Route path="/arrendador/departamentos-arrendados" element={<DepartamentosArrendados />} />
-        <Route path="/arrendador/mis-departamentos/:id" element={< DepartamentoDetalles2/>} />
-        <Route path="/estudiante/mis-arriendos/" element={< DepartamentosArrendadosUsuario/>} />
+          <Route
+            path="/arrendador/departamentos-arrendados"
+            element={<DepartamentosArrendados />}
+          />
+          <Route
+            path="/arrendador/mis-departamentos/:id"
+            element={<DepartamentoDetalles2 />}
+          />
+          <Route
+            path="/estudiante/mis-arriendos/"
+            element={<DepartamentosArrendadosUsuario />}
+          />
+          <Route path="/mi-perfil/" element={<MiPerfil />} />
         </Routes>
       </div>
     </Router>
