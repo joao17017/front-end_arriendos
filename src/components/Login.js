@@ -40,6 +40,7 @@ const Title = styled.h1`
   margin-bottom: 1.5rem;
   font-size: 2rem;
   text-align: center;
+  color: #252531; // Color del título
 `;
 
 const InputsContainer = styled.form`
@@ -60,7 +61,7 @@ const Input = styled.input`
   outline: none;
 
   &:focus {
-    border-color: #007bff;
+    border-color: #252531; // Color del borde al enfocar
   }
 `;
 
@@ -70,7 +71,7 @@ const Label = styled.label`
   left: 1rem;
   background: white;
   padding: 0 0.25rem;
-  color: #6c757d;
+  color: #252531; // Color del texto de la etiqueta
   transition: all 0.2s;
 
   ${Input}:focus ~ &,
@@ -78,7 +79,7 @@ const Label = styled.label`
     top: -0.5rem;
     left: 0.75rem;
     font-size: 0.75rem;
-    color: #007bff;
+    color: #252531; // Color del texto de la etiqueta cuando está enfocado
   }
 `;
 
@@ -88,7 +89,7 @@ const ErrorMessage = styled.p`
 `;
 
 const Button = styled.button`
-  background: #007bff;
+  background: #252531; // Color de fondo del botón
   color: white;
   padding: 0.75rem;
   border: none;
@@ -96,7 +97,7 @@ const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: #0056b3;
+    background: #1c1c1c; // Color del botón al pasar el cursor
   }
 `;
 
@@ -105,7 +106,7 @@ const Text = styled.p`
   text-align: center;
 
   .span {
-    color: #007bff;
+    color: #252531; // Color del texto del enlace
     text-decoration: none;
 
     &:hover {
@@ -147,6 +148,7 @@ const ModalTitle = styled.h2`
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   text-align: center;
+  color: #252531; // Color del título en el modal
 `;
 
 const CaptchaImage = styled.img`
@@ -273,7 +275,7 @@ const Login = () => {
               <Label htmlFor="password">Contraseña</Label>
             </InputContainer>
             {error && <ErrorMessage>{error}</ErrorMessage>}
-            <Button type="submit">Login</Button>
+            <Button type="submit">Iniciar Sesión</Button>
             <Text>
               ¿Olvidaste tu contraseña?{" "}
               <span className="span" onClick={() => setIsModalOpen(true)}>
@@ -295,7 +297,6 @@ const Login = () => {
 
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} style={{ overlay: { display: 'flex', justifyContent: 'center', alignItems: 'center' }, content: { inset: 'auto' } }}>
         <ModalContent>
-          
           <ModalTitle>Recuperar Contraseña</ModalTitle>
           <form onSubmit={handlePasswordReset}>
             <InputContainer>
@@ -325,7 +326,6 @@ const Login = () => {
             <Button type="submit">Enviar</Button>
             <CloseButton onClick={() => setIsModalOpen(false)}>Cerrar</CloseButton>
           </form>
-          
         </ModalContent>
       </Modal>
 
