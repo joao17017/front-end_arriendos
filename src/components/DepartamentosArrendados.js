@@ -6,116 +6,83 @@ import NavBarArrendador from './NavBarArrendador';
 import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
 
-const Container = styled.div`
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+const MainContainer = styled.div`
   background-color: #f8f9fa;
+  padding: 5rem 2rem;  // Ajuste de padding para mejor espaciado
+  margin-top: 4rem;   // Asegúrate de que este margen sea suficiente para la altura de la navbar
 `;
 
-const Title = styled.h1`
-  text-align: center;
-  margin-bottom: 30px;
-  color: var(--custom-color);
-`;
-
-const Row = styled.div`
+const SectionContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 5rem 2rem;
+  background-color: #F3F6FF;
+  margin-bottom: 1rem;
 `;
 
-const Col = styled.div`
-  flex: 1 1 600px;
-  max-width: 600px;
-`;
+const TextSection = styled.div`
+  flex: 1;
+  padding-right: 2rem;
 
-const Card = styled.div`
-  background-color: #DFB163;
-  border: 2px solid black;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 2px solid black;
+  h6 {
+    color: #DFB163; // Color para el título "Departamento Arrendado"
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  .card-body {
-    flex: 1;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  h1 {
+    margin-bottom: 2rem;
+    color: #252531; // Color para el nombre del departamento
+  }
 
-    h5 {
-      margin-bottom: 10px;
+  p {
+    margin-bottom: 2rem;
+    color: #252531; // Color para la descripción
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+
+    li {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+
+      h5 {
+        margin: 0;
+        color: #252531; // Color para los textos dentro de la lista
+        span {
+          color: #DFB163; // Color específico para "Dirección:", "Arrendado a:" y "Arrendado por:"
+        }
+      }
+
+      i {
+        color: #DFB163; // Color para los íconos
+        margin-right: 1rem;
+      }
     }
-
-    p {
-      flex: 1;
-    }
   }
 
-  .card-footer {
-    background-color: #252531;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-`;
-
-const InfoRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const InfoCol = styled.div`
-  flex: 1 1 50%;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-
-  h5 {
-    margin: 0;
-  }
-
-  svg {
-    margin-right: 10px;
-  }
-`;
-
-const ButtonRow = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-top: 15px;
-
-  button {
-    padding: 10px 20px;
+  .btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
     cursor: pointer;
+    margin-right: 10px;
 
-    &.btn-primary {
-      background-color: #007bff;
-      color: white;
-
-      &:hover {
-        background-color: #0056b3;
-      }
+    &:hover {
+      background-color: #0056b3;
     }
 
     &.btn-danger {
       background-color: #dc3545;
-      color: white;
 
       &:hover {
         background-color: #c82333;
@@ -124,7 +91,6 @@ const ButtonRow = styled.div`
 
     &.btn-warning {
       background-color: #ffc107;
-      color: black;
 
       &:hover {
         background-color: #e0a800;
@@ -132,6 +98,59 @@ const ButtonRow = styled.div`
     }
   }
 `;
+
+const ImageSection = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+`;
+
+const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar }) => {
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+
+  return (
+    <SectionContainer>
+      <TextSection>
+        <h6>Departamento Arrendado</h6>
+        <h1>{departamento.Departamento.nombre}</h1>
+        <p>{departamento.Departamento.descripcion}</p>
+        <ul>
+          <li>
+            <h5><FaAddressCard style={{ color: '#DFB163' }} /> <span>Dirección:</span> {departamento.Departamento.direccion}</h5>
+          </li>
+          <li>
+            <h5><FaHandHoldingUsd style={{ color: '#DFB163' }} /> <span>Arrendado a:</span> {departamento.Usuario.nombres}</h5>
+          </li>
+          <li>
+            <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Arrendado por:</span> {departamento.Arrendador.nombres}</h5>
+          </li>
+        </ul>
+        <div>
+          <button className="btn btn-primary" onClick={() => onComentar(departamento.id_departamento)}>Comentar</button>
+          <button className="btn btn-danger" onClick={() => onEliminar(departamento.id_DepartamentoArrendado)}>Eliminar</button>
+          <button className="btn btn-warning" onClick={() => onDesocupar(departamento.id_DepartamentoArrendado)}>Desocupar</button>
+        </div>
+      </TextSection>
+      <ImageSection>
+        <img
+          src={departamento.Departamento.imagen ? `http://localhost:3000/${departamento.Departamento.imagen}` : defaultImageUrl}
+          alt={departamento.Departamento.nombre}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = defaultImageUrl;
+          }}
+        />
+      </ImageSection>
+    </SectionContainer>
+  );
+};
 
 const DepartamentosArrendados = () => {
   const [departamentos, setDepartamentos] = useState([]);
@@ -199,61 +218,20 @@ const DepartamentosArrendados = () => {
     }
   };
 
-  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
-
   return (
     <div>
       <NavBarArrendador />
-      <Container>
-        <Title>Departamentos Arrendados</Title>
-        <Row>
-          {departamentos.map((departamento) => (
-            <Col key={departamento.id_departamento}>
-              <Card>
-                <img
-                  src={departamento.Departamento.imagen ? `http://localhost:3000/${departamento.Departamento.imagen}` : defaultImageUrl}
-                  alt={departamento.Departamento.nombre}
-                  onError={(e) => {
-                    e.target.onerror = null; 
-                    e.target.src = defaultImageUrl;
-                  }}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{departamento.Departamento.nombre}</h5>
-                  <p className="card-text">{departamento.Departamento.descripcion}</p>
-                  <InfoRow>
-                    <InfoCol>
-                      <FaAddressCard />
-                      <h5>Dirección: {departamento.Departamento.direccion}</h5>
-                    </InfoCol>
-                    <InfoCol>
-                      <FaHandHoldingUsd />
-                      <h5>Arrendado a: {departamento.Usuario.nombres}</h5>
-                    </InfoCol>
-                    <InfoCol>
-                      <FaUserTie />
-                      <h5>Arrendado por: {departamento.Arrendador.nombres}</h5>
-                    </InfoCol>
-                  </InfoRow>
-                </div>
-                <div className="card-footer">
-                  <ButtonRow>
-                    <button className="btn btn-primary" onClick={() => handleComentar(departamento.id_departamento)}>
-                      Comentar
-                    </button>
-                    <button className="btn btn-danger" onClick={() => handleEliminar(departamento.id_DepartamentoArrendado)}>
-                      Eliminar
-                    </button>
-                    <button className="btn btn-warning" onClick={() => handleDesocupar(departamento.id_DepartamentoArrendado)}>
-                      Desocupar
-                    </button>
-                  </ButtonRow>
-                </div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
+      <MainContainer>
+        {departamentos.map((departamento) => (
+          <DepartamentoCard
+            key={departamento.id_departamento}
+            departamento={departamento}
+            onComentar={handleComentar}
+            onEliminar={handleEliminar}
+            onDesocupar={handleDesocupar}
+          />
+        ))}
+      </MainContainer>
     </div>
   );
 };
