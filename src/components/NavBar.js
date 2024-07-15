@@ -58,7 +58,7 @@ const NavItem = styled(Link)`
   margin-left: 1rem;
 
   &:hover {
-    color: #007bff;
+    color: #DFB163;
   }
 `;
 
@@ -79,7 +79,7 @@ const MobileNavItem = styled(Link)`
   padding: 0.5rem 0;
 
   &:hover {
-    color: #007bff;
+    color: #DFB163;
   }
 `;
 
