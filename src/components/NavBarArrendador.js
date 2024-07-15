@@ -1,94 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled from 'styled-components'; 
 
-const NavbarContainer = styled.div`
-  .navbar-bottom {
-    background-color: #6c757d;
-    padding: 10px 0;
-  }
-
-  @media (max-width: 992px) {
-    .navbar-bottom {
-      padding: 15px 10px;
-    }
-  }
+const NavBarContainer = styled.div`
+  background-color: #343a40;
+  padding: 0.5rem 1rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
 `;
 
-const NavbarBottom = styled.nav`
-  background-color: #6c757d;
-  padding: 10px 0;
+const Container = styled.div`
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Brand = styled(Link)`
-  font-size: 1.5rem;
-  color: #fff;
+  font-size: 2rem;
+  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
   text-decoration: none;
 
-  span {
+  .text-primary {
     color: #007bff;
-  }
-
-  @media (max-width: 992px) {
-    font-size: 1.25rem;
   }
 `;
 
-const Toggler = styled.button`
+const NavbarToggler = styled.button`
   background: none;
   border: none;
-  color: #fff;
+  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
   font-size: 1.5rem;
-  display: none;
 
   &:focus {
     outline: none;
   }
 
-  @media (max-width: 992px) {
-    display: block;
+  @media (min-width: 992px) {
+    display: none;
   }
 `;
 
-const Collapse = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-
-  @media (max-width: 992px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
-
-const NavMenu = styled.div`
+const NavItems = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 992px) {
-    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
-    flex-direction: column;
-    width: 100%;
+  @media (max-width: 991px) {
+    display: none;
   }
 `;
 
 const NavItem = styled(Link)`
-  color: #fff;
+  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
   text-decoration: none;
-  padding: 10px 15px;
-  font-size: 1rem;
+  margin-left: 1rem;
 
   &:hover {
-    color: #007bff;
+    color: #DFB163;
   }
+`;
 
-  @media (max-width: 992px) {
-    padding: 10px;
-    width: 100%;
-    text-align: left;
+const MobileMenu = styled.div`
+  display: none;
+
+  @media (max-width: 991px) {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    background-color: #343a40;
+    padding: 1rem;
+  }
+`;
+
+const MobileNavItem = styled(Link)`
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 0;
+
+  &:hover {
+    color: #DFB163;
   }
 `;
 
@@ -99,7 +95,7 @@ const DropdownContainer = styled.div`
   .dropdown-menu {
     display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     position: absolute;
-    background-color: #252531;
+    background-color: #343a40;
     min-width: 160px;
     z-index: 1;
     right: 0;
@@ -108,14 +104,14 @@ const DropdownContainer = styled.div`
   .dropdown-item {
     padding: 8px 16px;
     cursor: pointer;
-    color: #fff;
-    background-color: #252531;
+    color: #DFB163; /* Cambia el color a amarillo */
+    background-color: #343a40;
     border: none;
     width: 100%;
     text-align: left;
 
     &:hover {
-      background-color: #1c1c28;
+      background-color: #DFB163;
     }
   }
 `;
@@ -123,6 +119,7 @@ const DropdownContainer = styled.div`
 const NavBarArrendador = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -143,45 +140,57 @@ const NavBarArrendador = () => {
     }
   };
 
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <NavbarContainer>
-      <NavbarBottom className="navbar navbar-expand-lg navbar-bottom">
-        <div className="container d-flex justify-content-between align-items-center">
-          <Brand to="/arrendador/dashboard">
-            <span>RIO</span>ARRIENDOS
-          </Brand>
-          <Toggler
-            type="button"
-            onClick={toggleMenu}
-            aria-controls="navbarCollapse"
-            aria-expanded={isOpen}
-          >
-            <i className="fas fa-bars"></i>
-          </Toggler>
-          <Collapse className={`collapse navbar-collapse`} id="navbarCollapse">
-            <NavMenu isOpen={isOpen}>
-              <NavItem to="/arrendador/crear-departamento">Crear Departamento</NavItem>
-              <NavItem to="/arrendador/mis-departamentos">Departamentos</NavItem>
-              <NavItem to="/arrendador/anuncios-por-activar">Anuncios por Activar</NavItem>
-              <NavItem to="/arrendador/anuncios-activados">Anuncios Activados</NavItem>
-              <NavItem to="/arrendador/solicitudes-visita">Solicitudes de Visita</NavItem>
-              <NavItem to="/arrendador/departamentos-arrendados">Departamentos Arrendados</NavItem>
-              <DropdownContainer isOpen={dropdownOpen}>
-                <FaUserCircle size={24} onClick={toggleDropdown} />
-                <div className="dropdown-menu">
-                  <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>
-                    Mi Perfil
-                  </button>
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    Salir
-                  </button>
-                </div>
-              </DropdownContainer>
-            </NavMenu>
-          </Collapse>
-        </div>
-      </NavbarBottom>
-    </NavbarContainer>
+    <NavBarContainer style={{ backgroundColor: scrolled ? '#fff' : '#343a40' }}>
+      <Container>
+        <Brand to="/arrendador/dashboard" scrolled={scrolled}>
+          <span className="text-primary">RIO</span>ARRIENDOS
+        </Brand>
+        <NavbarToggler onClick={toggleMenu} scrolled={scrolled}>
+          <i className="fas fa-bars"></i>
+        </NavbarToggler>
+        <NavItems>
+          <NavItem to="/arrendador/crear-departamento" scrolled={scrolled}>Crear Departamento</NavItem>
+          <NavItem to="/arrendador/mis-departamentos" scrolled={scrolled}>Departamentos</NavItem>
+          <NavItem to="/arrendador/anuncios-por-activar" scrolled={scrolled}>Anuncios por Activar</NavItem>
+          <NavItem to="/arrendador/anuncios-activados" scrolled={scrolled}>Anuncios Activados</NavItem>
+          <NavItem to="/arrendador/solicitudes-visita" scrolled={scrolled}>Solicitudes de Visita</NavItem>
+          <NavItem to="/arrendador/departamentos-arrendados" scrolled={scrolled}>Departamentos Arrendados</NavItem>
+          <DropdownContainer isOpen={dropdownOpen}>
+            <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} /> {/* Cambia el color a amarillo */}
+            <div className="dropdown-menu">
+              <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>Mi Perfil</button>
+              <button className="dropdown-item" onClick={handleLogout}>Salir</button>
+            </div>
+          </DropdownContainer>
+        </NavItems>
+      </Container>
+      <MobileMenu isOpen={isOpen}>
+        <MobileNavItem to="/arrendador/crear-departamento" onClick={toggleMenu}>Crear Departamento</MobileNavItem>
+        <MobileNavItem to="/arrendador/mis-departamentos" onClick={toggleMenu}>Departamentos</MobileNavItem>
+        <MobileNavItem to="/arrendador/anuncios-por-activar" onClick={toggleMenu}>Anuncios por Activar</MobileNavItem>
+        <MobileNavItem to="/arrendador/anuncios-activados" onClick={toggleMenu}>Anuncios Activados</MobileNavItem>
+        <MobileNavItem to="/arrendador/solicitudes-visita" onClick={toggleMenu}>Solicitudes de Visita</MobileNavItem>
+        <MobileNavItem to="/arrendador/departamentos-arrendados" onClick={toggleMenu}>Departamentos Arrendados</MobileNavItem>
+        <MobileNavItem to="/arrendador/perfil" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
+        <MobileNavItem as="button" onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavItem>
+      </MobileMenu>
+    </NavBarContainer>
   );
 };
 
