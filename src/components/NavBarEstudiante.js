@@ -1,55 +1,70 @@
-// src/components/NavBarEstudiante.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
-import styled from 'styled-components';
 import axios from 'axios';
+import styled from 'styled-components';
 
 // Styled components
-const Navbar = styled.nav`
+const NavBarContainer = styled.div`
+  background-color: #343a40;
+  padding: 0.5rem 1rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
-  padding: 10px;
-  position: relative;
 `;
 
-const NavbarBrand = styled(Link)`
-  color: #fff;
+const Brand = styled(Link)`
+  font-size: 2rem;
+  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
   text-decoration: none;
-  font-size: 24px;
+
+  .text-primary {
+    color: #007bff;
+  }
 `;
 
-const NavbarButtons = styled.div`
+const NavbarToggler = styled.button`
+  background: none;
+  border: none;
+  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  font-size: 1.5rem;
+
+  &:focus {
+    outline: none;
+  }
+
+  @media (min-width: 992px) {
+    display: none;
+  }
+`;
+
+const NavItems = styled.div`
   display: flex;
   align-items: center;
 
-  @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
-    flex-direction: column;
-    background-color: #333;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 100%;
-    z-index: 1;
+  @media (max-width: 991px) {
+    display: none;
   }
 `;
 
-const NavbarButton = styled.button`
-  background: none;
-  color: #fff;
-  border: none;
-  margin: 0 10px;
-  cursor: pointer;
+const NavItem = styled(Link)`
+  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  text-decoration: none;
+  margin-left: 1rem;
 
   &:hover {
-    text-decoration: underline;
-  }
-
-  @media (max-width: 768px) {
-    margin: 10px 0;
+    color: #DFB163;
   }
 `;
 
@@ -60,49 +75,59 @@ const SearchInput = styled.input`
   margin-right: 10px;
 `;
 
-const NavbarAccount = styled.div`
+const MobileMenu = styled.div`
+  display: none;
+
+  @media (max-width: 991px) {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    background-color: #343a40;
+    padding: 1rem;
+  }
+`;
+
+const MobileNavItem = styled(Link)`
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem 0;
+
+  &:hover {
+    color: #DFB163;
+  }
+`;
+
+const DropdownContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  cursor: pointer;
-`;
+  margin-left: 1rem; /* Añadido para mover el icono más a la derecha */
 
-const DropdownMenu = styled.div`
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 4px;
-  z-index: 10;
-`;
-
-const DropdownItem = styled.button`
-  background: none;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-
-  &:hover {
-    background-color: #f0f0f0;
-  }
-`;
-
-const NavbarToggler = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-
-  &:focus {
-    outline: none;
+  .dropdown-menu {
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    position: absolute;
+    background-color: #343a40;
+    min-width: 160px;
+    z-index: 1;
+    right: 0;
+    top: 100%; /* Ajusta la posición del menú desplegable */
   }
 
-  @media (min-width: 769px) {
-    display: none;
+  .dropdown-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    color: #DFB163;
+    background-color: #343a40;
+    border: none;
+    width: 100%;
+    text-align: left;
+
+    &:hover {
+      background-color: #DFB163;
+    }
+  }
+
+  .dropdown-item:not(:last-child) {
+    margin-bottom: 0.5rem; /* Añade separación entre los elementos del menú desplegable */
   }
 `;
 
@@ -110,6 +135,7 @@ const NavBarEstudiante = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -130,6 +156,21 @@ const NavBarEstudiante = () => {
     }
   };
 
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const handleSearch = async (e) => {
     if (e.key === 'Enter') {
       navigate(`/estudiante/dashboard?query=${searchQuery}`);
@@ -137,48 +178,44 @@ const NavBarEstudiante = () => {
   };
 
   return (
-    <Navbar>
-      <NavbarBrand to="/estudiante/dashboard">
-        Arriendos Riobamba
-      </NavbarBrand>
-      <NavbarToggler onClick={toggleMenu}>
-        <i className="fas fa-bars"></i>
-      </NavbarToggler>
-      <NavbarButtons isOpen={isOpen}>
-        <SearchInput
-          type="text"
-          placeholder="Buscar departamentos"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleSearch}
-        />
-        <NavbarButton onClick={() => navigate('/estudiante/MisFavoritos')}>
-          Favoritos
-        </NavbarButton>
-        <NavbarButton onClick={() => navigate('/estudiante/dashboard')}>
-          Anuncios
-        </NavbarButton>
-        <NavbarButton onClick={() => navigate('/mis-solicitudes')}>
-          Solicitud de Visita
-        </NavbarButton>
-        <NavbarButton onClick={() => navigate('/estudiante/mis-arriendos/')}>
-          Mi Arriendo
-        </NavbarButton>
-        <NavbarAccount onClick={toggleDropdown}>
-          <FaUserCircle size={24} />
-          {dropdownOpen && (
-            <DropdownMenu>
-              <DropdownItem onClick={() => navigate('/perfil')}>
-                Mi Perfil
-              </DropdownItem>
-              <DropdownItem onClick={handleLogout}>
-                Salir
-              </DropdownItem>
-            </DropdownMenu>
-          )}
-        </NavbarAccount>
-      </NavbarButtons>
-    </Navbar>
+    <NavBarContainer style={{ backgroundColor: scrolled ? '#fff' : '#343a40' }}>
+      <Container>
+        <Brand to="/estudiante/dashboard" scrolled={scrolled}>
+          <span className="text-primary">RIO</span>ARRIENDOS
+        </Brand>
+        <NavbarToggler onClick={toggleMenu} scrolled={scrolled}>
+          <i className="fas fa-bars"></i>
+        </NavbarToggler>
+        <NavItems>
+          <SearchInput
+            type="text"
+            placeholder="Buscar departamentos"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+          <NavItem to="/estudiante/MisFavoritos" scrolled={scrolled}>Favoritos</NavItem>
+          <NavItem to="/estudiante/dashboard" scrolled={scrolled}>Anuncios</NavItem>
+          <NavItem to="/mis-solicitudes" scrolled={scrolled}>Solicitud de Visita</NavItem>
+          <NavItem to="/estudiante/mis-arriendos/" scrolled={scrolled}>Mi Arriendo</NavItem>
+          <DropdownContainer isOpen={dropdownOpen}>
+            <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} /> {/* Cambia el color a amarillo */}
+            <div className="dropdown-menu">
+              <button className="dropdown-item" onClick={() => navigate('/perfil')}>Mi Perfil</button>
+              <button className="dropdown-item" onClick={handleLogout}>Salir</button>
+            </div>
+          </DropdownContainer>
+        </NavItems>
+      </Container>
+      <MobileMenu isOpen={isOpen}>
+        <MobileNavItem to="/estudiante/MisFavoritos" onClick={toggleMenu}>Favoritos</MobileNavItem>
+        <MobileNavItem to="/estudiante/dashboard" onClick={toggleMenu}>Anuncios</MobileNavItem>
+        <MobileNavItem to="/mis-solicitudes" onClick={toggleMenu}>Solicitud de Visita</MobileNavItem>
+        <MobileNavItem to="/estudiante/mis-arriendos/" onClick={toggleMenu}>Mi Arriendo</MobileNavItem>
+        <MobileNavItem to="/perfil" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
+        <MobileNavItem as="button" onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavItem>
+      </MobileMenu>
+    </NavBarContainer>
   );
 };
 
