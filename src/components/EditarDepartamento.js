@@ -3,7 +3,129 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import NavBarArrendador from './NavBarArrendador';
-import './EditarDepartamento.css';
+import styled from 'styled-components';
+
+// Contenedor principal del formulario
+const FormContainer = styled.div`
+  max-width: 1200px;
+  margin: 80px auto 20px; /* Ajusta el margen superior según el tamaño de la navbar */
+  padding: 20px;
+  background-color: #fff;
+  border: 2px solid #252531;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* Alinea el contenido en una columna */
+  gap: 20px; /* Espacio entre los elementos del contenedor */
+`;
+
+// Contenedor para el título del formulario
+const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+`;
+
+// Contenedor del formulario
+const Form = styled.form`
+  display: flex;
+  flex-direction: column; /* Alinea los elementos en una columna */
+  gap: 20px; /* Espacio entre los elementos del formulario */
+`;
+
+// Sección del formulario (izquierda y derecha)
+const FormSection = styled.div`
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+// Contenedor para las dos secciones del formulario
+const FormRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+// Contenedor para los grupos de campos
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+// Etiqueta de los campos
+const Label = styled.label`
+  font-weight: bold;
+  color: #333;
+`;
+
+// Campos de entrada y textarea
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #DFB163; /* Borde de color #DFB163 */
+  border-radius: 5px;
+  outline: none;
+
+  &:focus {
+    border-color: #252531; /* Color del borde en enfoque */
+  }
+`;
+
+const TextArea = styled.textarea`
+  padding: 10px;
+  border: 1px solid #DFB163; /* Borde de color #DFB163 */
+  border-radius: 5px;
+  resize: vertical;
+  min-height: 100px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff; /* Color del borde en enfoque */
+  }
+`;
+
+// Contenedor para los checkbox
+const CheckboxGroup = styled.div`
+  display: flex;
+  flex-direction: column; /* Alinea los elementos en una columna */
+  gap: 10px;
+`;
+
+// Etiquetas de los checkbox
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+// Estilo para los checkbox
+const Checkbox = styled.input`
+  accent-color: #DFB163; /* Color para los checkboxes */
+`;
+
+// Botón de envío
+const SubmitButton = styled.button`
+  background-color: #252531;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+  align-self: center;
+
+  &:hover {
+    background-color: #252531;
+  }
+`;
 
 const EditarDepartamento = () => {
   const { id_departamento } = useParams();
@@ -98,107 +220,184 @@ const EditarDepartamento = () => {
   return (
     <div>
       <NavBarArrendador />
-      <div className="edit-container col-lg-8 col-md-10 mb-5 mx-auto" style={{ backgroundColor: '#252531', padding: '20px', borderRadius: '10px', color: 'white' }}>
-        <h4 className="text-primary mb-4">Editar Departamento</h4>
-        <form onSubmit={handleSubmit} className="edit-form">
-          <input type="hidden" name="id_departamento" value={departamento.id_departamento} />
-          <input type="hidden" name="id_arrendador" value={departamento.id_arrendador} />
+      <FormContainer>
+        <Title>Editar Departamento</Title>
+        <Form onSubmit={handleSubmit}>
+          <Input type="hidden" name="id_departamento" value={departamento.id_departamento} />
+          <Input type="hidden" name="id_arrendador" value={departamento.id_arrendador} />
 
-          <div className="form-group">
-            <input type="text" className="form-control border-0" placeholder="Nombre" name="nombre" value={departamento.nombre} onChange={handleChange} required />
-          </div>
-          <div className="form-group">
-            <input type="text" className="form-control border-0" placeholder="Dirección" name="direccion" value={departamento.direccion} onChange={handleChange} required />
-          </div>
-          <div className="form-group">
-            <input type="number" className="form-control border-0" placeholder="Precio" name="precio" value={departamento.precio} onChange={handleChange} required />
-          </div>
-          <div className="form-group">
-            <textarea className="form-control border-0" placeholder="Descripción" name="descripcion" value={departamento.descripcion} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="incluye_luz" checked={departamento.incluye_luz} onChange={handleChange} />
-              Incluye Luz
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="todos_los_servicios_basicos" checked={departamento.todos_los_servicios_basicos} onChange={handleChange} />
-              Todos los Servicios Básicos
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="incluye_agua" checked={departamento.incluye_agua} onChange={handleChange} />
-              Incluye Agua
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="incluye_telefono" checked={departamento.incluye_telefono} onChange={handleChange} />
-              Incluye Teléfono
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="incluye_internet" checked={departamento.incluye_internet} onChange={handleChange} />
-              Incluye Internet
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="incluye_garaje" checked={departamento.incluye_garaje} onChange={handleChange} />
-              Incluye Garaje
-            </label>
-          </div>
-          <div className="form-group">
-            <input type="number" className="form-control border-0" placeholder="Número de Baños" name="n_banos" value={departamento.n_banos} onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <input type="number" className="form-control border-0" placeholder="Número de Habitaciones" name="n_habitaciones" value={departamento.n_habitaciones} onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <input type="number" className="form-control border-0" placeholder="Tamaño en m²" name="tamano_m_cuadrados" value={departamento.tamano_m_cuadrados} onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="aceptan_gatos" checked={departamento.aceptan_gatos} onChange={handleChange} />
-              Aceptan Gatos
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="aceptan_perros" checked={departamento.aceptan_perros} onChange={handleChange} />
-              Aceptan Perros
-            </label>
-          </div>
-          <div className="form-group">
-            <label>
-              <input type="checkbox" className="form-control border-0" name="lavanderia" checked={departamento.lavanderia} onChange={handleChange} />
-              Lavandería
-            </label>
-          </div>
-
-          <div className="form-group">
-            <label>Imagen Actual</label>
-            {departamento.imagen && (
-              <img
-                src={`http://localhost:3000/${departamento.imagen}`}
-                alt={departamento.nombre}
-                className="departamento-image"
-              />
-            )}
-          </div>
-          <div className="form-group">
-            <label>Nueva Imagen</label>
-            <input type="file" className="form-control border-0" name="imagen" onChange={handleImageChange} />
-          </div>
-
-          <button type="submit" className="btn btn-lg btn-primary btn-block border-0 text-white">Guardar Cambios</button>
-        </form>
-      </div>
+          <FormRow>
+            <FormSection>
+              <FormGroup>
+                <Label>Nombre</Label>
+                <Input
+                  type="text"
+                  name="nombre"
+                  value={departamento.nombre}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Dirección</Label>
+                <Input
+                  type="text"
+                  name="direccion"
+                  value={departamento.direccion}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Precio</Label>
+                <Input
+                  type="number"
+                  name="precio"
+                  value={departamento.precio}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Descripción</Label>
+                <TextArea
+                  name="descripcion"
+                  value={departamento.descripcion}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormRow>
+                <FormGroup>
+                  <Label>Número de Baños</Label>
+                  <Input
+                    type="number"
+                    name="n_banos"
+                    value={departamento.n_banos}
+                    onChange={handleChange}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Número de Habitaciones</Label>
+                  <Input
+                    type="number"
+                    name="n_habitaciones"
+                    value={departamento.n_habitaciones}
+                    onChange={handleChange}
+                  />
+                </FormGroup>
+              </FormRow>
+            </FormSection>
+            <FormSection>
+              <FormGroup>
+                <Label>Servicios Básicos</Label>
+                <CheckboxGroup>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="incluye_luz"
+                      checked={departamento.incluye_luz}
+                      onChange={handleChange}
+                    />
+                    Luz
+                  </CheckboxLabel>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="todos_los_servicios_basicos"
+                      checked={departamento.todos_los_servicios_basicos}
+                      onChange={handleChange}
+                    />
+                    Servicios Básicos
+                  </CheckboxLabel>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="incluye_agua"
+                      checked={departamento.incluye_agua}
+                      onChange={handleChange}
+                    />
+                    Agua
+                  </CheckboxLabel>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="incluye_telefono"
+                      checked={departamento.incluye_telefono}
+                      onChange={handleChange}
+                    />
+                    Teléfono
+                  </CheckboxLabel>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="incluye_internet"
+                      checked={departamento.incluye_internet}
+                      onChange={handleChange}
+                    />
+                    Internet
+                  </CheckboxLabel>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="incluye_garaje"
+                      checked={departamento.incluye_garaje}
+                      onChange={handleChange}
+                    />
+                    Garaje
+                  </CheckboxLabel>
+                </CheckboxGroup>
+              </FormGroup>
+              <FormGroup>
+                <Label>Aceptan Mascotas</Label>
+                <CheckboxGroup>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="aceptan_gatos"
+                      checked={departamento.aceptan_gatos}
+                      onChange={handleChange}
+                    />
+                    Gatos
+                  </CheckboxLabel>
+                  <CheckboxLabel>
+                    <Checkbox
+                      type="checkbox"
+                      name="aceptan_perros"
+                      checked={departamento.aceptan_perros}
+                      onChange={handleChange}
+                    />
+                    Perros
+                  </CheckboxLabel>
+                </CheckboxGroup>
+              </FormGroup>
+              <FormGroup>
+                <Label>Tamaño en Metros Cuadrados</Label>
+                <Input
+                  type="number"
+                  name="tamano_m_cuadrados"
+                  value={departamento.tamano_m_cuadrados}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Lavandería</Label>
+                <Checkbox
+                  type="checkbox"
+                  name="lavanderia"
+                  checked={departamento.lavanderia}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+            </FormSection>
+          </FormRow>
+          <FormGroup>
+            <Label>Imagen</Label>
+            <Input type="file" name="imagen" accept="image/*" onChange={handleImageChange} />
+          </FormGroup>
+          <SubmitButton type="submit">Guardar Cambios</SubmitButton>
+        </Form>
+      </FormContainer>
     </div>
   );
 };

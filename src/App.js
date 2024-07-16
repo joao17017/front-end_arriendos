@@ -32,6 +32,9 @@ import ListaSolicitudesVisita from "./components/ListaSolicitudesVisita";
 import MiPerfil from "./components/Mi_Perfil";
 import "./App.css";
 import DepartamentoDetalles2 from "./components/DepartamentoDetalles2";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 
 function App() {
   return (
