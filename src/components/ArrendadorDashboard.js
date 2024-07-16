@@ -26,13 +26,16 @@ const DashboardText = styled.p`
 // Styled component for the carousel container
 const CarouselContainer = styled.div`
   margin-top: 20px;
+  max-width: 600px; /* Ajusta el ancho máximo del contenedor del carrusel si es necesario */
+  margin: 0 auto; /* Centra el carrusel */
 `;
 
 // Styled component for the image
 const CarouselImage = styled.img`
   width: 100%;
-  height: 400px;
-  object-fit: cover;
+  height: 300px; /* Ajusta la altura según sea necesario */
+  object-fit: cover; /* Ajusta la forma en que la imagen se ajusta al contenedor */
+  border: 5px solid #252531; /* Agrega el borde de color */
 `;
 
 // Slider settings
