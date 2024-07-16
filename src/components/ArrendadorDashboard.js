@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBarArrendador from './NavBarArrendador';
 import styled from 'styled-components';
+import Slider from 'react-slick';
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 // Styled component for the dashboard container
 const DashboardContainer = styled.div`
@@ -20,7 +23,49 @@ const DashboardText = styled.p`
   color: #6c757d;
 `;
 
+// Styled component for the carousel container
+const CarouselContainer = styled.div`
+  margin-top: 20px;
+`;
+
+// Styled component for the image
+const CarouselImage = styled.img`
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+`;
+
+// Slider settings
+const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+};
+
 const ArrendadorDashboard = () => {
+  const [departamentos, setDepartamentos] = useState([]);
+  
+  useEffect(() => {
+    const fetchDepartamentos = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+        const decoded = jwtDecode(token);
+        const id_arrendador = decoded.id;
+        const response = await axios.get(`http://localhost:3000/departamentos/arrendador/${id_arrendador}`);
+        setDepartamentos(response.data);
+      } catch (err) {
+        console.error("Error fetching departamentos:", err);
+      }
+    };
+    fetchDepartamentos();
+  }, []);
+
   return (
     <div>
       <NavBarArrendador />
@@ -29,6 +74,21 @@ const ArrendadorDashboard = () => {
         <DashboardText>
           Bienvenido a tu dashboard, aquí podrás gestionar tus departamentos y anuncios.
         </DashboardText>
+        <CarouselContainer>
+          <Slider {...sliderSettings}>
+            {departamentos.map((departamento) => (
+              <div key={departamento.id_departamento}>
+                <CarouselImage
+                  src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : 'http://localhost:3000/uploads/defaultimagedepartamento.png'}
+                  alt={departamento.nombre}
+                  onError={(e) => {
+                    e.target.src = 'http://localhost:3000/uploads/defaultimagedepartamento.png'; // Fallback image on error
+                  }}
+                />
+              </div>
+            ))}
+          </Slider>
+        </CarouselContainer>
       </DashboardContainer>
     </div>
   );

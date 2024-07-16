@@ -8,24 +8,30 @@ import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
 
 const MainContainer = styled.div`
   background-color: #f8f9fa;
-  padding: 5rem 2rem;  // Ajuste de padding para mejor espaciado
-  margin-top: 4rem;   // Asegúrate de que este margen sea suficiente para la altura de la navbar
+  padding: 5rem 2rem;
+  margin-top: 4rem;
 `;
 
 const SectionContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;  /* Cambia la dirección a columna por defecto */
   padding: 5rem 2rem;
   background-color: #F3F6FF;
   margin-bottom: 1rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row;  /* Cambia a fila en pantallas grandes */
+    justify-content: space-between;
+  }
 `;
 
 const TextSection = styled.div`
   flex: 1;
-  padding-right: 2rem;
+  padding-right: 0;  /* Ajuste para el diseño en columna */
+  margin-bottom: 2rem;  /* Espaciado en la parte inferior para pantallas pequeñas */
 
   h6 {
-    color: #DFB163; // Color para el título "Departamento Arrendado"
+    color: #DFB163;
     font-weight: normal;
     text-transform: uppercase;
     margin-bottom: 1rem;
@@ -33,12 +39,12 @@ const TextSection = styled.div`
 
   h1 {
     margin-bottom: 2rem;
-    color: #252531; // Color para el nombre del departamento
+    color: #252531;
   }
 
   p {
     margin-bottom: 2rem;
-    color: #252531; // Color para la descripción
+    color: #252531;
   }
 
   ul {
@@ -53,14 +59,14 @@ const TextSection = styled.div`
 
       h5 {
         margin: 0;
-        color: #252531; // Color para los textos dentro de la lista
+        color: #252531;
         span {
-          color: #DFB163; // Color específico para "Dirección:", "Arrendado a:" y "Arrendado por:"
+          color: #DFB163;
         }
       }
 
       i {
-        color: #DFB163; // Color para los íconos
+        color: #DFB163;
         margin-right: 1rem;
       }
     }
@@ -112,6 +118,16 @@ const ImageSection = styled.div`
   }
 `;
 
+const ButtonSection = styled.div`
+  margin-top: 2rem;
+  display: flex;
+  gap: 10px; /* Espacio entre los botones */
+
+  @media (min-width: 768px) {
+    margin-top: 0;
+  }
+`;
+
 const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar }) => {
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
@@ -132,11 +148,11 @@ const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar })
             <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Arrendado por:</span> {departamento.Arrendador.nombres}</h5>
           </li>
         </ul>
-        <div>
+        <ButtonSection>
           <button className="btn btn-primary" onClick={() => onComentar(departamento.id_departamento)}>Comentar</button>
           <button className="btn btn-danger" onClick={() => onEliminar(departamento.id_DepartamentoArrendado)}>Eliminar</button>
           <button className="btn btn-warning" onClick={() => onDesocupar(departamento.id_DepartamentoArrendado)}>Desocupar</button>
-        </div>
+        </ButtonSection>
       </TextSection>
       <ImageSection>
         <img

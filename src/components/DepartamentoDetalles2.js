@@ -6,78 +6,95 @@ import NavBarEstudiante from './NavBarEstudiante';
 import NavBarArrendador from './NavBarArrendador';
 import NavBarAdministrador from './NavBarAdministrador';
 import { jwtDecode } from 'jwt-decode';
+import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
+import Modal from 'react-modal';
 
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+const MainContainer = styled.div`
+  background-color: #f8f9fa;
+  padding: 5rem 2rem;
+  margin-top: 4rem;
 `;
 
-const DetailsContainer = styled.div`
+const SectionContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: column; /* Cambiado a columna por defecto */
+  padding: 5rem 2rem;
+  background-color: #F3F6FF;
+  margin-bottom: 1rem;
 
   @media (min-width: 768px) {
-    flex-direction: row;
+    flex-direction: row; /* Cambia a fila en pantallas más grandes */
   }
 `;
 
-const ImageContainer = styled.div`
+const TextSection = styled.div`
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
+  padding-right: 2rem;
 
-  img {
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
+  h6 {
+    color: #DFB163;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  button {
-    width: 100%;
-    max-width: 600px;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  h1 {
+    margin-bottom: 2rem;
+    color: #252531;
+  }
 
-    &:hover {
-      background-color: #0056b3;
+  p {
+    margin-bottom: 2rem;
+    color: #252531;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+
+    li {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+
+      h5 {
+        margin: 0;
+        color: #252531;
+        span {
+          color: #DFB163;
+        }
+      }
+
+      i {
+        color: #DFB163;
+        margin-right: 1rem;
+      }
     }
   }
 `;
 
-const Content = styled.div`
-  flex: 2;
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+const ImageSection = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  h1 {
-    margin-bottom: 20px;
-    text-align: center;
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
   }
+`;
 
-  p {
-    margin-bottom: 10px;
-    display: flex;
-    flex-wrap: wrap;
-  }
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+`;
 
-  strong {
-    display: inline-block;
-    width: 150px;
-    color: #333;
-  }
+const Mensaje = styled.p`
+  color: green;
+  text-align: center;
 `;
 
 const Form = styled.div`
@@ -93,34 +110,52 @@ const Form = styled.div`
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: 2px solid #DFB163; /* Borde dorado para los inputs */
     border-radius: 4px;
   }
 
   button {
-    width: 100%;
+    width: 48%;
     padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
+    background-color: #252531; /* Fondo negro para los botones */
+    color: #fff; /* Letras blancas para los botones */
+    border: 2px solid #DFB163; /* Borde dorado para los botones */
     border-radius: 4px;
     cursor: pointer;
-
+    font-size: 1rem;
+    margin-right: 4%;
+    
     &:hover {
-      background-color: #0056b3;
+      background-color: #333; /* Fondo negro más oscuro para el hover */
     }
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-close {
+    width: 48%;
+    background-color: #252531; /* Fondo rojo para el botón de cerrar */
+    border: 2px solid #DFB163; /* Borde dorado para el botón de cerrar */
+    margin-right: 0;
   }
 `;
 
-const ErrorMessage = styled.p`
-  color: red;
-  text-align: center;
-`;
-
-const Mensaje = styled.p`
-  color: green;
-  text-align: center;
-`;
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    border: '2px solid #252531', /* Borde negro para el modal */
+    borderRadius: '8px',
+    padding: '2rem',
+  },
+};
 
 const DepartamentoDetalles2 = () => {
   const { id } = useParams();
@@ -130,6 +165,7 @@ const DepartamentoDetalles2 = () => {
   const [usuario, setUsuario] = useState(null);
   const [fechaSolicitada, setFechaSolicitada] = useState('');
   const [comentario, setComentario] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchDepartamento = async () => {
@@ -175,41 +211,22 @@ const DepartamentoDetalles2 = () => {
 
       setMensaje('Solicitud de visita enviada correctamente');
       alert('Solicitud de visita enviada correctamente');
+      closeModal();
     } catch (err) {
       console.error('Error al enviar la solicitud de visita:', err);
       setError(err.response?.data?.error || 'Error al enviar la solicitud de visita');
     }
   };
 
-  const handleAnadirAFavorito = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('Por favor inicia sesión para añadir a favoritos');
-        return;
-      }
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
-      const decoded = jwtDecode(token);
-      const id_usuario = decoded.id;
-
-      await axios.post('http://localhost:3000/favoritos', {
-        id_usuario,
-        id_departamento: id
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      setMensaje('Añadido a favoritos correctamente');
-      alert('Añadido a favoritos correctamente');
-    } catch (err) {
-      console.error('Error al añadir a favoritos:', err);
-      setError(err.response?.data?.error || 'Error al añadir a favoritos');
-    }
+  const openModal = () => {
+    setModalIsOpen(true);
   };
 
-  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   if (error) {
     return <ErrorMessage>{error}</ErrorMessage>;
@@ -224,64 +241,72 @@ const DepartamentoDetalles2 = () => {
       {usuario && usuario.tipo === 'estudiante' && <NavBarEstudiante />}
       {usuario && usuario.tipo === 'administrador' && <NavBarAdministrador />}
       {usuario && usuario.tipo === 'arrendador' && <NavBarArrendador />}
-      <Container>
-        <DetailsContainer>
-          <ImageContainer>
-            <img
-              src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl}
-              alt={departamento.nombre}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = defaultImageUrl;
-              }}
-            />
-            {usuario && usuario.tipo === 'estudiante' && (
-              <>
-                <button onClick={handleSolicitudVisita}>Solicitar Visita</button>
-                <button onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
-              </>
-            )}
-          </ImageContainer>
-          <Content>
+      <MainContainer>
+        <SectionContainer>
+          <TextSection>
+            <h6>Departamento</h6>
             <h1>{departamento.nombre}</h1>
-            <p><strong>Dirección:</strong> {departamento.direccion}</p>
-            <p><strong>Precio:</strong> {departamento.precio}</p>
-            <p><strong>Descripción:</strong> {departamento.descripcion}</p>
-            <p><strong>Número de Baños:</strong> {departamento.n_banos}</p>
-            <p><strong>Número de Habitaciones:</strong> {departamento.n_habitaciones}</p>
-            <p><strong>Tamaño en Metros Cuadrados:</strong> {departamento.tamano_m_cuadrados}</p>
-            <p><strong>Acepta Gatos:</strong> {departamento.aceptan_gatos ? 'Sí' : 'No'}</p>
-            <p><strong>Acepta Perros:</strong> {departamento.aceptan_perros ? 'Sí' : 'No'}</p>
-            <p><strong>Incluye Luz:</strong> {departamento.incluye_luz ? 'Sí' : 'No'}</p>
-            <p><strong>Incluye Agua:</strong> {departamento.incluye_agua ? 'Sí' : 'No'}</p>
-            <p><strong>Incluye Teléfono:</strong> {departamento.incluye_telefono ? 'Sí' : 'No'}</p>
-            <p><strong>Incluye Internet:</strong> {departamento.incluye_internet ? 'Sí' : 'No'}</p>
-            <p><strong>Incluye Garaje:</strong> {departamento.incluye_garaje ? 'Sí' : 'No'}</p>
-            <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
-          </Content>
-        </DetailsContainer>
-        {usuario && usuario.tipo === 'estudiante' && (
+            <p>{departamento.descripcion}</p>
+            <ul>
+              <li>
+                <h5><FaAddressCard style={{ color: '#DFB163' }} /> <span>Dirección:</span> {departamento.direccion}</h5>
+              </li>
+              <li>
+                <h5><FaHandHoldingUsd style={{ color: '#DFB163' }} /> <span>Precio:</span> {departamento.precio}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Número de Baños:</span> {departamento.n_banos}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Número de Habitaciones:</span> {departamento.n_habitaciones}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Acepta Perros:</span> {departamento.aceptan_perros ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Incluye Agua:</span> {departamento.incluye_agua ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Incluye Luz:</span> {departamento.incluye_luz ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Incluye Internet:</span> {departamento.incluye_internet ? 'Sí' : 'No'}</h5>
+              </li>
+            </ul>
+          </TextSection>
+          <ImageSection>
+            <img src={departamento.imageUrl || defaultImageUrl} alt="Departamento" />
+          </ImageSection>
+        </SectionContainer>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Formulario de Solicitud de Visita"
+        >
+          <h2>Solicitud de Visita</h2>
           <Form>
-            <label>
-              Fecha Solicitada:
-              <input
-                type="date"
-                value={fechaSolicitada}
-                onChange={(e) => setFechaSolicitada(e.target.value)}
-              />
-            </label>
-            <label>
-              Comentario:
-              <textarea
-                value={comentario}
-                onChange={(e) => setComentario(e.target.value)}
-              />
-            </label>
-            <button onClick={handleSolicitudVisita}>Enviar Solicitud de Visita</button>
+            <label htmlFor="fechaSolicitada">Fecha Solicitada:</label>
+            <input 
+              type="date" 
+              id="fechaSolicitada" 
+              value={fechaSolicitada} 
+              onChange={(e) => setFechaSolicitada(e.target.value)} 
+            />
+            <label htmlFor="comentario">Comentario:</label>
+            <textarea 
+              id="comentario" 
+              value={comentario} 
+              onChange={(e) => setComentario(e.target.value)} 
+            />
+            <div className="button-group">
+              <button onClick={handleSolicitudVisita}>Enviar Solicitud</button>
+              <button onClick={closeModal} className="btn-close">Cerrar</button>
+            </div>
           </Form>
-        )}
-        {mensaje && <Mensaje>{mensaje}</Mensaje>}
-      </Container>
+          {mensaje && <Mensaje>{mensaje}</Mensaje>}
+        </Modal>
+      </MainContainer>
     </div>
   );
 };
