@@ -76,10 +76,16 @@ const FormGroup = styled.div`
   input[type="email"],
   input[type="password"] {
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #DFB163; /* Color de borde inicial de los campos de entrada */
     border-radius: 8px;
     font-size: 1rem;
     color: #252531; /* Color de texto de los campos de entrada */
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: #252531; /* Color de borde al enfocar el campo */
+      outline: none; /* Elimina el borde azul predeterminado al enfocar */
+    }
   }
 
   input[type="checkbox"] {
@@ -93,13 +99,13 @@ const Button = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: ${props => (props.primary ? '#DFB163' : '#28a745')}; /* Color de fondo del botón */
+  background-color: #DFB163; /* Color de fondo del botón */
   color: #252531; /* Color de texto del botón */
   font-size: 1rem;
   transition: background-color 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background-color: ${props => (props.primary ? '#252531' : '#218838')}; /* Color de fondo del botón al pasar el mouse */
+    background-color: #252531; /* Color de fondo del botón al pasar el mouse */
     color: white; /* Color de texto del botón al pasar el mouse */
   }
 
@@ -212,7 +218,7 @@ const ArrendadorProfile = () => {
             </FormGroup>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
               <Button type="submit" primary>Guardar Cambios</Button>
-              <Button type="button" onClick={() => setIsEditing(false)}>Cancelar</Button>
+              <Button type="button" primary onClick={() => setIsEditing(false)}>Cancelar</Button>
             </div>
           </Form>
         ) : (

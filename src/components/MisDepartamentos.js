@@ -4,11 +4,15 @@ import NavBarArrendador from "./NavBarArrendador";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
 import styled from 'styled-components';
+import { FaEdit, FaTrash, FaEye, FaCheck } from 'react-icons/fa';
+
+const NavBarHeight = '60px'; // Ajusta este valor según el alto real de tu NavBar
 
 const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: ${NavBarHeight}; /* Añadir margen superior igual al alto de la NavBar */
 `;
 
 const Title = styled.h1`
@@ -27,98 +31,85 @@ const Row = styled.div`
 const Col = styled.div`
   flex: 1 1 300px;
   max-width: 300px;
+  position: relative; /* Ensures the overlay can be positioned absolutely within this container */
 `;
 
 const Card = styled.div`
-  background-color: #DFB163;
-  border: 2px solid black;
-  border-radius: 8px;
+  position: relative; /* Ensure that the overlay can be positioned absolutely within this container */
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  border-radius: 8px;
+  cursor: pointer;
 
   img {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-bottom: 2px solid black;
+    transition: opacity 0.3s ease; /* Smooth transition for image */
   }
 
-  .card-body {
-    flex: 1;
-    padding: 15px;
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
-    h5 {
-      margin-bottom: 10px;
-    }
-
-    p {
-      flex: 1;
-    }
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Smooth transition for overlay */
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
-  .card-footer {
-    background-color: #252531;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  &:hover .overlay {
+    opacity: 1; /* Show overlay on hover */
+  }
+
+  .overlay h5 {
+    color: white; /* Ensure the text is white */
+    margin-bottom: 10px; /* Add margin to the bottom */
   }
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+  justify-content: center;
 
-  button, .nav-link {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
+  .icon-button {
+    background: none; /* Remove background */
+    border: none; /* Remove border */
+    color: white; /* Default color */
+    font-size: 24px;
     cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    color: white;
+    transition: color 0.3s ease;
 
     &:hover {
-      opacity: 0.9;
-    }
-
-    &.btn-primary {
-      background-color: #007bff;
-
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-
-    &.btn-danger {
-      background-color: #dc3545;
-
-      &:hover {
-        background-color: #c82333;
-      }
+      color: #ccc; /* Lighten the color on hover */
     }
 
     &.btn-warning {
-      background-color: #ffc107;
-      color: black;
+      color: #ffc107; /* Color for warning icon */
+    }
 
-      &:hover {
-        background-color: #e0a800;
-      }
+    &.btn-danger {
+      color: #dc3545; /* Color for danger icon */
+    }
+
+    &.btn-primary {
+      color: #007bff; /* Color for primary icon */
     }
 
     &.btn-success {
-      background-color: #28a745;
-
-      &:hover {
-        background-color: #218838;
-      }
+      color: #28a745; /* Color for success icon */
     }
   }
 `;
@@ -203,16 +194,13 @@ const MisDepartamentos = () => {
                     e.target.src = defaultImageUrl;
                   }}
                 />
-                <div className="card-body">
-                  <h5 className="card-title">{departamento.nombre}</h5>
-                  <p className="card-text">{departamento.descripcion}</p>
-                </div>
-                <div className="card-footer">
+                <div className="overlay">
+                  <h5>{departamento.nombre}</h5>
                   <ButtonRow>
-                    <Link to={`/departamentos/editar/${departamento.id_departamento}`} className="nav-link btn-warning">Editar</Link>
-                    <button className="btn-danger" onClick={() => handleDelete(departamento.id_departamento)}>Eliminar</button>
-                    <Link to={`./${departamento.id_departamento}`} className="nav-link btn-primary">Ver</Link>
-                    <button className="btn-success" onClick={() => handleSolicitarActivacion(departamento.id_departamento)}>Solicitar</button>
+                    <Link to={`/departamentos/editar/${departamento.id_departamento}`} className="icon-button btn-warning"><FaEdit /></Link>
+                    <span className="icon-button btn-danger" onClick={() => handleDelete(departamento.id_departamento)}><FaTrash /></span>
+                    <Link to={`./${departamento.id_departamento}`} className="icon-button btn-primary"><FaEye /></Link>
+                    <span className="icon-button btn-success" onClick={() => handleSolicitarActivacion(departamento.id_departamento)}><FaCheck /></span>
                   </ButtonRow>
                 </div>
               </Card>
