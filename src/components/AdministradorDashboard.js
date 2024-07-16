@@ -1,24 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import NavBarAdministrador from './NavBarAdministrador';
-import './AdministradorDashboard.css';
+import styled from 'styled-components';
 import { FaEdit } from 'react-icons/fa';
 
+const DashboardContainer = styled.div`
+  margin-top: 70px; /* Ajusta este valor según la altura de tu navbar */
+  padding: 20px;
+`;
+
+const WelcomeMessage = styled.div`
+  text-align: center;
+  h1 {
+    font-size: 2.5rem;
+    color: #343a40;
+  }
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    text-align: center;
+  }
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+  .input-group {
+    display: flex;
+    align-items: center;
+    input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      &:disabled {
+        background-color: #e9ecef;
+      }
+    }
+    .edit-button {
+      margin-left: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #007bff;
+      &:hover {
+        color: #0056b3;
+      }
+    }
+  }
+`;
+
 const AdministradorDashboard = () => {
-  const [showUserManagement, setShowUserManagement] = useState(false);
-  const [activeUserType, setActiveUserType] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [noResultsMessage, setNoResultsMessage] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
   const [editData, setEditData] = useState({
     id_administrador: '',
     cedula: '',
     nombres: '',
     telefono: '',
     email: '',
-    contrasena: '' // Este campo se deja vacío inicialmente
+    contrasena: ''
   });
   const [editableFields, setEditableFields] = useState({
     nombres: false,
@@ -27,62 +78,10 @@ const AdministradorDashboard = () => {
     contrasena: false
   });
 
-  const handleUserManagementClick = () => {
-    setShowUserManagement(!showUserManagement);
-  };
-
-  const handleSelectUserType = (type) => {
-    setActiveUserType(type);
-    setSearchQuery('');
-    setSearchResults([]);
-    setNoResultsMessage(false);
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  useEffect(() => {
-    const handleSearchSubmit = async () => {
-      if (activeUserType && searchQuery) {
-        try {
-          let url = '';
-          if (activeUserType === 'Arrendador') {
-            url = `http://localhost:3000/arrendadores/buscar/${searchQuery}`;
-          } else if (activeUserType === 'Administrador') {
-            url = `http://localhost:3000/administradores/buscar/${searchQuery}`;
-          } else if (activeUserType === 'Estudiante') {
-            url = `http://localhost:3000/estudiantes/buscar/${searchQuery}`;
-          }
-
-          const response = await fetch(url);
-          const data = await response.json();
-
-          if (response.ok) {
-            setSearchResults(data);
-            setNoResultsMessage(data.length === 0);
-          } else {
-            setSearchResults([]);
-            setNoResultsMessage(true);
-          }
-        } catch (error) {
-          console.error('Error al realizar la búsqueda:', error);
-          setSearchResults([]);
-          setNoResultsMessage(true);
-        }
-      } else {
-        setSearchResults([]);
-        setNoResultsMessage(false);
-      }
-    };
-
-    handleSearchSubmit();
-  }, [searchQuery, activeUserType]);
-
   const handleEdit = (data) => {
     setEditData({
       ...data,
-      contrasena: '' // Resetear la contraseña al editar
+      contrasena: ''
     });
     setEditableFields({
       nombres: false,
@@ -91,46 +90,6 @@ const AdministradorDashboard = () => {
       contrasena: false
     });
     setShowEditModal(true);
-  };
-
-  const handleDelete = (id) => {
-    setDeleteId(id);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDelete = async () => {
-    if (deleteId) {
-      try {
-        let url = '';
-        if (activeUserType === 'Arrendador') {
-          url = `http://localhost:3000/arrendadores/${deleteId}`;
-        } else if (activeUserType === 'Administrador') {
-          url = `http://localhost:3000/administradores/${deleteId}`;
-        } else if (activeUserType === 'Estudiante') {
-          url = `http://localhost:3000/estudiantes/${deleteId}`;
-        }
-
-        const response = await fetch(url, {
-          method: 'DELETE'
-        });
-
-        if (response.ok) {
-          setSearchResults(searchResults.filter(result => (result.id_administrador || result.id_arrendador || result.id_estudiante) !== deleteId));
-          setShowDeleteModal(false);
-          setDeleteId(null);
-        } else {
-          alert('Error al eliminar el registro');
-        }
-      } catch (error) {
-        console.error('Error al eliminar el registro:', error);
-        alert('Error al eliminar el registro');
-      }
-    }
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteModal(false);
-    setDeleteId(null);
   };
 
   const handleEditChange = (e) => {
@@ -146,210 +105,83 @@ const AdministradorDashboard = () => {
   };
 
   const saveEdit = async () => {
-    try {
-      let url = '';
-      if (activeUserType === 'Arrendador') {
-        url = `http://localhost:3000/arrendadores/${editData.id_arrendador}`;
-      } else if (activeUserType === 'Administrador') {
-        url = `http://localhost:3000/administradores/${editData.id_administrador}`;
-      } else if (activeUserType === 'Estudiante') {
-        url = `http://localhost:3000/estudiantes/${editData.id_estudiante}`;
-      }
-
-      // Construir el objeto de actualización solo con los campos modificados
-      const updatedFields = {};
-      if (editableFields.nombres) updatedFields.nombres = editData.nombres;
-      if (editableFields.telefono) updatedFields.telefono = editData.telefono;
-      if (editableFields.email) updatedFields.email = editData.email;
-      if (editableFields.contrasena && editData.contrasena) updatedFields.contrasena = editData.contrasena;
-
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedFields)
-      });
-
-      if (response.ok) {
-        const updatedRecord = await response.json();
-        setSearchResults((prevResults) => prevResults.map((result) =>
-          result.id_administrador === updatedRecord.id_administrador ? updatedRecord : result
-        ));
-        setShowEditModal(false);
-      } else {
-        const errorData = await response.json();
-        alert('Error al guardar los cambios: ' + errorData.error);
-      }
-    } catch (error) {
-      console.error('Error al guardar los cambios:', error);
-      alert('Error al guardar los cambios');
-    }
+    // Aquí puedes implementar la lógica para guardar los cambios si es necesario
+    setShowEditModal(false);
   };
 
   return (
-    <div>
-      <NavBarAdministrador onGestionarUsuariosClick={handleUserManagementClick} />
-      <div className="dashboard-container">
-        {!showUserManagement ? (
-          <div className="welcome-message">
-            <h1>Bienvenido al Panel de Administrador</h1>
-          </div>
-        ) : (
-          <div className="user-management-container">
-            <div className="sidebar">
-              <button onClick={() => handleSelectUserType('Estudiante')}>Estudiante</button>
-              <button onClick={() => handleSelectUserType('Arrendador')}>Arrendador</button>
-              <button onClick={() => handleSelectUserType('Administrador')}>Administrador</button>
-            </div>
-            <div className="main-content">
-              {activeUserType && (
-                <>
-                  <h2>Gestionar Usuario: {activeUserType}</h2>
-                  <input
-                    type="text"
-                    placeholder={`Buscar ${activeUserType} por nombre o ID`}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                  />
-                  <div className="search-results-container">
-                    {searchQuery && (
-                      <div className="search-results-box">
-                        {searchResults.length > 0 ? (
-                          <table className="results-table">
-                            <thead>
-                              <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>Cédula</th>
-                                <th>Teléfono</th>
-                                <th>Email</th>
-                                <th>Acciones</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {searchResults.map((result, index) => (
-                                <tr key={result.id_administrador || result.id_arrendador || result.id_estudiante}>
-                                  <td>{index + 1}</td>
-                                  <td>{result.nombres}</td>
-                                  <td>{result.cedula}</td>
-                                  <td>{result.telefono}</td>
-                                  <td>{result.email}</td>
-                                  <td>
-                                    <button onClick={() => handleEdit(result)}>Editar</button>
-                                    <button onClick={() => handleDelete(result.id_administrador || result.id_arrendador || result.id_estudiante)}>Eliminar</button>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        ) : (
-                          noResultsMessage && <p>No se encontraron resultados</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {showDeleteModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>¿Está seguro de que desea eliminar este registro?</h3>
-            <button onClick={confirmDelete}>Confirmar</button>
-            <button onClick={cancelDelete}>Cancelar</button>
-          </div>
-        </div>
-      )}
-
+    <DashboardContainer>
+      <NavBarAdministrador />
+      <WelcomeMessage>
+        <h1>Bienvenido al Dashboard Administrador</h1>
+      </WelcomeMessage>
+      {/* Aquí no hay búsqueda ni botones para seleccionar usuarios */}
       {showEditModal && (
-        <div className="modal">
+        <Modal>
           <div className="modal-content">
-            <h3>Editar Usuario</h3>
-            <form>
-              <div className="form-group">
-                <label>Cédula</label>
+            <h2>Editar Administrador</h2>
+            <FormGroup>
+              <div className="input-group">
                 <input
                   type="text"
-                  name="cedula"
-                  value={editData.cedula}
+                  name="nombres"
+                  value={editData.nombres}
                   onChange={handleEditChange}
-                  disabled
+                  disabled={!editableFields.nombres}
                 />
+                <button className="edit-button" onClick={() => toggleEditableField('nombres')}>
+                  {editableFields.nombres ? 'Guardar' : 'Editar'}
+                </button>
               </div>
-              <div className="form-group">
-                <label>Nombres</label>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="nombres"
-                    value={editData.nombres}
-                    onChange={handleEditChange}
-                    disabled={!editableFields.nombres}
-                  />
-                  <button type="button" onClick={() => toggleEditableField('nombres')} className="edit-button">
-                    <FaEdit />
-                  </button>
-                </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="telefono"
+                  value={editData.telefono}
+                  onChange={handleEditChange}
+                  disabled={!editableFields.telefono}
+                />
+                <button className="edit-button" onClick={() => toggleEditableField('telefono')}>
+                  {editableFields.telefono ? 'Guardar' : 'Editar'}
+                </button>
               </div>
-              <div className="form-group">
-                <label>Teléfono</label>
-                <div className="input-group">
-                  <input
-                    type="text"
-                    name="telefono"
-                    value={editData.telefono}
-                    onChange={handleEditChange}
-                    disabled={!editableFields.telefono}
-                  />
-                  <button type="button" onClick={() => toggleEditableField('telefono')} className="edit-button">
-                    <FaEdit />
-                  </button>
-                </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="input-group">
+                <input
+                  type="email"
+                  name="email"
+                  value={editData.email}
+                  onChange={handleEditChange}
+                  disabled={!editableFields.email}
+                />
+                <button className="edit-button" onClick={() => toggleEditableField('email')}>
+                  {editableFields.email ? 'Guardar' : 'Editar'}
+                </button>
               </div>
-              <div className="form-group">
-                <label>Email</label>
-                <div className="input-group">
-                  <input
-                    type="email"
-                    name="email"
-                    value={editData.email}
-                    onChange={handleEditChange}
-                    disabled={!editableFields.email}
-                  />
-                  <button type="button" onClick={() => toggleEditableField('email')} className="edit-button">
-                    <FaEdit />
-                  </button>
-                </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="input-group">
+                <input
+                  type="password"
+                  name="contrasena"
+                  value={editData.contrasena}
+                  onChange={handleEditChange}
+                  disabled={!editableFields.contrasena}
+                />
+                <button className="edit-button" onClick={() => toggleEditableField('contrasena')}>
+                  {editableFields.contrasena ? 'Guardar' : 'Editar'}
+                </button>
               </div>
-              <div className="form-group">
-                <label>Nueva Contraseña</label>
-                <div className="input-group">
-                  <input
-                    type="password"
-                    name="contrasena"
-                    value={editData.contrasena}
-                    onChange={handleEditChange}
-                    disabled={!editableFields.contrasena}
-                  />
-                  <button type="button" onClick={() => toggleEditableField('contrasena')} className="edit-button">
-                    <FaEdit />
-                  </button>
-                </div>
-              </div>
-              <div>
-                <button type="button" onClick={saveEdit}>Guardar</button>
-                <button type="button" onClick={() => setShowEditModal(false)}>Cancelar</button>
-              </div>
-            </form>
+            </FormGroup>
+            <button onClick={saveEdit}>Guardar Cambios</button>
+            <button onClick={() => setShowEditModal(false)}>Cerrar</button>
           </div>
-        </div>
+        </Modal>
       )}
-    </div>
+    </DashboardContainer>
   );
 };
 
