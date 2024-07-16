@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
+// src/components/NavBar.js
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 // Styled components
 const NavBarContainer = styled.div`
-  background-color: ${({ scrolled }) => (scrolled ? '#343a40' : 'transparent')}; /* Fondo transparente al inicio y sólido al hacer scroll */
+  background-color: #343a40;
   padding: 0.5rem 1rem;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: ${({ scrolled }) => (scrolled ? '0 4px 8px rgba(0, 0, 0, 0.3)' : 'none')}; /* Sombra solo al hacer scroll */
 `;
 
 const Container = styled.div`
@@ -25,18 +20,18 @@ const Container = styled.div`
 
 const Brand = styled(Link)`
   font-size: 2rem;
-  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Azul cuando se hace scroll, blanco antes de hacer scroll */
+  color: white;
   text-decoration: none;
 
   .text-primary {
-    color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Blanco cuando se hace scroll, azul antes de hacer scroll */
+    color: #007bff;
   }
 `;
 
 const NavbarToggler = styled.button`
   background: none;
   border: none;
-  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Blanco cuando se hace scroll, azul antes de hacer scroll */
+  color: white;
   font-size: 1.5rem;
 
   &:focus {
@@ -58,7 +53,7 @@ const NavItems = styled.div`
 `;
 
 const NavItem = styled(Link)`
-  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Blanco cuando se hace scroll, azul antes de hacer scroll */
+  color: white;
   text-decoration: none;
   margin-left: 1rem;
 
@@ -89,8 +84,7 @@ const MobileNavItem = styled(Link)`
 `;
 
 const NavBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -101,33 +95,18 @@ const NavBar = () => {
     navigate('/login'); // Redirect to login page
   };
 
-  const handleScroll = () => {
-    if (window.scrollY > 50) {
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   return (
-    <NavBarContainer scrolled={scrolled}>
+    <NavBarContainer>
       <Container>
-        <Brand to="/" scrolled={scrolled}>
+        <Brand to="/">
           <span className="text-primary">RIO</span>ARRIENDOS
         </Brand>
-        <NavbarToggler onClick={toggleMenu} scrolled={scrolled}>
+        <NavbarToggler onClick={toggleMenu}>
           <i className="fas fa-bars"></i>
         </NavbarToggler>
         <NavItems>
-          <NavItem to="/login" scrolled={scrolled}>Login</NavItem>
-          <NavItem to="/signup" scrolled={scrolled}>Signup</NavItem>
+          <NavItem to="/login">Login</NavItem>
+          <NavItem to="/signup">Signup</NavItem>
         </NavItems>
       </Container>
       <MobileMenu isOpen={isOpen}>

@@ -5,13 +5,14 @@ import axios from 'axios';
 import styled from 'styled-components'; 
 
 const NavBarContainer = styled.div`
-  background-color: #343a40;
+  background-color: #343a40; /* Color de fondo constante */
   padding: 0.5rem 1rem;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
-  transition: background-color 0.3s ease;
+  transition: box-shadow 0.3s ease, border-bottom 0.3s ease;
+  border-bottom: 2px solid ${({ scrolled }) => (scrolled ? 'black' : 'transparent')}; /* Cambio de borde solo */
 `;
 
 const Container = styled.div`
@@ -25,7 +26,7 @@ const Container = styled.div`
 
 const Brand = styled(Link)`
   font-size: 2rem;
-  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  color: white; /* Color constante */
   text-decoration: none;
 
   .text-primary {
@@ -36,7 +37,7 @@ const Brand = styled(Link)`
 const NavbarToggler = styled.button`
   background: none;
   border: none;
-  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  color: white; /* Color constante */
   font-size: 1.5rem;
 
   &:focus {
@@ -58,7 +59,7 @@ const NavItems = styled.div`
 `;
 
 const NavItem = styled(Link)`
-  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  color: white; /* Color constante */
   text-decoration: none;
   margin-left: 1rem;
 
@@ -156,21 +157,21 @@ const NavBarArrendador = () => {
   }, []);
 
   return (
-    <NavBarContainer style={{ backgroundColor: scrolled ? '#fff' : '#343a40' }}>
+    <NavBarContainer scrolled={scrolled}>
       <Container>
-        <Brand to="/arrendador/dashboard" scrolled={scrolled}>
+        <Brand to="/arrendador/dashboard">
           <span className="text-primary">RIO</span>ARRIENDOS
         </Brand>
-        <NavbarToggler onClick={toggleMenu} scrolled={scrolled}>
+        <NavbarToggler onClick={toggleMenu}>
           <i className="fas fa-bars"></i>
         </NavbarToggler>
         <NavItems>
-          <NavItem to="/arrendador/crear-departamento" scrolled={scrolled}>Crear Departamento</NavItem>
-          <NavItem to="/arrendador/mis-departamentos" scrolled={scrolled}>Departamentos</NavItem>
-          <NavItem to="/arrendador/anuncios-por-activar" scrolled={scrolled}>Anuncios por Activar</NavItem>
-          <NavItem to="/arrendador/anuncios-activados" scrolled={scrolled}>Anuncios Activados</NavItem>
-          <NavItem to="/arrendador/solicitudes-visita" scrolled={scrolled}>Solicitudes de Visita</NavItem>
-          <NavItem to="/arrendador/departamentos-arrendados" scrolled={scrolled}>Departamentos Arrendados</NavItem>
+          <NavItem to="/arrendador/crear-departamento">Crear Departamento</NavItem>
+          <NavItem to="/arrendador/mis-departamentos">Departamentos</NavItem>
+          <NavItem to="/arrendador/anuncios-por-activar">Anuncios por Activar</NavItem>
+          <NavItem to="/arrendador/anuncios-activados">Anuncios Activados</NavItem>
+          <NavItem to="/arrendador/solicitudes-visita">Solicitudes de Visita</NavItem>
+          <NavItem to="/arrendador/departamentos-arrendados">Departamentos Arrendados</NavItem>
           <DropdownContainer isOpen={dropdownOpen}>
             <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} /> {/* Cambia el color a amarillo */}
             <div className="dropdown-menu">

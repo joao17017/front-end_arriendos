@@ -6,13 +6,13 @@ import styled from 'styled-components';
 
 // Styled components
 const NavBarContainer = styled.div`
-  background-color: #343a40;
+  background-color: #343a40; /* Color de fondo constante */
   padding: 0.5rem 1rem;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
-  transition: background-color 0.3s ease;
+  transition: box-shadow 0.3s ease;
 `;
 
 const Container = styled.div`
@@ -26,7 +26,7 @@ const Container = styled.div`
 
 const Brand = styled(Link)`
   font-size: 2rem;
-  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  color: white; /* Color constante */
   text-decoration: none;
 
   .text-primary {
@@ -37,7 +37,7 @@ const Brand = styled(Link)`
 const NavbarToggler = styled.button`
   background: none;
   border: none;
-  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  color: white; /* Color constante */
   font-size: 1.5rem;
 
   &:focus {
@@ -59,7 +59,7 @@ const NavItems = styled.div`
 `;
 
 const NavItem = styled(Link)`
-  color: ${({ scrolled }) => (scrolled ? 'black' : 'white')};
+  color: white; /* Color constante */
   text-decoration: none;
   margin-left: 1rem;
 
@@ -135,7 +135,6 @@ const NavBarEstudiante = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -156,21 +155,6 @@ const NavBarEstudiante = () => {
     }
   };
 
-  const handleScroll = () => {
-    if (window.scrollY > 50) {
-      setScrolled(true);
-    } else {
-      setScrolled(false);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   const handleSearch = async (e) => {
     if (e.key === 'Enter') {
       navigate(`/estudiante/dashboard?query=${searchQuery}`);
@@ -178,12 +162,12 @@ const NavBarEstudiante = () => {
   };
 
   return (
-    <NavBarContainer style={{ backgroundColor: scrolled ? '#fff' : '#343a40' }}>
+    <NavBarContainer>
       <Container>
-        <Brand to="/estudiante/dashboard" scrolled={scrolled}>
+        <Brand to="/estudiante/dashboard">
           <span className="text-primary">RIO</span>ARRIENDOS
         </Brand>
-        <NavbarToggler onClick={toggleMenu} scrolled={scrolled}>
+        <NavbarToggler onClick={toggleMenu}>
           <i className="fas fa-bars"></i>
         </NavbarToggler>
         <NavItems>
@@ -194,10 +178,10 @@ const NavBarEstudiante = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleSearch}
           />
-          <NavItem to="/estudiante/MisFavoritos" scrolled={scrolled}>Favoritos</NavItem>
-          <NavItem to="/estudiante/dashboard" scrolled={scrolled}>Anuncios</NavItem>
-          <NavItem to="/mis-solicitudes" scrolled={scrolled}>Solicitud de Visita</NavItem>
-          <NavItem to="/estudiante/mis-arriendos/" scrolled={scrolled}>Mi Arriendo</NavItem>
+          <NavItem to="/estudiante/MisFavoritos">Favoritos</NavItem>
+          <NavItem to="/estudiante/dashboard">Anuncios</NavItem>
+          <NavItem to="/mis-solicitudes">Solicitud de Visita</NavItem>
+          <NavItem to="/estudiante/mis-arriendos/">Mi Arriendo</NavItem>
           <DropdownContainer isOpen={dropdownOpen}>
             <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} /> {/* Cambia el color a amarillo */}
             <div className="dropdown-menu">
