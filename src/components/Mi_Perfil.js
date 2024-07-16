@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import {jwtDecode} from 'jwt-decode'; // Importar jwtDecode correctamente
+import { jwtDecode } from 'jwt-decode'; // Importar jwtDecode correctamente
 import NavBarAdministrador from './NavBarAdministrador';
 import NavBarArrendador from './NavBarArrendador';
 import NavBarEstudiante from './NavBarEstudiante';
@@ -12,12 +12,13 @@ const ProfileContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 56px);
-  background-color: #f8f9fa;
+  min-height: calc(100vh - 56px); /* Asegúrate de que el contenedor tenga en cuenta el tamaño de la navbar */
+  background-color: #f8f9fa; /* Mantener el color de fondo original */
+  margin-top: 56px; /* Ajusta el margen superior para que el contenido aparezca debajo de la navbar */
 `;
 
 const FormContainer = styled.div`
-  background: white;
+  background: #F3F6FF; /* Color de fondo del contenedor del formulario */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -44,23 +45,23 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 0.5rem;
-  color: #6c757d;
+  color: #252531; /* Color de las letras de las etiquetas */
 `;
 
 const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ced4da;
+  border: 1px solid #DFB163; /* Color de los bordes del input */
   border-radius: 4px;
   outline: none;
 
   &:focus {
-    border-color: #007bff;
+    border-color: #252531; /* Color del borde al seleccionar el input */
   }
 `;
 
 const Button = styled.button`
-  background: #007bff;
+  background: #DFB163; /* Color de fondo del botón */
   color: white;
   padding: 0.75rem;
   border: none;
@@ -69,7 +70,7 @@ const Button = styled.button`
   margin-top: 1rem;
 
   &:hover {
-    background: #0056b3;
+    background: #252531; /* Color de fondo del botón al poner el mouse sobre él */
   }
 `;
 
@@ -181,11 +182,11 @@ const Profile = () => {
   return (
     <div>
       {profile.tipo === 'estudiante' && (<NavBarEstudiante />)}
-          {profile.tipo === 'arrendador' && (<NavBarArrendador />)}
-          {profile.tipo === 'administrador' && (<NavBarAdministrador />)}
+      {profile.tipo === 'arrendador' && (<NavBarArrendador />)}
+      {profile.tipo === 'administrador' && (<NavBarAdministrador />)}
       <ProfileContainer>
         <FormContainer>
-        {profile.tipo === 'estudiante' && (<Title>Mi Perfil de Estudiante</Title>)}
+          {profile.tipo === 'estudiante' && (<Title>Mi Perfil de Estudiante</Title>)}
           {profile.tipo === 'arrendador' && (<Title>Mi Perfil de Arrendador</Title>)}
           {profile.tipo === 'administrador' && (<Title>Mi Perfil de Administrador</Title>)}
           {error && <ErrorMessage>{error}</ErrorMessage>}
