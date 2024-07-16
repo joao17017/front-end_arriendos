@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Modal from "react-modal";
 import departamentoImage from "../imag/Departamento.jpg";
-import NavBar from "./NavBar";
+import NavBarLogin from "./NavBarLogin";
 
 Modal.setAppElement("#root");
 
@@ -247,7 +247,7 @@ const Login = () => {
 
   return (
     <LoginPage>
-      <NavBar />
+      <NavBarLogin />
       <LoginContainer>
         <LoginInfoContainer>
           <Title>Iniciar Sesión</Title>
