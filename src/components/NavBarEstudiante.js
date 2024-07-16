@@ -185,7 +185,7 @@ const NavBarEstudiante = () => {
           <DropdownContainer isOpen={dropdownOpen}>
             <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} /> {/* Cambia el color a amarillo */}
             <div className="dropdown-menu">
-              <button className="dropdown-item" onClick={() => navigate('/perfil')}>Mi Perfil</button>
+              <button className="dropdown-item" onClick={() => navigate('/mi-perfil')}>Mi Perfil</button>
               <button className="dropdown-item" onClick={handleLogout}>Salir</button>
             </div>
           </DropdownContainer>
@@ -196,7 +196,7 @@ const NavBarEstudiante = () => {
         <MobileNavItem to="/estudiante/dashboard" onClick={toggleMenu}>Anuncios</MobileNavItem>
         <MobileNavItem to="/mis-solicitudes" onClick={toggleMenu}>Solicitud de Visita</MobileNavItem>
         <MobileNavItem to="/estudiante/mis-arriendos/" onClick={toggleMenu}>Mi Arriendo</MobileNavItem>
-        <MobileNavItem to="/perfil" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
+        <MobileNavItem to="/mi-perfil/" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
         <MobileNavItem as="button" onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavItem>
       </MobileMenu>
     </NavBarContainer>

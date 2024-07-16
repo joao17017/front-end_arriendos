@@ -175,7 +175,7 @@ const NavBarArrendador = () => {
           <DropdownContainer isOpen={dropdownOpen}>
             <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} /> {/* Cambia el color a amarillo */}
             <div className="dropdown-menu">
-              <button className="dropdown-item" onClick={() => navigate('/arrendador/perfil')}>Mi Perfil</button>
+              <button className="dropdown-item" onClick={() => navigate('/mi-perfil')}>Mi Perfil</button>
               <button className="dropdown-item" onClick={handleLogout}>Salir</button>
             </div>
           </DropdownContainer>
@@ -188,7 +188,7 @@ const NavBarArrendador = () => {
         <MobileNavItem to="/arrendador/anuncios-activados" onClick={toggleMenu}>Anuncios Activados</MobileNavItem>
         <MobileNavItem to="/arrendador/solicitudes-visita" onClick={toggleMenu}>Solicitudes de Visita</MobileNavItem>
         <MobileNavItem to="/arrendador/departamentos-arrendados" onClick={toggleMenu}>Departamentos Arrendados</MobileNavItem>
-        <MobileNavItem to="/arrendador/perfil" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
+        <MobileNavItem to="/mi-perfil/" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
         <MobileNavItem as="button" onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavItem>
       </MobileMenu>
     </NavBarContainer>
