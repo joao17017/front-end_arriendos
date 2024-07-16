@@ -28,6 +28,7 @@ const Button = styled.button`
 const PropertyContainer = styled.div`
   width: 100%;
   padding: 15px;
+  box-sizing: border-box;
 
   @media (min-width: 992px) {
     .col-md-4 {
@@ -49,16 +50,21 @@ const PropertyItem = styled.div`
   position: relative;
   background: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;  // Asegura que todas las tarjetas tengan la misma altura
+  display: flex;
+  flex-direction: column;
 `;
 
 const ImageWrapper = styled.div`
   position: relative;
   overflow: hidden;
+  height: 200px;  // Altura fija para las imágenes
 `;
 
 const PropertyImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;  // Asegura que la imagen cubra el contenedor sin distorsión
 `;
 
 const Price = styled.h5`
@@ -86,6 +92,7 @@ const Address = styled.p`
 const InfoRow = styled.div`
   display: flex;
   border-top: 2px solid #DFB163;
+  margin-top: auto;  // Empuja la fila de información al final del contenedor
 `;
 
 const InfoItem = styled.small`
