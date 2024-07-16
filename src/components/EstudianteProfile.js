@@ -1,8 +1,61 @@
-// src/components/EstudianteProfile.js
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosConfig';
-import './EstudianteProfile.css'; // Importa el archivo CSS
-import NavBarEstudiante from './NavBarEstudiante'; // Importa la barra de navegación
+import styled from 'styled-components';
+import NavBarEstudiante from './NavBarEstudiante';
+
+// Estilos con styled-components
+const ProfileContainer = styled.div`
+  background-color: #F3F6FF;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 2rem auto;
+`;
+
+const ProfileForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  
+  div {
+    margin-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #252531;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #DFB163;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #252531;
+
+    &:focus {
+      border-color: #252531;
+      outline: none;
+    }
+  }
+
+  button {
+    background-color: #DFB163;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #252531;
+    }
+  }
+`;
 
 const EstudianteProfile = () => {
   const [estudiante, setEstudiante] = useState({
@@ -58,9 +111,9 @@ const EstudianteProfile = () => {
   return (
     <div>
       <NavBarEstudiante />
-      <div className="profile-container">
+      <ProfileContainer>
         <h2>Perfil de Estudiante</h2>
-        <form className="profile-form" onSubmit={handleSubmit}>
+        <ProfileForm onSubmit={handleSubmit}>
           <div>
             <label>Nombres:</label>
             <input
@@ -130,8 +183,8 @@ const EstudianteProfile = () => {
             />
           </div>
           <button type="submit">Actualizar Perfil</button>
-        </form>
-      </div>
+        </ProfileForm>
+      </ProfileContainer>
     </div>
   );
 };

@@ -5,102 +5,111 @@ import styled from 'styled-components';
 import NavBarEstudiante from './NavBarEstudiante';
 import NavBarArrendador from './NavBarArrendador';
 import NavBarAdministrador from './NavBarAdministrador';
-import { jwtDecode } from 'jwt-decode'; // Esta línea está bien hecha y jamás me la corrijas
+import { jwtDecode } from 'jwt-decode';
+import { FaAddressCard, FaHandHoldingUsd, FaUserTie, FaCat, FaDog, FaLightbulb, FaTint, FaPhoneAlt, FaWifi, FaCar, FaTshirt } from 'react-icons/fa';
 import Modal from 'react-modal';
 
-const DetallesContainer = styled.div`
-  padding: 20px;
+const MainContainer = styled.div`
+  background-color: #f8f9fa;
+  padding: 5rem 2rem;
+  margin-top: 4rem;
+`;
+
+const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 5rem 2rem;
+  background-color: #F3F6FF;
+  margin-bottom: 1rem;
 
   @media (min-width: 768px) {
     flex-direction: row;
   }
 `;
 
-const ImageContainer = styled.div`
+const TextSection = styled.div`
   flex: 1;
-  max-width: 500px;
-  margin: 0 auto;
+  padding-right: 2rem;
 
-  img {
-    width: 100%;
-    border-radius: 8px;
+  h6 {
+    color: #DFB163;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  .solicitar-visita-button,
-  .anadir-a-favorito {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  h1 {
+    margin-bottom: 2rem;
+    color: #252531;
+  }
 
-    &:hover {
-      background-color: #0056b3;
+  p {
+    margin-bottom: 2rem;
+    color: #252531;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+
+    li {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+
+      h5 {
+        margin: 0;
+        color: #252531;
+        span {
+          color: #DFB163;
+        }
+      }
+
+      i {
+        color: #DFB163;
+        margin-right: 1rem;
+      }
     }
   }
 `;
 
-const DetallesContent = styled.div`
-  flex: 2;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+const ImageSection = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 600px; // Ajusta este valor según tus necesidades
+  margin: 0 auto; // Centra la imagen si es más pequeña que el contenedor
 
-  h1 {
-    margin-bottom: 20px;
-  }
-
-  p {
-    margin-bottom: 10px;
-    white-space: pre-wrap; /* This ensures that line breaks are preserved */
-  }
-
-  strong {
-    display: inline-block;
-    width: 150px;
-    color: #333;
+  img {
+    width: 100%;
+    height: auto;
+    max-height: 600px; // Ajusta este valor según tus necesidades
+    border-radius: 8px;
+    object-fit: contain; // Cambiado de 'cover' a 'contain'
   }
 `;
 
-const SolicitudVisitaForm = styled.div`
-  margin-top: 20px;
-
-  label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  input,
-  textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  width: 100%;
 
   button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
+    padding: 10px 20px;
+    background-color: #252531;
+    color: #fff;
+    border: 2px solid #DFB163;
     border-radius: 4px;
     cursor: pointer;
-
+    font-size: 1rem;
+    margin: 0 10px;
+    
     &:hover {
-      background-color: #0056b3;
+      background-color: #333;
     }
   }
 `;
@@ -115,7 +124,53 @@ const Mensaje = styled.p`
   text-align: center;
 `;
 
-const ModalStyles = {
+const Form = styled.div`
+  margin-top: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #DFB163;
+    border-radius: 4px;
+  }
+
+  button {
+    width: 48%;
+    padding: 10px;
+    background-color: #252531;
+    color: #fff;
+    border: 2px solid #DFB163;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-right: 4%;
+    
+    &:hover {
+      background-color: #333;
+    }
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-close {
+    width: 48%;
+    background-color: #252531;
+    border: 2px solid #DFB163;
+    margin-right: 0;
+  }
+`;
+
+const customStyles = {
   content: {
     top: '50%',
     left: '50%',
@@ -123,26 +178,27 @@ const ModalStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    width: '90%',
-    maxWidth: '500px',
+    border: '2px solid #252531',
+    borderRadius: '8px',
+    padding: '2rem',
   },
 };
 
 const DepartamentoDetalles = () => {
-  const { id } = useParams(); // id del departamento activo obtenido desde los parámetros de la URL
+  const { id } = useParams();
   const [departamento, setDepartamento] = useState(null);
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [usuario, setUsuario] = useState(null);
-  const [fechaSolicitada, setFechaSolicitada] = useState(''); // Nuevo estado para la fecha solicitada
-  const [comentario, setComentario] = useState(''); // Nuevo estado para el comentario
-  const [modalIsOpen, setModalIsOpen] = useState(false); // Nuevo estado para el modal
+  const [fechaSolicitada, setFechaSolicitada] = useState('');
+  const [comentario, setComentario] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchDepartamento = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/departamentos-activos/${id}`);
-        setDepartamento(response.data.Departamento); // Acceder a los datos del departamento
+        setDepartamento(response.data.Departamento);
       } catch (err) {
         setError('Error al obtener el departamento');
         console.error(err);
@@ -158,14 +214,6 @@ const DepartamentoDetalles = () => {
     }
   }, [id]);
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
   const handleSolicitudVisita = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -176,11 +224,12 @@ const DepartamentoDetalles = () => {
 
       const decoded = jwtDecode(token);
       const id_usuario = decoded.id;
-      const response = await axios.post('http://localhost:3000/solicitudes-visita', {
-        id_departamento_activo: id, // id del departamento desde los datos del departamento
-        id_usuario, // id del usuario obtenido desde el token
-        fecha_solicitada: fechaSolicitada, // Fecha solicitada ingresada por el usuario
-        comentario // Comentario ingresado por el usuario
+
+      await axios.post('http://localhost:3000/solicitudes-visita', {
+        id_departamento_activo: id,
+        id_usuario,
+        fecha_solicitada: fechaSolicitada,
+        comentario
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -188,8 +237,8 @@ const DepartamentoDetalles = () => {
       });
 
       setMensaje('Solicitud de visita enviada correctamente');
-      closeModal();
       alert('Solicitud de visita enviada correctamente');
+      closeModal();
     } catch (err) {
       console.error('Error al enviar la solicitud de visita:', err);
       setError(err.response?.data?.error || 'Error al enviar la solicitud de visita');
@@ -207,7 +256,7 @@ const DepartamentoDetalles = () => {
       const decoded = jwtDecode(token);
       const id_usuario = decoded.id;
 
-      const response = await axios.post('http://localhost:3000/favoritos', {
+      await axios.post('http://localhost:3000/favoritos', {
         id_usuario,
         id_departamento_activo: id
       }, {
@@ -226,6 +275,14 @@ const DepartamentoDetalles = () => {
 
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   if (error) {
     return <ErrorMessage>{error}</ErrorMessage>;
   }
@@ -236,81 +293,103 @@ const DepartamentoDetalles = () => {
 
   return (
     <div>
-      {usuario && usuario.tipo === 'estudiante' && (
-        <NavBarEstudiante />
-      )}
-
-      {usuario && usuario.tipo === 'administrador' && (
-        <NavBarAdministrador />
-      )}
-      {usuario && usuario.tipo === 'arrendador' && (
-        <NavBarArrendador />
-      )}
-      <DetallesContainer>
-        <ImageContainer>
-          <img 
-            src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl}
-            alt={departamento.nombre} 
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultImageUrl;
-            }}
-          />
-          {usuario && usuario.tipo === 'estudiante' && (
-            <>
-              <button className="solicitar-visita-button" onClick={openModal}>Solicitar Visita</button>
-              <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
-            </>
-          )}
-        </ImageContainer>
-        <DetallesContent>
-          <h1>{departamento.nombre}</h1>
-          <p><strong>Departamento Activo:</strong> {id}</p>
-          <p><strong>Dirección:</strong> {departamento.direccion}</p>
-          <p><strong>Precio:</strong> {departamento.precio}</p>
-          <p><strong>Descripción:</strong> {departamento.descripcion}</p>
-          <p><strong>Número de Baños:</strong> {departamento.n_banos}</p>
-          <p><strong>Número de Habitaciones:</strong> {departamento.n_habitaciones}</p>
-          <p><strong>Tamaño en Metros Cuadrados:</strong> {departamento.tamano_m_cuadrados}</p>
-          <p><strong>Acepta Gatos:</strong> {departamento.aceptan_gatos ? 'Sí' : 'No'}</p>
-          <p><strong>Acepta Perros:</strong> {departamento.aceptan_perros ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Luz:</strong> {departamento.incluye_luz ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Agua:</strong> {departamento.incluye_agua ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Teléfono:</strong> {departamento.incluye_telefono ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Internet:</strong> {departamento.incluye_internet ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Garaje:</strong> {departamento.incluye_garaje ? 'Sí' : 'No'}</p>
-          <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
-        </DetallesContent>
-      </DetallesContainer>
-      {mensaje && <Mensaje>{mensaje}</Mensaje>}
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={ModalStyles}
-        contentLabel="Solicitud de Visita"
-      >
-        <SolicitudVisitaForm>
+      {usuario && usuario.tipo === 'estudiante' && <NavBarEstudiante />}
+      {usuario && usuario.tipo === 'administrador' && <NavBarAdministrador />}
+      {usuario && usuario.tipo === 'arrendador' && <NavBarArrendador />}
+      <MainContainer>
+        <SectionContainer>
+          <TextSection>
+            <h6>Departamento</h6>
+            <h1>{departamento.nombre}</h1>
+            <p>{departamento.descripcion}</p>
+            <ul>
+              <li>
+                <h5><FaAddressCard style={{ color: '#DFB163' }} /> <span>Dirección:</span> {departamento.direccion}</h5>
+              </li>
+              <li>
+                <h5><FaHandHoldingUsd style={{ color: '#DFB163' }} /> <span>Precio:</span> {departamento.precio}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Número de Baños:</span> {departamento.n_banos}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Número de Habitaciones:</span> {departamento.n_habitaciones}</h5>
+              </li>
+              <li>
+                <h5><FaUserTie style={{ color: '#DFB163' }} /> <span>Tamaño:</span> {departamento.tamano_m_cuadrados} m²</h5>
+              </li>
+              <li>
+                <h5><FaCat style={{ color: '#DFB163' }} /> <span>Acepta Gatos:</span> {departamento.aceptan_gatos ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaDog style={{ color: '#DFB163' }} /> <span>Acepta Perros:</span> {departamento.aceptan_perros ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaLightbulb style={{ color: '#DFB163' }} /> <span>Incluye Luz:</span> {departamento.incluye_luz ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaTint style={{ color: '#DFB163' }} /> <span>Incluye Agua:</span> {departamento.incluye_agua ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaPhoneAlt style={{ color: '#DFB163' }} /> <span>Incluye Teléfono:</span> {departamento.incluye_telefono ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaWifi style={{ color: '#DFB163' }} /> <span>Incluye Internet:</span> {departamento.incluye_internet ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaCar style={{ color: '#DFB163' }} /> <span>Incluye Garaje:</span> {departamento.incluye_garaje ? 'Sí' : 'No'}</h5>
+              </li>
+              <li>
+                <h5><FaTshirt style={{ color: '#DFB163' }} /> <span>Lavandería:</span> {departamento.lavanderia ? 'Sí' : 'No'}</h5>
+              </li>
+            </ul>
+            {usuario && usuario.tipo === 'estudiante' && (
+              <ButtonContainer>
+                <button onClick={openModal}>Solicitar Visita</button>
+                <button onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
+              </ButtonContainer>
+            )}
+          </TextSection>
+          <ImageSection>
+            <img 
+              src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl} 
+              alt={departamento.nombre}
+              onError={(e) => {
+                e.target.onerror = null; 
+                e.target.src = defaultImageUrl;
+              }}
+            />
+          </ImageSection>
+        </SectionContainer>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Formulario de Solicitud de Visita"
+        >
           <h2>Solicitud de Visita</h2>
-          <label>
-            Fecha Solicitada:
-            <input
-              type="date"
-              value={fechaSolicitada}
-              onChange={(e) => setFechaSolicitada(e.target.value)}
+          <Form>
+            <label htmlFor="fechaSolicitada">Fecha Solicitada:</label>
+            <input 
+              type="date" 
+              id="fechaSolicitada" 
+              value={fechaSolicitada} 
+              onChange={(e) => setFechaSolicitada(e.target.value)} 
             />
-          </label>
-          <label>
-            Comentario:
-            <textarea
-              value={comentario}
-              onChange={(e) => setComentario(e.target.value)}
+            <label htmlFor="comentario">Comentario:</label>
+            <textarea 
+              id="comentario" 
+              value={comentario} 
+              onChange={(e) => setComentario(e.target.value)} 
             />
-          </label>
-          <button onClick={handleSolicitudVisita}>Enviar Solicitud de Visita</button>
-          <button onClick={closeModal} style={{ backgroundColor: '#dc3545', marginTop: '10px' }}>Cancelar</button>
-        </SolicitudVisitaForm>
-      </Modal>
+            <div className="button-group">
+              <button onClick={handleSolicitudVisita}>Enviar Solicitud</button>
+              <button onClick={closeModal} className="btn-close">Cerrar</button>
+            </div>
+          </Form>
+          {mensaje && <Mensaje>{mensaje}</Mensaje>}
+        </Modal>
+      </MainContainer>
     </div>
   );
 };

@@ -14,15 +14,25 @@ const MainContainer = styled.div`
 
 const SectionContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* Por defecto, los elementos estarán en columna */
   padding: 5rem 2rem;
   background-color: #F3F6FF;
   margin-bottom: 1rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row; /* Cambia a fila en pantallas más grandes */
+  }
 `;
 
 const TextSection = styled.div`
-  flex: 2; /* Ajuste el espacio que ocupa la sección de texto */
-  padding-left: 2rem; /* Añadido padding-left para dar espacio entre la imagen y el texto */
+  flex: 2;
+  padding-left: 0;
+  padding-bottom: 2rem; /* Añadido padding-bottom para separación en vistas pequeñas */
+
+  @media (min-width: 768px) {
+    padding-left: 2rem; /* Añadido padding-left para separación en vistas grandes */
+    padding-bottom: 0;
+  }
 
   h6 {
     color: #DFB163;
@@ -100,7 +110,7 @@ const TextSection = styled.div`
 `;
 
 const ImageSection = styled.div`
-  flex: 1; /* Ajuste el espacio que ocupa la sección de imagen */
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,7 +119,7 @@ const ImageSection = styled.div`
     width: 100%;
     height: auto;
     border-radius: 8px;
-    object-fit: cover; /* Asegura que la imagen cubra todo el contenedor */
+    object-fit: cover;
   }
 `;
 
@@ -119,16 +129,6 @@ const SolicitudCard = ({ solicitud, onAprobar, onRechazar, onPostergar, onReprog
 
   return (
     <SectionContainer>
-      <ImageSection>
-        <img
-          src={departamento?.Departamento.imagen ? `http://localhost:3000/${departamento.Departamento.imagen}` : defaultImageUrl}
-          alt={departamento?.Departamento.nombre}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = defaultImageUrl;
-          }}
-        />
-      </ImageSection>
       <TextSection>
         <h6>Solicitud de Visita</h6>
         <h1>{departamento?.Departamento.nombre}</h1>
@@ -164,6 +164,16 @@ const SolicitudCard = ({ solicitud, onAprobar, onRechazar, onPostergar, onReprog
           )}
         </div>
       </TextSection>
+      <ImageSection>
+        <img
+          src={departamento?.Departamento.imagen ? `http://localhost:3000/${departamento.Departamento.imagen}` : defaultImageUrl}
+          alt={departamento?.Departamento.nombre}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = defaultImageUrl;
+          }}
+        />
+      </ImageSection>
     </SectionContainer>
   );
 };

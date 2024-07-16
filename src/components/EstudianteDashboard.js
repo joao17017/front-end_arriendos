@@ -1,16 +1,16 @@
-// src/components/EstudianteDashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import NavBarEstudiante from './NavBarEstudiante';
-import Filters from './Filters';
 
 const DashboardContainer = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-top: 80px;
+  background-color: #F3F6FF;
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -21,7 +21,7 @@ const Sidebar = styled.div`
   flex: 1;
   max-width: 300px;
   margin-bottom: 20px;
-  background-color: #f8f9fa;
+  background-color: #DFB163;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -86,6 +86,88 @@ const Button = styled.button`
   }
 `;
 
+const PropertyContainer = styled.div`
+  width: 100%;
+  padding: 15px;
+
+  @media (min-width: 992px) {
+    .col-md-4 {
+      width: 33.3333%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .col-md-6 {
+      width: 50%;
+    }
+  }
+`;
+
+const PropertyItem = styled.div`
+  border: 2px solid #DFB163;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+`;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  overflow: hidden;
+`;
+
+const PropertyImage = styled.img`
+  width: 100%;
+  height: auto;
+`;
+
+const Price = styled.h5`
+  color: #DFB163;
+  margin-bottom: 15px;
+`;
+
+const Title = styled.a`
+  display: block;
+  font-size: 1.125rem;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    color: #DFB163;
+  }
+`;
+
+const Address = styled.p`
+  font-size: 0.875rem;
+  color: #666;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  border-top: 2px solid #DFB163;
+`;
+
+const InfoItem = styled.small`
+  flex: 1;
+  text-align: center;
+  border-right: 2px solid #DFB163;
+  padding: 10px;
+  color: #333;
+  font-size: 0.875rem;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  i {
+    color: #DFB163;
+    margin-right: 5px;
+  }
+`;
+
 const EstudianteDashboard = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const [filteredDepartamentos, setFilteredDepartamentos] = useState([]);
@@ -139,14 +221,12 @@ const EstudianteDashboard = () => {
     const applyFilters = () => {
       let filtered = departamentos;
 
-      // Filtrar por campos booleanos
       Object.keys(filters).forEach((key) => {
         if (filters[key] === true) {
           filtered = filtered.filter((departamento) => departamento[key]);
         }
       });
 
-      // Filtrar por rango de precios
       if (filters.precioMin !== '') {
         filtered = filtered.filter(
           (departamento) => parseFloat(departamento.precio) >= parseFloat(filters.precioMin)
@@ -159,7 +239,6 @@ const EstudianteDashboard = () => {
         );
       }
 
-      // Filtrar por rango de tamaño
       if (filters.tamanoMin !== '') {
         filtered = filtered.filter(
           (departamento) => parseFloat(departamento.tamano_m_cuadrados) >= parseFloat(filters.tamanoMin)
@@ -381,30 +460,30 @@ const EstudianteDashboard = () => {
           <div className="container">
             <div className="row">
               {currentDepartamentos.map((departamento) => (
-                <div className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
-                  <div
-                    className="card"
-                    onClick={() => handleDepartamentoClick(departamento.id_departamento_activo)}
-                  >
-                    <img 
-                      src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl} 
-                      alt={departamento.nombre} 
-                      className="card-img-top" 
-                      onError={(e) => {
-                        e.target.onerror = null; 
-                        e.target.src = defaultImageUrl;
-                      }}
-                    />
-                    <div className="card-body bg-white p-4">
-                      <div className="d-flex align-items-center mb-3">
-                        <h5 className="m-0 ml-3 text-truncate">{departamento.nombre}</h5>
-                      </div>
-                      <p><strong>Dirección:</strong> {departamento.direccion}</p>
-                      <p><strong>Precio:</strong> {departamento.precio}</p>
-                      <p><strong>Descripción:</strong> {departamento.descripcion}</p>
+                <PropertyContainer className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
+                  <PropertyItem onClick={() => handleDepartamentoClick(departamento.id_departamento_activo)}>
+                    <ImageWrapper>
+                      <PropertyImage 
+                        src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl} 
+                        alt={departamento.nombre} 
+                        onError={(e) => {
+                          e.target.onerror = null; 
+                          e.target.src = defaultImageUrl;
+                        }}
+                      />
+                    </ImageWrapper>
+                    <div className="p-4 pb-0">
+                      <Price>{departamento.precio}</Price>
+                      <Title>{departamento.nombre}</Title>
+                      <Address><i className="fa fa-map-marker-alt"></i>{departamento.direccion}</Address>
                     </div>
-                  </div>
-                </div>
+                    <InfoRow>
+                      <InfoItem><i className="fa fa-ruler-combined"></i>{departamento.tamano_m_cuadrados} m²</InfoItem>
+                      <InfoItem><i className="fa fa-bed"></i>{departamento.n_habitaciones} habitaciones</InfoItem>
+                      <InfoItem><i className="fa fa-bath"></i>{departamento.n_banos} baños</InfoItem>
+                    </InfoRow>
+                  </PropertyItem>
+                </PropertyContainer>
               ))}
             </div>
             <PaginationContainer>
