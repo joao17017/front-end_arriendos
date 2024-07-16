@@ -1,10 +1,10 @@
-// src/components/Home.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
 import styled from 'styled-components';
 
+// Styled components
 const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -25,6 +25,88 @@ const Button = styled.button`
   }
 `;
 
+const PropertyContainer = styled.div`
+  width: 100%;
+  padding: 15px;
+
+  @media (min-width: 992px) {
+    .col-md-4 {
+      width: 33.3333%;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .col-md-6 {
+      width: 50%;
+    }
+  }
+`;
+
+const PropertyItem = styled.div`
+  border: 2px solid #DFB163;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const ImageWrapper = styled.div`
+  position: relative;
+  overflow: hidden;
+`;
+
+const PropertyImage = styled.img`
+  width: 100%;
+  height: auto;
+`;
+
+const Price = styled.h5`
+  color: #DFB163;
+  margin-bottom: 15px;
+`;
+
+const Title = styled.a`
+  display: block;
+  font-size: 1.125rem;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    color: #DFB163;
+  }
+`;
+
+const Address = styled.p`
+  font-size: 0.875rem;
+  color: #666;
+`;
+
+const InfoRow = styled.div`
+  display: flex;
+  border-top: 2px solid #DFB163;
+`;
+
+const InfoItem = styled.small`
+  flex: 1;
+  text-align: center;
+  border-right: 2px solid #DFB163;
+  padding: 10px;
+  color: #333;
+  font-size: 0.875rem;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  i {
+    color: #DFB163;
+    margin-right: 5px;
+  }
+`;
+
+// Component
 const Home = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const [error, setError] = useState('');
@@ -111,30 +193,32 @@ const Home = () => {
         <div className="container">
           <div className="row">
             {currentDepartamentos.map((departamento) => (
-              <div className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
-                <div
-                  className="card"
-                  onClick={handleDepartamentoClick}
-                >
-                  <img 
-                    src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : '/images/default-image.png'} 
-                    alt={departamento.nombre} 
-                    className="card-img-top" 
-                    onError={(e) => {
-                      e.target.onerror = null; 
-                      e.target.src = defaultImageUrl;
-                    }}
-                  />
-                  <div className="card-body bg-white p-4">
-                    <div className="d-flex align-items-center mb-3">
-                      <h5 className="m-0 ml-3 text-truncate">{departamento.nombre}</h5>
-                    </div>
-                    <p><strong>Dirección:</strong> {departamento.direccion}</p>
-                    <p><strong>Precio:</strong> {departamento.precio}</p>
-                    <p><strong>Descripción:</strong> {departamento.descripcion}</p>
+              <PropertyContainer className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
+                <PropertyItem>
+                  <ImageWrapper>
+                    <a href="#">
+                      <PropertyImage 
+                        src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl} 
+                        alt={departamento.nombre} 
+                        onError={(e) => {
+                          e.target.onerror = null; 
+                          e.target.src = defaultImageUrl;
+                        }}
+                      />
+                    </a>
+                  </ImageWrapper>
+                  <div className="p-4 pb-0">
+                    <Price>{departamento.precio}</Price>
+                    <Title href="#">{departamento.nombre}</Title>
+                    <Address><i className="fa fa-map-marker-alt"></i>{departamento.direccion}</Address>
                   </div>
-                </div>
-              </div>
+                  <InfoRow>
+                    <InfoItem><i className="fa fa-ruler-combined"></i>{departamento.tamano_m_cuadrados} m²</InfoItem>
+                    <InfoItem><i className="fa fa-bed"></i>{departamento.n_habitaciones} habitaciones</InfoItem>
+                    <InfoItem><i className="fa fa-bath"></i>{departamento.n_banos} baños</InfoItem>
+                  </InfoRow>
+                </PropertyItem>
+              </PropertyContainer>
             ))}
           </div>
           <PaginationContainer>
