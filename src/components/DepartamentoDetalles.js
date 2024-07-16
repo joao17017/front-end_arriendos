@@ -47,6 +47,11 @@ const ImageContainer = styled.div`
       background-color: #0056b3;
     }
   }
+
+  .anadir-a-favorito.disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
 `;
 
 const DetallesContent = styled.div`
@@ -137,6 +142,7 @@ const DepartamentoDetalles = () => {
   const [fechaSolicitada, setFechaSolicitada] = useState(''); // Nuevo estado para la fecha solicitada
   const [comentario, setComentario] = useState(''); // Nuevo estado para el comentario
   const [modalIsOpen, setModalIsOpen] = useState(false); // Nuevo estado para el modal
+  const [esFavorito, setEsFavorito] = useState(false); // Nuevo estado para el favorito
 
   useEffect(() => {
     const fetchDepartamento = async () => {
@@ -155,6 +161,21 @@ const DepartamentoDetalles = () => {
     if (token) {
       const decoded = jwtDecode(token);
       setUsuario(decoded);
+
+      // Verificar si el departamento está en los favoritos del usuario
+      const verificarFavorito = async () => {
+        try {
+          const response = await axios.post('http://localhost:3000/favoritos/verificar', {
+            id_usuario: decoded.id,
+            id_departamento_activo: id
+          });
+          setEsFavorito(response.data.favorito);
+        } catch (err) {
+          console.error('Error al verificar favorito:', err);
+        }
+      };
+
+      verificarFavorito();
     }
   }, [id]);
 
@@ -217,6 +238,7 @@ const DepartamentoDetalles = () => {
       });
 
       setMensaje('Añadido a favoritos correctamente');
+      setEsFavorito(true);
       alert('Añadido a favoritos correctamente');
     } catch (err) {
       console.error('Error al añadir a favoritos:', err);
@@ -259,7 +281,13 @@ const DepartamentoDetalles = () => {
           {usuario && usuario.tipo === 'estudiante' && (
             <>
               <button className="solicitar-visita-button" onClick={openModal}>Solicitar Visita</button>
-              <button className="anadir-a-favorito" onClick={handleAnadirAFavorito}>Añadir a Favorito</button>
+              <button
+                className={`anadir-a-favorito ${esFavorito ? 'disabled' : ''}`}
+                onClick={handleAnadirAFavorito}
+                disabled={esFavorito}
+              >
+                {esFavorito ? 'En Favoritos' : 'Añadir a Favorito'}
+              </button>
             </>
           )}
         </ImageContainer>
