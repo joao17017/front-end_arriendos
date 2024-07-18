@@ -105,13 +105,13 @@ const NavBar = () => {
           <i className="fas fa-bars"></i>
         </NavbarToggler>
         <NavItems>
-          <NavItem to="/login">Login</NavItem>
-          <NavItem to="/signup">Signup</NavItem>
+          <NavItem to="/login">Iniciar Sesion</NavItem>
+          <NavItem to="/signup">Registartse</NavItem>
         </NavItems>
       </Container>
       <MobileMenu isOpen={isOpen}>
-        <MobileNavItem to="/login" onClick={toggleMenu}>Login</MobileNavItem>
-        <MobileNavItem to="/signup" onClick={toggleMenu}>Signup</MobileNavItem>
+        <MobileNavItem to="/login" onClick={toggleMenu}>Iniciar Sesion</MobileNavItem>
+        <MobileNavItem to="/signup" onClick={toggleMenu}>Registrarse</MobileNavItem>
       </MobileMenu>
     </NavBarContainer>
   );

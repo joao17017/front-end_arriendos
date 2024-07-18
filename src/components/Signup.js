@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import NavBar from './NavBar';
+import NavBarLogin from './NavBarLogin';
 
 // Styled components
 const SignupContainer = styled.div`
@@ -151,7 +151,7 @@ const Signup = () => {
 
   return (
     <div>
-      <NavBar />
+      <NavBarLogin />
       <SignupContainer>
         {submitted ? (
           <ConfirmationMessage>
