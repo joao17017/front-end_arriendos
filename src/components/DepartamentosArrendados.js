@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import NavBarArrendador from './NavBarArrendador';
 import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
+import Modal from 'react-modal';
+import Rating from 'react-rating-stars-component';
 
 const MainContainer = styled.div`
   background-color: #f8f9fa;
@@ -14,21 +16,20 @@ const MainContainer = styled.div`
 
 const SectionContainer = styled.div`
   display: flex;
-  flex-direction: column;  /* Cambia la dirección a columna por defecto */
+  flex-direction: column;
   padding: 5rem 2rem;
   background-color: #F3F6FF;
   margin-bottom: 1rem;
 
   @media (min-width: 768px) {
-    flex-direction: row;  /* Cambia a fila en pantallas grandes */
+    flex-direction: row;
     justify-content: space-between;
   }
 `;
 
 const TextSection = styled.div`
   flex: 1;
-  padding-right: 0;  /* Ajuste para el diseño en columna */
-  margin-bottom: 2rem;  /* Espaciado en la parte inferior para pantallas pequeñas */
+  margin-bottom: 2rem;
 
   h6 {
     color: #DFB163;
@@ -121,11 +122,91 @@ const ImageSection = styled.div`
 const ButtonSection = styled.div`
   margin-top: 2rem;
   display: flex;
-  gap: 10px; /* Espacio entre los botones */
+  gap: 10px;
 
   @media (min-width: 768px) {
     margin-top: 0;
   }
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    color: #252531;
+    margin-bottom: 1.5rem;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      color: #252531;
+    }
+
+    textarea, input {
+      width: 95%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ced4da;
+      outline: none;
+
+      &:focus {
+        border-color: #007bff;
+      }
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &.btn-primary {
+          background-color: #007bff;
+          color: white;
+
+          &:hover {
+            background-color: #0056b3;
+          }
+        }
+
+        &.btn-secondary {
+          background-color: #6c757d;
+          color: white;
+
+          &:hover {
+            background-color: #5a6268;
+          }
+        }
+      }
+    }
+  }
+`;
+
+const RatingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: row; /* Make sure stars are aligned horizontally */
 `;
 
 const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar }) => {
@@ -149,7 +230,7 @@ const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar })
           </li>
         </ul>
         <ButtonSection>
-          <button className="btn btn-primary" onClick={() => onComentar(departamento.id_departamento)}>Comentar</button>
+          <button className="btn btn-primary" onClick={() => onComentar(departamento)}>Comentar</button>
           <button className="btn btn-danger" onClick={() => onEliminar(departamento.id_DepartamentoArrendado)}>Eliminar</button>
           <button className="btn btn-warning" onClick={() => onDesocupar(departamento.id_DepartamentoArrendado)}>Desocupar</button>
         </ButtonSection>
@@ -170,6 +251,10 @@ const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar })
 
 const DepartamentosArrendados = () => {
   const [departamentos, setDepartamentos] = useState([]);
+  const [comentario, setComentario] = useState('');
+  const [estrellas, setEstrellas] = useState(0);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedDepartamento, setSelectedDepartamento] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -200,8 +285,37 @@ const DepartamentosArrendados = () => {
     fetchDepartamentos();
   }, [navigate]);
 
-  const handleComentar = (id_departamento) => {
-    console.log('Comentar:', id_departamento);
+  const handleComentar = (departamento) => {
+    setSelectedDepartamento(departamento);
+    setModalIsOpen(true);
+  };
+
+  const submitComentario = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      await axios.post('http://localhost:3000/comentarios/arrendador-a-usuario', {
+        id_usuario: selectedDepartamento.Usuario.id_usuario,
+        id_arrendador: selectedDepartamento.Arrendador.id_arrendador,
+        comentario,
+        estrellas,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setModalIsOpen(false);
+      setComentario('');
+      setEstrellas(0);
+      console.log('Comentario Enviado');
+    } catch (err) {
+      console.error('Error al comentar:', err);
+    }
   };
 
   const handleEliminar = async (id_departamento_arrendado) => {
@@ -248,6 +362,58 @@ const DepartamentosArrendados = () => {
           />
         ))}
       </MainContainer>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            maxWidth: '500px',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+        contentLabel="Comentario"
+      >
+        <ModalContainer>
+          <h2>Comentar a {selectedDepartamento?.Usuario?.nombres}</h2>
+          <form onSubmit={(e) => { e.preventDefault(); submitComentario(); }}>
+            <div>
+              <label>Comentario:</label>
+              <textarea
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Estrellas:</label>
+              <RatingContainer>
+                <Rating
+                  count={5}
+                  size={24}
+                  activeColor="#ffd700"
+                  value={estrellas}
+                  onChange={(newValue) => {
+                    setEstrellas(newValue);
+                  }}
+                />
+              </RatingContainer>
+            </div>
+            <div className="button-container">
+              <button type="submit" className="btn btn-primary">Enviar</button>
+              <button type="button" className="btn btn-secondary" onClick={() => setModalIsOpen(false)}>Cancelar</button>
+            </div>
+          </form>
+        </ModalContainer>
+      </Modal>
     </div>
   );
 };

@@ -19,7 +19,7 @@ import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
 import EditarDepartamento from "./components/EditarDepartamento";
 import ArrendadorProfile from "./components/ArrendadorProfile";
-import EstudianteProfile from "./components/EstudianteProfile";
+import EstudianteProfile from "./components/Mi_Perfil";
 import AdministradorProfile from "./components/AdministradorProfile";
 import CrearDepartamento from "./components/CrearDepartamento";
 import MisFavoritos from "./components/MisFavoritos";

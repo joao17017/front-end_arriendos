@@ -1,192 +1,258 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../api/axiosConfig';
+import axios from 'axios';
 import styled from 'styled-components';
+import { jwtDecode } from 'jwt-decode'; // Importar jwtDecode correctamente
+import NavBarAdministrador from './NavBarAdministrador';
+import NavBarArrendador from './NavBarArrendador';
 import NavBarEstudiante from './NavBarEstudiante';
 
-// Estilos con styled-components
+// Styled components
 const ProfileContainer = styled.div`
-  background-color: #F3F6FF;
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 800px;
-  margin: 2rem auto;
-`;
-
-const ProfileForm = styled.form`
   display: flex;
   flex-direction: column;
-  
-  div {
-    margin-bottom: 1rem;
-  }
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 56px); /* Asegúrate de que el contenedor tenga en cuenta el tamaño de la navbar */
+  background-color: #f8f9fa; /* Mantener el color de fondo original */
+  margin-top: 56px; /* Ajusta el margen superior para que el contenido aparezca debajo de la navbar */
+`;
 
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #252531;
-    font-weight: bold;
-  }
+const FormContainer = styled.div`
+  background: #F3F6FF; /* Color de fondo del contenedor del formulario */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem;
+`;
 
-  input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 2px solid #DFB163;
-    border-radius: 4px;
-    font-size: 1rem;
-    color: #252531;
+const Title = styled.h2`
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+`;
 
-    &:focus {
-      border-color: #252531;
-      outline: none;
-    }
-  }
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
 
-  button {
-    background-color: #DFB163;
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+const FormGroup = styled.div`
+  margin-bottom: 1rem;
+`;
 
-    &:hover {
-      background-color: #252531;
-    }
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #252531; /* Color de las letras de las etiquetas */
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #DFB163; /* Color de los bordes del input */
+  border-radius: 4px;
+  outline: none;
+
+  &:focus {
+    border-color: #252531; /* Color del borde al seleccionar el input */
   }
 `;
 
-const EstudianteProfile = () => {
-  const [estudiante, setEstudiante] = useState({
-    id_usuario: '',
-    nombres: '',
-    cedula: '',
-    telefono: '',
-    email: '',
-    universidad: '',
-    contrasena: '',
-    estado: false,
-  });
+const Button = styled.button`
+  background: #DFB163; /* Color de fondo del botón */
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
 
-  const [loading, setLoading] = useState(true);
+  &:hover {
+    background: #252531; /* Color de fondo del botón al poner el mouse sobre él */
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  margin-bottom: 1rem;
+`;
+
+const Profile = () => {
+  const [profile, setProfile] = useState({});
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProfile = async () => {
       try {
-        const response = await axiosInstance.get('/api/estudiante'); // Cambia la URL según tu configuración
-        setEstudiante(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching estudiante data:', error);
-        setLoading(false);
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        const userType = decoded.tipo;
+
+        const response = await axios.get('http://localhost:3000/usuarios/perfil', {
+          params: {
+            id: userId,
+            tipo: userType,
+          },
+        });
+        setProfile(decoded);
+        setFormData(response.data);
+      } catch (err) {
+        setError('Error al cargar el perfil');
       }
     };
 
-    fetchData();
+    fetchProfile();
   }, []);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setEstudiante({
-      ...estudiante,
-      [name]: type === 'checkbox' ? checked : value,
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.put(`/api/estudiante/${estudiante.id_usuario}`, estudiante);
-      alert('Perfil actualizado con éxito');
-    } catch (error) {
-      console.error('Error updating estudiante data:', error);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const userId = decoded.id;
+      const userType = decoded.tipo;
+
+      const response = await axios.put('http://localhost:3000/usuarios/perfil', {
+        ...formData,
+        id: userId,
+        tipo: userType,
+      });
+      setSuccess('Perfil actualizado exitosamente');
+      setError('');
+      setProfile(response.data);
+    } catch (err) {
+      setError('Error actualizando el perfil');
+      setSuccess('');
     }
   };
 
-  if (loading) {
-    return <p>Cargando...</p>;
-  }
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const userId = decoded.id;
+      const userType = decoded.tipo;
+
+      await axios.put('http://localhost:3000/usuarios/perfil/cambiar-contrasena', {
+        id: userId,
+        tipo: userType,
+        oldPassword,
+        newPassword,
+      });
+      setSuccess('Contraseña actualizada exitosamente');
+      setError('');
+      setOldPassword('');
+      setNewPassword('');
+    } catch (err) {
+      setError('Error cambiando la contraseña');
+      setSuccess('');
+    }
+  };
 
   return (
     <div>
-      <NavBarEstudiante />
+      {profile.tipo === 'estudiante' && (<NavBarEstudiante />)}
+      {profile.tipo === 'arrendador' && (<NavBarArrendador />)}
+      {profile.tipo === 'administrador' && (<NavBarAdministrador />)}
       <ProfileContainer>
-        <h2>Perfil de Estudiante</h2>
-        <ProfileForm onSubmit={handleSubmit}>
-          <div>
-            <label>Nombres:</label>
-            <input
-              type="text"
-              name="nombres"
-              value={estudiante.nombres}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Cédula:</label>
-            <input
-              type="text"
-              name="cedula"
-              value={estudiante.cedula}
-              readOnly
-            />
-          </div>
-          <div>
-            <label>Teléfono:</label>
-            <input
-              type="text"
-              name="telefono"
-              value={estudiante.telefono}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              name="email"
-              value={estudiante.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Universidad:</label>
-            <input
-              type="text"
-              name="universidad"
-              value={estudiante.universidad}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              name="contrasena"
-              value={estudiante.contrasena}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Estado:</label>
-            <input
-              type="checkbox"
-              name="estado"
-              checked={estudiante.estado}
-              onChange={handleChange}
-            />
-          </div>
-          <button type="submit">Actualizar Perfil</button>
-        </ProfileForm>
+        <FormContainer>
+          {profile.tipo === 'estudiante' && (<Title>Mi Perfil de Estudiante</Title>)}
+          {profile.tipo === 'arrendador' && (<Title>Mi Perfil de Arrendador</Title>)}
+          {profile.tipo === 'administrador' && (<Title>Mi Perfil de Administrador</Title>)}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {success && <ErrorMessage style={{ color: 'green' }}>{success}</ErrorMessage>}
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label>Nombres:</Label>
+              <Input type="text" name="nombres" value={formData.nombres || ''} onChange={handleChange} required />
+            </FormGroup>
+            <FormGroup>
+              <Label>Teléfono:</Label>
+              <Input type="text" name="telefono" value={formData.telefono || ''} onChange={handleChange} required />
+            </FormGroup>
+            <FormGroup>
+              <Label>Email:</Label>
+              <Input type="email" name="email" value={formData.email || ''} onChange={handleChange} required />
+            </FormGroup>
+            {profile.tipo === 'estudiante' && (
+              <>
+                <FormGroup>
+                  <Label>Universidad:</Label>
+                  <Input type="text" name="universidad" value={formData.universidad || ''} onChange={handleChange} required />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Cédula:</Label>
+                  <Input type="text" name="cedula" value={formData.cedula || ''} onChange={handleChange} required />
+                </FormGroup>
+              </>
+            )}
+            {profile.tipo === 'arrendador' && (
+              <>
+                <FormGroup>
+                  <Label>RUC:</Label>
+                  <Input type="text" name="RUC" value={formData.RUC || ''} onChange={handleChange} required />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Dirección:</Label>
+                  <Input type="text" name="direccion" value={formData.direccion || ''} onChange={handleChange} required />
+                </FormGroup>
+              </>
+            )}
+            {profile.tipo === 'administrador' && (
+              <>
+                <FormGroup>
+                  <Label>Cédula:</Label>
+                  <Input type="text" name="cedula" value={formData.cedula || ''} onChange={handleChange} required />
+                </FormGroup>
+              </>
+            )}
+            <Button type="submit">Actualizar Perfil</Button>
+          </Form>
+          <Form onSubmit={handleChangePassword}>
+            <FormGroup>
+              <Label>Contraseña Actual:</Label>
+              <Input type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} required />
+            </FormGroup>
+            <FormGroup>
+              <Label>Nueva Contraseña:</Label>
+              <Input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+            </FormGroup>
+            <Button type="submit">Cambiar Contraseña</Button>
+          </Form>
+        </FormContainer>
       </ProfileContainer>
     </div>
   );
 };
 
-export default EstudianteProfile;
+export default Profile;

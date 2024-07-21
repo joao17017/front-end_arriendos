@@ -144,6 +144,7 @@ const Profile = () => {
       setSuccess('Perfil actualizado exitosamente');
       setError('');
       setProfile(response.data);
+      window.location.reload(); // Recargar la vista
     } catch (err) {
       setError('Error actualizando el perfil');
       setSuccess('');
@@ -173,6 +174,7 @@ const Profile = () => {
       setError('');
       setOldPassword('');
       setNewPassword('');
+      window.location.reload(); // Recargar la vista
     } catch (err) {
       setError('Error cambiando la contraseña');
       setSuccess('');

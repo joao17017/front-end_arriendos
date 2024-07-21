@@ -1,16 +1,71 @@
-// src/components/ListaSolicitudesVisita.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import NavBarEstudiante from "./NavBarEstudiante";
 import {jwtDecode} from "jwt-decode";
-import "./ListaSolicitudesVisita.css";
+import styled from "styled-components";
+import NavBarEstudiante from "./NavBarEstudiante";
+
+const ListaSolicitudesContainer = styled.div`
+  padding: 2rem;
+  background-color: #f8f9fa;
+`;
+
+const SolicitudesList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+`;
+
+const SolicitudCard = styled.div`
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h3 {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    width: calc(50% - 2rem);
+  }
+
+  @media (min-width: 1024px) {
+    width: calc(33.33% - 2rem);
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+  margin-top: 2rem;
+`;
 
 const ListaSolicitudesVisita = () => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
   useEffect(() => {
     const fetchSolicitudes = async () => {
@@ -45,7 +100,7 @@ const ListaSolicitudesVisita = () => {
   }, [navigate]);
 
   if (error) {
-    return <p className="error-message">{error}</p>;
+    return <ErrorMessage>{error}</ErrorMessage>;
   }
 
   if (!solicitudes.length) {
@@ -55,11 +110,12 @@ const ListaSolicitudesVisita = () => {
   return (
     <div>
       <NavBarEstudiante />
-      <div className="lista-solicitudes-container">
+      <ListaSolicitudesContainer>
+        <br></br>
         <h1>Mis Solicitudes de Visita</h1>
-        <div className="solicitudes-list">
+        <SolicitudesList>
           {solicitudes.map((solicitud) => (
-            <div className="solicitud-card" key={solicitud.id_solicitud_visita}>
+            <SolicitudCard key={solicitud.id_solicitud_visita}>
               {solicitud.DepartamentoActivo && solicitud.DepartamentoActivo.Departamento ? (
                 <>
                   <h3>{solicitud.DepartamentoActivo.Departamento.nombre}</h3>
@@ -80,21 +136,26 @@ const ListaSolicitudesVisita = () => {
                   <p>
                     <strong>Comentario Arrendador:</strong> {solicitud.comentario_arrendador}
                   </p>
-                  {solicitud.DepartamentoActivo.Departamento.imagen && (
-                    <img
-                      src={`http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`}
-                      alt={solicitud.DepartamentoActivo.Departamento.nombre}
-                      className="solicitud-image"
-                    />
-                  )}
+                  <img
+                    src={
+                      solicitud.DepartamentoActivo.Departamento.imagen
+                        ? `http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`
+                        : defaultImageUrl
+                    }
+                    alt={solicitud.DepartamentoActivo.Departamento.nombre}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = defaultImageUrl;
+                    }}
+                  />
                 </>
               ) : (
                 <p>Departamento no encontrado</p>
               )}
-            </div>
+            </SolicitudCard>
           ))}
-        </div>
-      </div>
+        </SolicitudesList>
+      </ListaSolicitudesContainer>
     </div>
   );
 };
