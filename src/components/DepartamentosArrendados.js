@@ -1,7 +1,8 @@
+// src/components/DepartamentosArrendados.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Importa jwtDecode correctamente
 import NavBarArrendador from './NavBarArrendador';
 import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
@@ -303,6 +304,7 @@ const DepartamentosArrendados = () => {
         id_arrendador: selectedDepartamento.Arrendador.id_arrendador,
         comentario,
         estrellas,
+        id_departamento: selectedDepartamento.Departamento.id_departamento
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
