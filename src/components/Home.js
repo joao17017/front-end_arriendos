@@ -203,7 +203,7 @@ const Home = () => {
               <PropertyContainer className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
                 <PropertyItem>
                   <ImageWrapper>
-                    <a href="#">
+                    <a href="/login">
                       <PropertyImage 
                         src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl} 
                         alt={departamento.nombre} 
@@ -216,7 +216,7 @@ const Home = () => {
                   </ImageWrapper>
                   <div className="p-4 pb-0">
                     <Price>{departamento.precio}</Price>
-                    <Title href="#">{departamento.nombre}</Title>
+                    <Title href="/login">{departamento.nombre}</Title>
                     <Address><i className="fa fa-map-marker-alt"></i>{departamento.direccion}</Address>
                   </div>
                   <InfoRow>

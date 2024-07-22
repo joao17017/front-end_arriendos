@@ -127,6 +127,11 @@ const SubmitButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+`;
+
 const EditarDepartamento = () => {
   const { id_departamento } = useParams();
   const [departamento, setDepartamento] = useState({
@@ -151,6 +156,7 @@ const EditarDepartamento = () => {
     imagen: null
   });
   const [nuevaImagen, setNuevaImagen] = useState(null);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -196,6 +202,31 @@ const EditarDepartamento = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar precio
+    if (departamento.precio < 20 || departamento.precio > 1000) {
+      setError('El precio debe estar entre 20 y 1000');
+      return;
+    }
+
+    // Validar número de baños
+    if (departamento.n_banos < 0 || departamento.n_banos > 25) {
+      setError('El número de baños debe estar entre 0 y 25');
+      return;
+    }
+
+    // Validar número de habitaciones
+    if (departamento.n_habitaciones < 0 || departamento.n_habitaciones > 25) {
+      setError('El número de habitaciones debe estar entre 0 y 25');
+      return;
+    }
+
+    // Validar tamaño en metros cuadrados
+    if (departamento.tamano_m_cuadrados < 5) {
+      setError('El tamaño en metros cuadrados debe ser como mínimo 5');
+      return;
+    }
+
     try {
       const formData = new FormData();
       for (const key in departamento) {
@@ -217,11 +248,14 @@ const EditarDepartamento = () => {
     }
   };
 
+  const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+
   return (
     <div>
       <NavBarArrendador />
       <FormContainer>
         <Title>Editar Departamento</Title>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <Form onSubmit={handleSubmit}>
           <Input type="hidden" name="id_departamento" value={departamento.id_departamento} />
           <Input type="hidden" name="id_arrendador" value={departamento.id_arrendador} />
@@ -275,6 +309,7 @@ const EditarDepartamento = () => {
                     name="n_banos"
                     value={departamento.n_banos}
                     onChange={handleChange}
+                    required
                   />
                 </FormGroup>
                 <FormGroup>
@@ -284,6 +319,7 @@ const EditarDepartamento = () => {
                     name="n_habitaciones"
                     value={departamento.n_habitaciones}
                     onChange={handleChange}
+                    required
                   />
                 </FormGroup>
               </FormRow>
@@ -378,6 +414,7 @@ const EditarDepartamento = () => {
                   name="tamano_m_cuadrados"
                   value={departamento.tamano_m_cuadrados}
                   onChange={handleChange}
+                  required
                 />
               </FormGroup>
               <FormGroup>
@@ -389,12 +426,24 @@ const EditarDepartamento = () => {
                   onChange={handleChange}
                 />
               </FormGroup>
+              <FormGroup>
+                <Label>Imagen Actual</Label>
+                <img 
+                  src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl}
+                  alt={departamento.nombre}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultImageUrl;
+                  }}
+                  style={{ width: '100%', borderRadius: '8px', marginBottom: '10px' }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label>Nueva Imagen</Label>
+                <Input type="file" name="imagen" accept="image/*" onChange={handleImageChange} />
+              </FormGroup>
             </FormSection>
           </FormRow>
-          <FormGroup>
-            <Label>Imagen</Label>
-            <Input type="file" name="imagen" accept="image/*" onChange={handleImageChange} />
-          </FormGroup>
           <SubmitButton type="submit">Guardar Cambios</SubmitButton>
         </Form>
       </FormContainer>

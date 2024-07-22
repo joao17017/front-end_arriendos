@@ -195,6 +195,16 @@ const DepartamentoDetalles = () => {
         return;
       }
 
+      // Validar fecha solicitada
+      const hoy = new Date();
+      const fechaMinima = hoy.toISOString().split('T')[0];
+      const fechaMaxima = new Date(hoy.setDate(hoy.getDate() + 8)).toISOString().split('T')[0];
+
+      if (fechaSolicitada < fechaMinima || fechaSolicitada > fechaMaxima) {
+        setError(`La fecha solicitada debe estar entre hoy y ${fechaMaxima}`);
+        return;
+      }
+
       const decoded = jwtDecode(token);
       const id_usuario = decoded.id;
       const response = await axios.post('http://localhost:3000/solicitudes-visita', {
@@ -258,6 +268,7 @@ const DepartamentoDetalles = () => {
 
   return (
     <div>
+      <br></br><br></br>
       {usuario && usuario.tipo === 'estudiante' && (
         <NavBarEstudiante />
       )}
@@ -326,6 +337,8 @@ const DepartamentoDetalles = () => {
               type="date"
               value={fechaSolicitada}
               onChange={(e) => setFechaSolicitada(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              max={new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
             />
           </label>
           <label>

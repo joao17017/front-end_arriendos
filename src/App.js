@@ -111,7 +111,7 @@ function App() {
             path="/arrendador/dashboard"
             element={
               <PrivateRoute allowedRoles={["arrendador"]}>
-                <ArrendadorDashboard />
+                <MisDepartamentos />
               </PrivateRoute>
             }
           />

@@ -127,6 +127,11 @@ const SubmitButton = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  text-align: center;
+`;
+
 const CrearDepartamento = () => {
   const [departamento, setDepartamento] = useState({
     nombre: '',
@@ -148,6 +153,7 @@ const CrearDepartamento = () => {
     imagen: null
   });
   const [nuevaImagen, setNuevaImagen] = useState(null);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -164,6 +170,31 @@ const CrearDepartamento = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar precio
+    if (departamento.precio < 20 || departamento.precio > 1000) {
+      setError('El precio debe estar entre 20 y 1000');
+      return;
+    }
+
+    // Validar número de baños
+    if (departamento.n_banos < 0 || departamento.n_banos > 25) {
+      setError('El número de baños debe estar entre 0 y 25');
+      return;
+    }
+
+    // Validar número de habitaciones
+    if (departamento.n_habitaciones < 0 || departamento.n_habitaciones > 25) {
+      setError('El número de habitaciones debe estar entre 0 y 25');
+      return;
+    }
+
+    // Validar tamaño en metros cuadrados
+    if (departamento.tamano_m_cuadrados < 5) {
+      setError('El tamaño en metros cuadrados debe ser como mínimo 5');
+      return;
+    }
+
     try {
       const formData = new FormData();
       for (const key in departamento) {
@@ -195,6 +226,7 @@ const CrearDepartamento = () => {
       <NavBarArrendador />
       <FormContainer>
         <Title>Crear Nuevo Departamento</Title>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <Form onSubmit={handleSubmit}>
           <FormRow>
             <FormSection>
