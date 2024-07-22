@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
 import NavBarEstudiante from "./NavBarEstudiante";
 
@@ -99,6 +99,14 @@ const ListaSolicitudesVisita = () => {
     fetchSolicitudes();
   }, [navigate]);
 
+  const formatFecha = (fecha) => {
+    const date = new Date(fecha);
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   if (error) {
     return <ErrorMessage>{error}</ErrorMessage>;
   }
@@ -109,6 +117,7 @@ const ListaSolicitudesVisita = () => {
 
   return (
     <div>
+      <br></br>
       <NavBarEstudiante />
       <ListaSolicitudesContainer>
         <br></br>
@@ -125,7 +134,7 @@ const ListaSolicitudesVisita = () => {
                   </p>
                   <p>
                     <strong>Fecha Solicitada:</strong>{" "}
-                    {new Date(solicitud.fecha_solicitada).toLocaleDateString()}
+                    {formatFecha(solicitud.fecha_solicitada)}
                   </p>
                   <p>
                     <strong>Estado:</strong> {solicitud.estado}
