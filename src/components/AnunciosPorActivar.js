@@ -162,7 +162,7 @@ const AnunciosPorActivar = () => {
   //corregir api para borrar la solicitud
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/departamentos/${id}`);
+      await axios.delete(`http://localhost:3000/solicitudes-activacion/${id}`);
       setSolicitudes(solicitudes.filter(solicitud => solicitud.Departamento.id_departamento !== id));
     } catch (err) {
       console.error('Error deleting departamento:', err);
