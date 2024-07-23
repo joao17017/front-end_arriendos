@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
 import styled from 'styled-components';
 import Footer from './Footer';
+import { driver } from 'driver.js'; // Importación correcta de driver.js
+import 'driver.js/dist/driver.css'; // Importación correcta del CSS de driver.js
 
 // Styled components
 const PaginationContainer = styled.div`
@@ -51,7 +53,7 @@ const PropertyItem = styled.div`
   position: relative;
   background: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 100%;  /* Asegura que todas las tarjetas tengan la misma altura */
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;
@@ -59,13 +61,13 @@ const PropertyItem = styled.div`
 const ImageWrapper = styled.div`
   position: relative;
   overflow: hidden;
-  height: 200px;  /* Altura fija para las imágenes */
+  height: 200px;
 `;
 
 const PropertyImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;  /* Asegura que la imagen cubra el contenedor sin distorsión */
+  object-fit: cover;
 `;
 
 const Price = styled.h5`
@@ -93,7 +95,7 @@ const Address = styled.p`
 const InfoRow = styled.div`
   display: flex;
   border-top: 2px solid #DFB163;
-  margin-top: auto;  /* Empuja la fila de información al final del contenedor */
+  margin-top: auto;
 `;
 
 const InfoItem = styled.small`
@@ -114,12 +116,35 @@ const InfoItem = styled.small`
   }
 `;
 
-// Component
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const Home = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [departamentosPerPage] = useState(10);
+  const [inTour, setInTour] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -139,6 +164,23 @@ const Home = () => {
 
     fetchDepartamentosActivos();
   }, []);
+
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho', // Text for the "Done" button
+      closeBtnText: 'Cerrar', // Text for the "Close" button
+      nextBtnText: 'Siguiente', // Text for the "Next" button
+      prevBtnText: 'Anterior', // Text for the "Previous" button
+      steps: [
+        { element: '#header-carousel', popover: { title: 'Carrusel de Bienvenida', description: 'Aquí puedes ver las imágenes destacadas de nuestro sitio.', side: "bottom", align: 'start' }},
+        { element: '.container .row', popover: { title: 'Lista de Departamentos', description: 'Aquí puedes ver los departamentos disponibles.', side: "top", align: 'start' }},
+        
+      ]
+    });
+
+    driverObj.drive();
+  };
 
   const handleDepartamentoClick = () => {
     navigate('/login');
@@ -236,6 +278,7 @@ const Home = () => {
         </div>
       </div>
       <Footer />
+      <FloatingButton onClick={handleTour}>{inTour ? '🚪' : '❓'}</FloatingButton>
     </div>
   );
 };

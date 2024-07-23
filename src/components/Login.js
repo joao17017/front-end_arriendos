@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
 import Modal from "react-modal";
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 import departamentoImage from "../imag/Departamento.jpg";
 import NavBarLogin from "./NavBarLogin";
 
@@ -174,6 +176,29 @@ const NotificationModal = styled(ModalContent)`
   text-align: center;
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -241,6 +266,28 @@ const Login = () => {
     } catch (err) {
       setResetMessage("Error al enviar el correo de recuperación");
     }
+  };
+
+  const handleTour = () => {
+    const steps = [
+      { element: 'form', popover: { title: 'Formulario de Inicio de Sesión', description: 'Complete los campos para iniciar sesión.', side: 'top' }},
+      { element: 'input[id="email"]', popover: { title: 'Correo Electrónico', description: 'Ingrese su dirección de correo electrónico.', side: 'top' }},
+      { element: 'input[id="password"]', popover: { title: 'Contraseña', description: 'Ingrese su contraseña.', side: 'top' }},
+      { element: 'button[type="submit"]', popover: { title: 'Iniciar Sesión', description: 'Haga clic aquí para iniciar sesión.', side: 'top' }},
+      { element: '.span', popover: { title: 'Olvidé mi Contraseña', description: 'Haga clic aquí para recuperar su contraseña.', side: 'top' }},
+      { element: 'a[href="/signup"]', popover: { title: 'Registrarse', description: 'Haga clic aquí para registrarse si no tiene una cuenta.', side: 'top' }}
+    ];
+
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: steps
+    });
+
+    driverObj.drive();
   };
 
   return (
@@ -336,6 +383,8 @@ const Login = () => {
           <Button onClick={() => setIsNotificationOpen(false)}>Cerrar</Button>
         </NotificationModal>
       </Modal>
+      
+      <FloatingButton onClick={handleTour}>?</FloatingButton>
     </LoginPage>
   );
 };

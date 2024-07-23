@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 import NavBarEstudiante from './NavBarEstudiante';
 
 const DashboardContainer = styled.div`
@@ -255,6 +257,29 @@ const Spinner = styled.div`
   }
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const EstudianteDashboard = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const [filteredDepartamentos, setFilteredDepartamentos] = useState([]);
@@ -281,6 +306,7 @@ const EstudianteDashboard = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const filterHeaderRef = useRef(null);
 
   useEffect(() => {
     const fetchDepartamentosActivos = async () => {
@@ -359,6 +385,27 @@ const EstudianteDashboard = () => {
     navigate(`/departamentos/${id_departamento_activo}`);
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: 'input[type="text"]', popover: { title: 'Buscar', description: 'Ingrese un término de búsqueda para encontrar departamentos y presione Enter para buscar.', side: 'bottom' }},
+        { element: '.col-md-4', popover: { title: 'Departamento', description: 'Aquí se muestra la información de un departamento.', side: 'top' }},
+        { element: '.fa-map-marker-alt', popover: { title: 'Ubicación', description: 'Muestra la dirección del departamento.', side: 'top' }},
+        { element: '.fa-ruler-combined', popover: { title: 'Tamaño', description: 'Indica el tamaño del departamento en metros cuadrados.', side: 'top' }},
+        { element: '.fa-bed', popover: { title: 'Habitaciones', description: 'Número de habitaciones disponibles en el departamento.', side: 'top' }},
+        { element: '.fa-bath', popover: { title: 'Baños', description: 'Número de baños disponibles en el departamento.', side: 'top' }},
+        { element: filterHeaderRef.current, popover: { title: 'Filtrar por:', description: 'Use estos filtros para ajustar su búsqueda.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   const indexOfLastDepartamento = currentPage * departamentosPerPage;
   const indexOfFirstDepartamento = indexOfLastDepartamento - departamentosPerPage;
   const currentDepartamentos = filteredDepartamentos.slice(indexOfFirstDepartamento, indexOfLastDepartamento);
@@ -378,8 +425,8 @@ const EstudianteDashboard = () => {
       <NavBarEstudiante />
       <DashboardContainer>
         <Sidebar>
-          <FilterHeader>Filtrar por:</FilterHeader>
-          <FilterGroup>
+          <FilterHeader >Filtrar por:</FilterHeader>
+          <FilterGroup ref={filterHeaderRef}>
             <FilterLabel>
               <FilterInput
                 type="checkbox"
@@ -649,6 +696,11 @@ const EstudianteDashboard = () => {
           <Spinner />
         </LoadingOverlay>
       )}
+
+      {/* Botón flotante para iniciar el tour */}
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

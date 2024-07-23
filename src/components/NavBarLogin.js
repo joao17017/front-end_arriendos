@@ -106,7 +106,7 @@ const NavBar = () => {
         </NavbarToggler>
         <NavItems>
           <NavItem to="/login">Iniciar Sesion</NavItem>
-          <NavItem to="/signup">Registartse</NavItem>
+          <NavItem to="/signup">Registrarse</NavItem>
         </NavItems>
       </Container>
       <MobileMenu isOpen={isOpen}>
