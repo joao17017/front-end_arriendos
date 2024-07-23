@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import NavBarArrendador from "./NavBarArrendador";
 import "./SolicitudesVisitaArrendador.css";
+import { FaCheck, FaTimes, FaPause, FaRedo, FaTrash, FaHandshake } from "react-icons/fa";
 
 const SolicitudesVisitaArrendador = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -163,9 +164,7 @@ const SolicitudesVisitaArrendador = () => {
 
   return (
     <div>
-      <br></br>
       <NavBarArrendador />
-      <br></br>
       <div className="dashboard">
         <h1>Solicitudes de Visita Recibidas</h1>
         <p>
@@ -183,6 +182,13 @@ const SolicitudesVisitaArrendador = () => {
               {solicitud.DepartamentoActivo ? (
                 <>
                   <h3>{solicitud.DepartamentoActivo.Departamento.nombre}</h3>
+                  {solicitud.DepartamentoActivo.Departamento.imagen && (
+                    <img
+                      src={`http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`}
+                      alt={solicitud.DepartamentoActivo.Departamento.nombre}
+                      className="card-image"
+                    />
+                  )}
                   <p>
                     <strong>Descripción:</strong>
                     {solicitud.DepartamentoActivo.Departamento.descripcion}
@@ -209,59 +215,55 @@ const SolicitudesVisitaArrendador = () => {
                     <strong>Comentario Arrendador:</strong>{" "}
                     {solicitud.comentario_arrendador}
                   </p>
-                  {solicitud.DepartamentoActivo.Departamento.imagen && (
-                    <img
-                      src={`http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`}
-                      alt={solicitud.DepartamentoActivo.Departamento.nombre}
-                      className="card-image"
-                    />
-                  )}
-                  {solicitud.estado !== "aprobada" && (
+
+                  <div className="button-container">
+                    {solicitud.estado !== "aprobada" && (
+                      <button
+                        onClick={() => openModal(solicitud, "aprobar")}
+                        className="button aprobar-button"
+                      >
+                        <FaCheck />
+                      </button>
+                    )}
+                    {solicitud.estado !== "rechazada" && (
+                      <button
+                        onClick={() => openModal(solicitud, "rechazar")}
+                        className="button rechazar-button"
+                      >
+                        <FaTimes />
+                      </button>
+                    )}
+                    {solicitud.estado !== "postergada" && (
+                      <button
+                        onClick={() => openModal(solicitud, "postergar")}
+                        className="button postergar-button"
+                      >
+                        <FaPause />
+                      </button>
+                    )}
                     <button
-                      onClick={() => openModal(solicitud, "aprobar")}
-                      className="button aprobar-button"
+                      onClick={() => openModal(solicitud, "reprogramar")}
+                      className="button reprogramar-button"
                     >
-                      Aprobar Solicitud
+                      <FaRedo />
                     </button>
-                  )}
-                  {solicitud.estado !== "rechazada" && (
                     <button
-                      onClick={() => openModal(solicitud, "rechazar")}
-                      className="button rechazar-button"
+                      onClick={() =>
+                        handleEliminar(solicitud.id_solicitud_visita)
+                      }
+                      className="button eliminar-button"
                     >
-                      Rechazar Solicitud
+                      <FaTrash />
                     </button>
-                  )}
-                  {solicitud.estado !== "postergada" && (
-                    <button
-                      onClick={() => openModal(solicitud, "postergar")}
-                      className="button postergar-button"
-                    >
-                      Postergar Solicitud
-                    </button>
-                  )}
-                  <button
-                    onClick={() => openModal(solicitud, "reprogramar")}
-                    className="button reprogramar-button"
-                  >
-                    Reprogramar Solicitud
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleEliminar(solicitud.id_solicitud_visita)
-                    }
-                    className="button eliminar-button"
-                  >
-                    Eliminar Solicitud
-                  </button>
-                  {solicitud.estado === "aprobada" && (
-                    <button
-                      onClick={() => handleArrendar(solicitud)}
-                      className="button arrendar-button"
-                    >
-                      Arrendar Departamento
-                    </button>
-                  )}
+                    {solicitud.estado === "aprobada" && (
+                      <button
+                        onClick={() => handleArrendar(solicitud)}
+                        className="button arrendar-button"
+                      >
+                        <FaHandshake />
+                      </button>
+                    )}
+                  </div>
                 </>
               ) : (
                 <p>Departamento no encontrado</p>

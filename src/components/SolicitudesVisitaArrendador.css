@@ -4,16 +4,17 @@
 
 .cards-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-wrap: wrap; /* Permite que las tarjetas se envuelvan a la siguiente fila */
+  gap: 20px; /* Espacio entre las tarjetas */
+  justify-content: center; /* Centra las tarjetas horizontalmente */
 }
 
 .card {
-  background: #fff;
+  background: #F3F6FF;
   border: 1px solid #ccc;
   border-radius: 10px;
   padding: 20px;
-  width: 300px;
+  width: 300px; /* Ancho fijo para las tarjetas */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -28,50 +29,54 @@
 }
 
 .button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  margin-right: 5px;
+  background-color: #D8A143;
+    color: #ffffff  ;
+      padding: 0.75rem 1.5rem;
+      border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-right: 10px;
+    width: 40px;
+    padding: 5px 10px;
+    justify-Content: center;
 }
 
 .button:hover {
-  background-color: #45a049;
+  background-color: #252531;
 }
 
 .reprogramar-button {
-  background-color: #2196F3;
+  background-color: none;
 }
 
 .reprogramar-button:hover {
-  background-color: #0b7dda;
+  background-color: #252531;
 }
 
 .postergar-button {
-  background-color: #FFC107;
+  background-color: none;
 }
 
 .postergar-button:hover {
-  background-color: #ffa000;
+  background-color: #252531;
 }
 
 .rechazar-button {
-  background-color: #F44336;
+  background-color: none;
 }
 
 .rechazar-button:hover {
-  background-color: #d32f2f;
+  background-color: #252531;
 }
 
 .eliminar-button {
-  background-color: #9E9E9E;
+  background-color: none;
 }
 
 .eliminar-button:hover {
-  background-color: #757575;
+  background-color: #252531;
 }
 
 /* Modal Styles */
