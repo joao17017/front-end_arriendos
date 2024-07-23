@@ -165,6 +165,7 @@ const SolicitudesVisitaArrendador = () => {
     <div>
       <br></br>
       <NavBarArrendador />
+      <br></br>
       <div className="dashboard">
         <h1>Solicitudes de Visita Recibidas</h1>
         <p>

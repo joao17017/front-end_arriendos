@@ -1,3 +1,4 @@
+// src/components/DepartamentoDetalles2.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -275,7 +276,14 @@ const DepartamentoDetalles2 = () => {
             </ul>
           </TextSection>
           <ImageSection>
-            <img src={departamento.imageUrl || defaultImageUrl} alt="Departamento" />
+            <img 
+              src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl}
+              alt={departamento.nombre} 
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultImageUrl;
+              }}
+            />
           </ImageSection>
         </SectionContainer>
         <Modal

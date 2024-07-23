@@ -164,7 +164,7 @@ const AdminSolicitudesActivacion = () => {
 
   const handleVerDetalles = (id_departamento) => {
     console.log("Redirigiendo al departamento con id:", id_departamento); // Agrega esta línea
-    navigate(`/departamentos/${id_departamento}`);
+    navigate(`/administrador/detalle-departamentos/${id_departamento}`);
   };
 
   const handleImageError = (e) => {

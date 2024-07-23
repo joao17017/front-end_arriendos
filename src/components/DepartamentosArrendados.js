@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; // Importa jwtDecode correctamente
+import { jwtDecode } from 'jwt-decode'; // Importa jwtDecode correctamente
 import NavBarArrendador from './NavBarArrendador';
 import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
@@ -233,7 +233,7 @@ const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar })
         <ButtonSection>
           <button className="btn btn-primary" onClick={() => onComentar(departamento)}>Comentar</button>
           <button className="btn btn-danger" onClick={() => onEliminar(departamento.id_DepartamentoArrendado)}>Eliminar</button>
-          <button className="btn btn-warning" onClick={() => onDesocupar(departamento.id_DepartamentoArrendado)}>Desocupar</button>
+          <button className="btn btn-warning" onClick={() => onDesocupar(departamento)}>Desocupar</button>
         </ButtonSection>
       </TextSection>
       <ImageSection>
@@ -256,6 +256,7 @@ const DepartamentosArrendados = () => {
   const [estrellas, setEstrellas] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedDepartamento, setSelectedDepartamento] = useState(null);
+  const [desocuparId, setDesocuparId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -315,6 +316,12 @@ const DepartamentosArrendados = () => {
       setComentario('');
       setEstrellas(0);
       console.log('Comentario Enviado');
+
+      // Si la acción fue desencadenada por "Desocupar", proceder con la eliminación
+      if (desocuparId) {
+        handleEliminar(desocuparId);
+        setDesocuparId(null);
+      }
     } catch (err) {
       console.error('Error al comentar:', err);
     }
@@ -335,19 +342,10 @@ const DepartamentosArrendados = () => {
     }
   };
 
-  const handleDesocupar = async (id_departamento_arrendado) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:3000/departamentos-arrendados/desocupar/${id_departamento_arrendado}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setDepartamentos(departamentos.filter(dep => dep.id_DepartamentoArrendado !== id_departamento_arrendado));
-      console.log('Departamento desocupado:', id_departamento_arrendado);
-    } catch (err) {
-      console.error('Error desocupando departamento arrendado:', err);
-    }
+  const handleDesocupar = (departamento) => {
+    setSelectedDepartamento(departamento);
+    setDesocuparId(departamento.id_DepartamentoArrendado);
+    setModalIsOpen(true);
   };
 
   return (

@@ -168,6 +168,10 @@ function App() {
             element={<DepartamentoDetalles2 />}
           />
           <Route
+            path="/administrador/detalle-departamentos/:id"
+            element={<DepartamentoDetalles2 />}
+          />
+          <Route
             path="/estudiante/mis-arriendos/"
             element={<DepartamentosArrendadosUsuario />}
           />
