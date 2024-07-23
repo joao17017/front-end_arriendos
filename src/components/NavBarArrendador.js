@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import axios from 'axios';
-import styled from 'styled-components'; 
+import styled from 'styled-components';
 
 const NavBarContainer = styled.div`
   background-color: #343a40; /* Color de fondo constante */
@@ -86,6 +86,22 @@ const MobileNavItem = styled(Link)`
 
   &:hover {
     color: #DFB163;
+  }
+`;
+
+const MobileNavButton = styled.button`
+  background-color: #343a40; /* Fondo del botón */
+  color: white; /* Texto blanco */
+  border: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #DFB163; /* Color de fondo del botón al pasar el ratón (opcional) */
   }
 `;
 
@@ -189,7 +205,7 @@ const NavBarArrendador = () => {
         <MobileNavItem to="/arrendador/solicitudes-visita" onClick={toggleMenu}>Solicitudes de Visita</MobileNavItem>
         <MobileNavItem to="/arrendador/departamentos-arrendados" onClick={toggleMenu}>Departamentos Arrendados</MobileNavItem>
         <MobileNavItem to="/mi-perfil/" onClick={toggleMenu}>Mi Perfil</MobileNavItem>
-        <MobileNavItem as="button" onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavItem>
+        <MobileNavButton onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavButton>
       </MobileMenu>
     </NavBarContainer>
   );

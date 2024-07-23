@@ -52,7 +52,7 @@ const Input = styled.input`
   outline: none;
 
   &:focus {
-    border-color: #007bff;
+    border-color: #DFB163;
   }
 `;
 
@@ -64,12 +64,12 @@ const Select = styled.select`
   outline: none;
 
   &:focus {
-    border-color: #007bff;
+    border-color: #DFB163;
   }
 `;
 
 const Button = styled.button`
-  background: #007bff;
+  background: #252531;
   color: white;
   padding: 0.75rem;
   border: none;
@@ -78,7 +78,7 @@ const Button = styled.button`
   margin-top: 1rem;
 
   &:hover {
-    background: #0056b3;
+    background: #DFB163;
   }
 `;
 
@@ -90,7 +90,7 @@ const ErrorMessage = styled.p`
 const ConfirmationMessage = styled.div`
   text-align: center;
   h2 {
-    color: #28a745;
+    color: #252531;
     margin-bottom: 1rem;
   }
 `;
@@ -160,7 +160,7 @@ const Signup = () => {
           </ConfirmationMessage>
         ) : (
           <FormContainer>
-            <Title>Signup</Title>
+            <Title>Registrase</Title>
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <Form onSubmit={handleSubmit}>
               <FormGroup>

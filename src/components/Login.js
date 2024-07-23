@@ -89,15 +89,17 @@ const ErrorMessage = styled.p`
 `;
 
 const Button = styled.button`
-  background: #252531; // Color de fondo del botón
+  background: #252531;
   color: white;
   padding: 0.75rem;
+  text-align: center;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-
+  width: 100%; // Ajusta el ancho del botón al 100%
+  
   &:hover {
-    background: #1c1c1c; // Color del botón al pasar el cursor
+    background: #DFB163;
   }
 `;
 
@@ -148,7 +150,7 @@ const ModalTitle = styled.h2`
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   text-align: center;
-  color: #252531; // Color del título en el modal
+  color: #252531;
 `;
 
 const CaptchaImage = styled.img`
@@ -158,18 +160,14 @@ const CaptchaImage = styled.img`
   margin-right: auto;
 `;
 
-const CloseButton = styled.button`
-  background: #dc3545;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  float: right;
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem; // Espacio entre los botones
+`;
 
-  &:hover {
-    background: #c82333;
-  }
+const CloseButton = styled(Button)`
+  width: 50%;
 `;
 
 const NotificationModal = styled(ModalContent)`
@@ -323,8 +321,10 @@ const Login = () => {
               <CaptchaImage src={captchaImage} alt="captcha" />
             </InputContainer>
             {resetMessage && <ErrorMessage>{resetMessage}</ErrorMessage>}
-            <Button type="submit">Enviar</Button>
-            <CloseButton onClick={() => setIsModalOpen(false)}>Cerrar</CloseButton>
+            <ButtonWrapper>
+              <Button type="submit">Enviar</Button>
+              <CloseButton onClick={() => setIsModalOpen(false)}>Cerrar</CloseButton>
+            </ButtonWrapper>
           </form>
         </ModalContent>
       </Modal>

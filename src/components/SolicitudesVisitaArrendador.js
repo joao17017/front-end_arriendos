@@ -3,87 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import NavBarArrendador from "./NavBarArrendador";
-import styled from 'styled-components';
-import Modal from 'react-modal';
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
-import "./SolicitudesVisitaArrendador.css"; // Ensure you have this CSS for styling the cards
-
-const Dashboard = styled.div`
-  padding: 20px;
-`;
-
-const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TabsContainer = styled.div`
-  display: flex;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 1rem;
-`;
-
-const Tab = styled.button`
-  flex: 1;
-  padding: 10px;
-  background: ${(props) => (props.active ? '#007bff' : 'white')};
-  color: ${(props) => (props.active ? 'white' : '#007bff')};
-  border: 1px solid #ccc;
-  border-bottom: none;
-  cursor: pointer;
-
-  &:hover {
-    background: ${(props) => (props.active ? '#0056b3' : '#f0f0f0')};
-  }
-`;
-
-const CommentsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: 400px;
-  overflow-y: auto;
-`;
-
-const CommentCard = styled.div`
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-`;
-
-const ModalStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    width: '90%',
-    maxWidth: '700px',
-    maxHeight: '80vh',
-    overflowY: 'auto',
-    padding: '20px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  },
-};
-
-const StarRating = ({ rating }) => {
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    if (i <= rating) {
-      stars.push(<FaStar key={i} color="#ffd700" />);
-    } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
-      stars.push(<FaStarHalfAlt key={i} color="#ffd700" />);
-    } else {
-      stars.push(<FaRegStar key={i} color="#ffd700" />);
-    }
-  }
-  return <div>{stars}</div>;
-};
+import "./SolicitudesVisitaArrendador.css";
+import { FaCheck, FaTimes, FaPause, FaRedo, FaTrash, FaHandshake } from "react-icons/fa";
 
 const SolicitudesVisitaArrendador = () => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -275,10 +196,8 @@ const SolicitudesVisitaArrendador = () => {
 
   return (
     <div>
-      <br></br>
       <NavBarArrendador />
-      <br></br>
-      <Dashboard className="dashboard">
+      <div className="dashboard">
         <h1>Solicitudes de Visita Recibidas</h1>
         <p>
           Estas son las solicitudes de visita que has recibido para tus
@@ -295,6 +214,13 @@ const SolicitudesVisitaArrendador = () => {
               {solicitud.DepartamentoActivo ? (
                 <>
                   <h3>{solicitud.DepartamentoActivo.Departamento.nombre}</h3>
+                  {solicitud.DepartamentoActivo.Departamento.imagen && (
+                    <img
+                      src={`http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`}
+                      alt={solicitud.DepartamentoActivo.Departamento.nombre}
+                      className="card-image"
+                    />
+                  )}
                   <p>
                     <strong>Descripción:</strong>
                     {solicitud.DepartamentoActivo.Departamento.descripcion}
@@ -321,60 +247,55 @@ const SolicitudesVisitaArrendador = () => {
                     <strong>Comentario Arrendador:</strong>{" "}
                     {solicitud.comentario_arrendador}
                   </p>
-                  {solicitud.DepartamentoActivo.Departamento.imagen && (
-                    <img
-                      src={`http://localhost:3000/${solicitud.DepartamentoActivo.Departamento.imagen}`}
-                      alt={solicitud.DepartamentoActivo.Departamento.nombre}
-                      className="card-image"
-                    />
-                  )}
-                  <button onClick={() => openComentariosModal(solicitud.id_usuario)} className="button ver-comentarios-button">Ver Comentarios del Usuario</button>
-                  {solicitud.estado !== "aprobada" && (
+
+                  <div className="button-container">
+                    {solicitud.estado !== "aprobada" && (
+                      <button
+                        onClick={() => openModal(solicitud, "aprobar")}
+                        className="button aprobar-button"
+                      >
+                        <FaCheck />
+                      </button>
+                    )}
+                    {solicitud.estado !== "rechazada" && (
+                      <button
+                        onClick={() => openModal(solicitud, "rechazar")}
+                        className="button rechazar-button"
+                      >
+                        <FaTimes />
+                      </button>
+                    )}
+                    {solicitud.estado !== "postergada" && (
+                      <button
+                        onClick={() => openModal(solicitud, "postergar")}
+                        className="button postergar-button"
+                      >
+                        <FaPause />
+                      </button>
+                    )}
                     <button
-                      onClick={() => openModal(solicitud, "aprobar")}
-                      className="button aprobar-button"
+                      onClick={() => openModal(solicitud, "reprogramar")}
+                      className="button reprogramar-button"
                     >
-                      Aprobar Solicitud
+                      <FaRedo />
                     </button>
-                  )}
-                  {solicitud.estado !== "rechazada" && (
                     <button
-                      onClick={() => openModal(solicitud, "rechazar")}
-                      className="button rechazar-button"
+                      onClick={() =>
+                        handleEliminar(solicitud.id_solicitud_visita)
+                      }
+                      className="button eliminar-button"
                     >
-                      Rechazar Solicitud
+                      <FaTrash />
                     </button>
-                  )}
-                  {solicitud.estado !== "postergada" && (
-                    <button
-                      onClick={() => openModal(solicitud, "postergar")}
-                      className="button postergar-button"
-                    >
-                      Postergar Solicitud
-                    </button>
-                  )}
-                  <button
-                    onClick={() => openModal(solicitud, "reprogramar")}
-                    className="button reprogramar-button"
-                  >
-                    Reprogramar Solicitud
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleEliminar(solicitud.id_solicitud_visita)
-                    }
-                    className="button eliminar-button"
-                  >
-                    Eliminar Solicitud
-                  </button>
-                  {solicitud.estado === "aprobada" && (
-                    <button
-                      onClick={() => handleArrendar(solicitud)}
-                      className="button arrendar-button"
-                    >
-                      Arrendar Departamento
-                    </button>
-                  )}
+                    {solicitud.estado === "aprobada" && (
+                      <button
+                        onClick={() => handleArrendar(solicitud)}
+                        className="button arrendar-button"
+                      >
+                        <FaHandshake />
+                      </button>
+                    )}
+                  </div>
                 </>
               ) : (
                 <p>Departamento no encontrado</p>

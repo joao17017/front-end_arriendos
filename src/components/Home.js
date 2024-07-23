@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NavBar from './NavBar';
 import styled from 'styled-components';
+import Footer from './Footer';
 
 // Styled components
 const PaginationContainer = styled.div`
@@ -50,7 +51,7 @@ const PropertyItem = styled.div`
   position: relative;
   background: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 100%;  // Asegura que todas las tarjetas tengan la misma altura
+  height: 100%;  /* Asegura que todas las tarjetas tengan la misma altura */
   display: flex;
   flex-direction: column;
 `;
@@ -58,13 +59,13 @@ const PropertyItem = styled.div`
 const ImageWrapper = styled.div`
   position: relative;
   overflow: hidden;
-  height: 200px;  // Altura fija para las imágenes
+  height: 200px;  /* Altura fija para las imágenes */
 `;
 
 const PropertyImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;  // Asegura que la imagen cubra el contenedor sin distorsión
+  object-fit: cover;  /* Asegura que la imagen cubra el contenedor sin distorsión */
 `;
 
 const Price = styled.h5`
@@ -92,7 +93,7 @@ const Address = styled.p`
 const InfoRow = styled.div`
   display: flex;
   border-top: 2px solid #DFB163;
-  margin-top: auto;  // Empuja la fila de información al final del contenedor
+  margin-top: auto;  /* Empuja la fila de información al final del contenedor */
 `;
 
 const InfoItem = styled.small`
@@ -160,7 +161,7 @@ const Home = () => {
   return (
     <div>
       <NavBar />
-      <div className="container-fluid p-0">
+      <div className="container-fluid p-0" style={{ paddingTop: '60px' }}> {/* Ajusta el padding para la navbar */}
         <div id="header-carousel" className="carousel slide" data-ride="carousel">
           <div className="carousel-inner">
             <div className="carousel-item active">
@@ -234,6 +235,7 @@ const Home = () => {
           </PaginationContainer>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

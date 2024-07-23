@@ -4,14 +4,14 @@ import styled from 'styled-components';
 
 // Styled components
 const NavBarContainer = styled.div`
-  background-color: ${({ scrolled }) => (scrolled ? '#343a40' : 'transparent')}; /* Fondo transparente al inicio y sólido al hacer scroll */
+  background-color: ${({ scrolled }) => (scrolled ? '#343a40' : 'transparent')};
   padding: 0.5rem 1rem;
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 1000;
+  z-index: 1050; /* Asegúrate de que sea mayor que cualquier otro elemento */
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: ${({ scrolled }) => (scrolled ? '0 4px 8px rgba(0, 0, 0, 0.3)' : 'none')}; /* Sombra solo al hacer scroll */
+  box-shadow: ${({ scrolled }) => (scrolled ? '0 4px 8px rgba(0, 0, 0, 0.3)' : 'none')};
 `;
 
 const Container = styled.div`
@@ -25,18 +25,14 @@ const Container = styled.div`
 
 const Brand = styled(Link)`
   font-size: 2rem;
-  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Azul cuando se hace scroll, blanco antes de hacer scroll */
+  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')};
   text-decoration: none;
-
-  .text-primary {
-    color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Blanco cuando se hace scroll, azul antes de hacer scroll */
-  }
 `;
 
 const NavbarToggler = styled.button`
   background: none;
   border: none;
-  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Blanco cuando se hace scroll, azul antes de hacer scroll */
+  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')};
   font-size: 1.5rem;
 
   &:focus {
@@ -58,7 +54,7 @@ const NavItems = styled.div`
 `;
 
 const NavItem = styled(Link)`
-  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')}; /* Blanco cuando se hace scroll, azul antes de hacer scroll */
+  color: ${({ scrolled }) => (scrolled ? 'white' : 'white')};
   text-decoration: none;
   margin-left: 1rem;
 
@@ -74,6 +70,11 @@ const MobileMenu = styled.div`
     display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     background-color: #343a40;
     padding: 1rem;
+    position: absolute; /* Añadir posición absoluta */
+    top: 100%; /* Asegurar que esté debajo de la navbar */
+    left: 0;
+    right: 0;
+    z-index: 1040; /* Asegúrate de que sea menor que el z-index de la navbar */
   }
 `;
 
@@ -95,10 +96,6 @@ const NavBar = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleLoginRedirect = () => {
-    navigate('/login'); // Redirect to login page
   };
 
   const handleScroll = () => {
@@ -127,12 +124,12 @@ const NavBar = () => {
         </NavbarToggler>
         <NavItems>
           <NavItem to="/login" scrolled={scrolled}>Iniciar Sesion</NavItem>
-          <NavItem to="/signup" scrolled={scrolled}>Registrase</NavItem>
+          <NavItem to="/signup" scrolled={scrolled}>Registrarse</NavItem>
         </NavItems>
       </Container>
       <MobileMenu isOpen={isOpen}>
         <MobileNavItem to="/login" onClick={toggleMenu}>Iniciar Sesion</MobileNavItem>
-        <MobileNavItem to="/signup" onClick={toggleMenu}>Iniciar Sesion</MobileNavItem>
+        <MobileNavItem to="/signup" onClick={toggleMenu}>Registrarse</MobileNavItem>
       </MobileMenu>
     </NavBarContainer>
   );
