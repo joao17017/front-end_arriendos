@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
 import Modal from 'react-modal';
 import Rating from 'react-rating-stars-component';
-import { FaComment, FaTrash, FaBroom} from "react-icons/fa";
 
 const MainContainer = styled.div`
   background-color: #f8f9fa;
@@ -76,8 +75,8 @@ const TextSection = styled.div`
   }
 
   .btn {
-    background-color: #D8A143;
-    color: #ffffff  ;
+    background-color: #007bff;
+    color: #fff;
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
@@ -85,25 +84,24 @@ const TextSection = styled.div`
     font-size: 1rem;
     cursor: pointer;
     margin-right: 10px;
-    justifyContent: center;
 
     &:hover {
-      background-color: #252531;
+      background-color: #0056b3;
     }
 
     &.btn-danger {
-      background-color: none;
+      background-color: #dc3545;
 
       &:hover {
-        background-color: #252531;
+        background-color: #c82333;
       }
     }
 
     &.btn-warning {
-      background-color: none;
+      background-color: #ffc107;
 
       &:hover {
-        background-color: #252531;
+        background-color: #e0a800;
       }
     }
   }
@@ -167,7 +165,7 @@ const ModalContainer = styled.div`
       outline: none;
 
       &:focus {
-        border-color: #D8A143;
+        border-color: #007bff;
       }
     }
 
@@ -183,20 +181,20 @@ const ModalContainer = styled.div`
         cursor: pointer;
 
         &.btn-primary {
-          background-color: #252531;
+          background-color: #007bff;
           color: white;
 
           &:hover {
-            background-color: #D8A143;
+            background-color: #0056b3;
           }
         }
 
         &.btn-secondary {
-          background-color: #252531;
+          background-color: #6c757d;
           color: white;
 
           &:hover {
-            background-color: #D8A143;
+            background-color: #5a6268;
           }
         }
       }
@@ -233,9 +231,9 @@ const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar })
           </li>
         </ul>
         <ButtonSection>
-          <button className="btn btn-primary" onClick={() => onComentar(departamento)}> <FaComment /> </button>
-          <button className="btn btn-danger" onClick={() => onEliminar(departamento.id_DepartamentoArrendado)}><FaTrash/> </button>
-          <button className="btn btn-warning" onClick={() => onDesocupar(departamento)}><FaBroom/></button>
+          <button className="btn btn-primary" onClick={() => onComentar(departamento)}>Comentar</button>
+          <button className="btn btn-danger" onClick={() => onEliminar(departamento.id_DepartamentoArrendado)}>Eliminar</button>
+          <button className="btn btn-warning" onClick={() => onDesocupar(departamento)}>Desocupar</button>
         </ButtonSection>
       </TextSection>
       <ImageSection>
@@ -332,25 +330,20 @@ const DepartamentosArrendados = () => {
   const handleEliminar = async (id_departamento_arrendado) => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
-      await axios.delete(`http://localhost:3000/departamentos-arrendados/eliminar/${id_departamento_arrendado}`, {
+      await axios.delete(`http://localhost:3000/departamentos-arrendados/${id_departamento_arrendado}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      setDepartamentos(departamentos.filter(depto => depto.id_DepartamentoArrendado !== id_departamento_arrendado));
-      console.log('Departamento Eliminado');
+      setDepartamentos(departamentos.filter(dep => dep.id_DepartamentoArrendado !== id_departamento_arrendado));
+      console.log('Departamento eliminado:', id_departamento_arrendado);
     } catch (err) {
-      console.error('Error al eliminar el departamento:', err);
+      console.error('Error eliminando departamento arrendado:', err);
     }
   };
 
   const handleDesocupar = (departamento) => {
+    setSelectedDepartamento(departamento);
     setDesocuparId(departamento.id_DepartamentoArrendado);
     setModalIsOpen(true);
   };
@@ -359,76 +352,68 @@ const DepartamentosArrendados = () => {
     <div>
       <NavBarArrendador />
       <MainContainer>
-        {departamentos.length > 0 ? (
-          departamentos.map(departamento => (
-            <DepartamentoCard
-              key={departamento.id_DepartamentoArrendado}
-              departamento={departamento}
-              onComentar={handleComentar}
-              onEliminar={handleEliminar}
-              onDesocupar={handleDesocupar}
-            />
-          ))
-        ) : (
-          <p>No hay departamentos arrendados.</p>
-        )}
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
-          style={{
-            overlay: {
-              zIndex: 1000, // Asegúrate de que el overlay tenga un z-index alto
-            },
-            content: {
-              top: '50%',
-              left: '50%',
-              right: 'auto',
-              bottom: 'auto',
-              marginRight: '-50%',
-              transform: 'translate(-50%, -50%)',
-              width: '90%',
-              maxWidth: '500px',
-              padding: '20px',
-              borderRadius: '8px',
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-              zIndex: 1001, // Asegúrate de que el contenido del modal tenga un z-index mayor que el overlay
-            },
-          }}
-          contentLabel="Comentario"
-        >
-          <ModalContainer>
-            <h2>Comentar a {selectedDepartamento?.Usuario?.nombres}</h2>
-            <form onSubmit={(e) => { e.preventDefault(); submitComentario(); }}>
-              <div>
-                <label>Comentario:</label>
-                <textarea
-                  value={comentario}
-                  onChange={(e) => setComentario(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <label>Estrellas:</label>
-                <RatingContainer>
-                  <Rating
-                    count={5}
-                    size={24}
-                    activeColor="#ffd700"
-                    value={estrellas}
-                    onChange={(newValue) => {
-                      setEstrellas(newValue);
-                    }}
-                  />
-                </RatingContainer>
-              </div>
-              <div className="button-container">
-                <button type="submit" className="btn btn-primary">Enviar</button>
-                <button type="button" className="btn btn-secondary" onClick={() => setModalIsOpen(false)}>Cancelar</button>
-              </div>
-            </form>
-          </ModalContainer>
-        </Modal>
+        {departamentos.map((departamento) => (
+          <DepartamentoCard
+            key={departamento.id_departamento}
+            departamento={departamento}
+            onComentar={handleComentar}
+            onEliminar={handleEliminar}
+            onDesocupar={handleDesocupar}
+          />
+        ))}
       </MainContainer>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90%',
+            maxWidth: '500px',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+        contentLabel="Comentario"
+      >
+        <ModalContainer>
+          <h2>Comentar a {selectedDepartamento?.Usuario?.nombres}</h2>
+          <form onSubmit={(e) => { e.preventDefault(); submitComentario(); }}>
+            <div>
+              <label>Comentario:</label>
+              <textarea
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Estrellas:</label>
+              <RatingContainer>
+                <Rating
+                  count={5}
+                  size={24}
+                  activeColor="#ffd700"
+                  value={estrellas}
+                  onChange={(newValue) => {
+                    setEstrellas(newValue);
+                  }}
+                />
+              </RatingContainer>
+            </div>
+            <div className="button-container">
+              <button type="submit" className="btn btn-primary">Enviar</button>
+              <button type="button" className="btn btn-secondary" onClick={() => setModalIsOpen(false)}>Cancelar</button>
+            </div>
+          </form>
+        </ModalContainer>
+      </Modal>
     </div>
   );
 };

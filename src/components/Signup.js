@@ -160,7 +160,7 @@ const Signup = () => {
           </ConfirmationMessage>
         ) : (
           <FormContainer>
-            <Title>Registrase</Title>
+            <Title>Registrarse</Title>
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <Form onSubmit={handleSubmit}>
               <FormGroup>
