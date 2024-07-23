@@ -18,7 +18,7 @@ const SolicitudesList = styled.div`
 `;
 
 const SolicitudCard = styled.div`
-  background: white;
+  background: #F3F6FF;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 1rem;
@@ -31,11 +31,45 @@ const SolicitudCard = styled.div`
 
   h3 {
     margin-bottom: 1rem;
+    color: #252531;
   }
 
   p {
     margin-bottom: 0.5rem;
     text-align: center;
+
+    &.label {
+      color: #D8A143;
+      font-weight: bold;
+    }
+
+    &.value {
+      color: #252531;
+    }
+  }
+
+  .info-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+
+    &.highlighted {
+      color: #D8A143;
+    }
+
+    &.normal {
+      color: #252531;
+    }
   }
 
   img {
@@ -128,23 +162,6 @@ const ListaSolicitudesVisita = () => {
               {solicitud.DepartamentoActivo && solicitud.DepartamentoActivo.Departamento ? (
                 <>
                   <h3>{solicitud.DepartamentoActivo.Departamento.nombre}</h3>
-                  <p>
-                    <strong>Dirección:</strong>{" "}
-                    {solicitud.DepartamentoActivo.Departamento.direccion}
-                  </p>
-                  <p>
-                    <strong>Fecha Solicitada:</strong>{" "}
-                    {formatFecha(solicitud.fecha_solicitada)}
-                  </p>
-                  <p>
-                    <strong>Estado:</strong> {solicitud.estado}
-                  </p>
-                  <p>
-                    <strong>Comentario:</strong> {solicitud.comentario}
-                  </p>
-                  <p>
-                    <strong>Comentario Arrendador:</strong> {solicitud.comentario_arrendador}
-                  </p>
                   <img
                     src={
                       solicitud.DepartamentoActivo.Departamento.imagen
@@ -157,6 +174,28 @@ const ListaSolicitudesVisita = () => {
                       e.target.src = defaultImageUrl;
                     }}
                   />
+                  <div className="info-container">
+                    <div className="info-item">
+                      <p className="label">Dirección:</p>
+                      <p className="value">{solicitud.DepartamentoActivo.Departamento.direccion}</p>
+                    </div>
+                    <div className="info-item">
+                      <p className="label">Fecha Solicitada:</p>
+                      <p className="value">{formatFecha(solicitud.fecha_solicitada)}</p>
+                    </div>
+                    <div className="info-item">
+                      <p className="label">Estado:</p>
+                      <p className="value">{solicitud.estado}</p>
+                    </div>
+                    <div className="info-item">
+                      <p className="label">Comentario:</p>
+                      <p className="value">{solicitud.comentario}</p>
+                    </div>
+                    <div className="info-item">
+                      <p className="label">Comentario Arrendador:</p>
+                      <p className="value">{solicitud.comentario_arrendador}</p>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <p>Departamento no encontrado</p>

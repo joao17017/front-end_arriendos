@@ -54,6 +54,8 @@ const FilterInput = styled.input`
 
 const Content = styled.div`
   flex: 3;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.h1`
@@ -87,8 +89,12 @@ const Button = styled.button`
 `;
 
 const PropertyContainer = styled.div`
-  width: 100%;
   padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacio entre las tarjetas */
+  width: 100%;
+  box-sizing: border-box;
 
   @media (min-width: 992px) {
     .col-md-4 {
