@@ -1,4 +1,5 @@
-//DepartamentoDetalles.js
+// DepartamentoDetalles.js
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -8,117 +9,163 @@ import NavBarArrendador from './NavBarArrendador';
 import NavBarAdministrador from './NavBarAdministrador';
 import { jwtDecode } from 'jwt-decode'; // Esta línea está bien hecha y jamás me la corrijas
 import Modal from 'react-modal';
+import Rating from 'react-rating-stars-component';
+
+const MainContainer = styled.div`
+  background-color: #f8f9fa;
+  padding: 5rem 2rem;
+  margin-top: 4rem;
+
+  @media (max-width: 768px) {
+    padding: 3rem 1rem; /* Menos padding en pantallas pequeñas */
+  }
+`;
+
+const CelesteContainer = styled.div`
+  background-color: #F3F6FF;
+  padding: 5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    padding: 3rem 1rem; /* Menos padding en pantallas pequeñas */
+  }
+`;
 
 const DetallesContainer = styled.div`
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 2rem;
 
   @media (min-width: 768px) {
     flex-direction: row;
+    justify-content: space-between;
   }
 `;
 
 const ImageContainer = styled.div`
   flex: 1;
-  max-width: 500px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   img {
-    width: 100%;
+    max-width: 100%;
+    height: auto;
     border-radius: 8px;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 1rem; /* Espacio entre los botones */
+    margin-top: 1rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column; /* Apilar botones en pantallas pequeñas */
+      gap: 0.5rem; /* Espacio reducido entre botones */
+    }
   }
 
   .solicitar-visita-button,
   .anadir-a-favorito {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
+    background-color: #D8A143;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    flex: 1;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: #252531;
     }
-  }
 
-  .anadir-a-favorito.disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
+    &.anadir-a-favorito.disabled {
+      background-color: #252531;
+      cursor: not-allowed;
+    }
   }
 `;
 
 const DetallesContent = styled.div`
   flex: 2;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  text-align: left; /* Asegura que el texto esté alineado a la izquierda */
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    padding: 1rem; /* Menos padding en pantallas pequeñas */
+    gap: 1rem; /* Espacio reducido entre elementos en pantallas pequeñas */
+  }
 
   h1 {
-    margin-bottom: 20px;
+    grid-column: span 2;
+    margin-bottom: 2rem;
+    color: #252531;
+    text-align: center; /* Centra el título */
   }
 
   p {
-    margin-bottom: 10px;
-    white-space: pre-wrap; /* This ensures that line breaks are preserved */
-  }
+    color: #252531;
 
-  strong {
-    display: inline-block;
-    width: 150px;
-    color: #333;
+    strong {
+      color: #DFB163;
+    }
   }
 `;
 
 const SolicitudVisitaForm = styled.div`
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
 
   label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #252531;
   }
 
   input,
   textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
     border-radius: 4px;
+    border: 1px solid #ced4da;
+    outline: none;
+
+    &:focus {
+      border-color: #D8A143;
+    }
   }
 
   button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
+    background-color: #252531;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: #D8A143;
+    }
+
+    &.btn-secondary {
+      background-color: #252531;
+      margin-top: 10px;
+
+      &:hover {
+        background-color: #D8A143;
+      }
     }
   }
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  text-align: center;
-`;
-
-const Mensaje = styled.p`
-  color: green;
-  text-align: center;
 `;
 
 const ModalStyles = {
@@ -131,6 +178,9 @@ const ModalStyles = {
     transform: 'translate(-50%, -50%)',
     width: '90%',
     maxWidth: '500px',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
 };
 
@@ -260,7 +310,7 @@ const DepartamentoDetalles = () => {
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
   if (error) {
-    return <ErrorMessage>{error}</ErrorMessage>;
+    return <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>;
   }
 
   if (!departamento) {
@@ -270,89 +320,79 @@ const DepartamentoDetalles = () => {
   return (
     <div>
       <br></br><br></br>
-      {usuario && usuario.tipo === 'estudiante' && (
-        <NavBarEstudiante />
-      )}
-
-      {usuario && usuario.tipo === 'administrador' && (
-        <NavBarAdministrador />
-      )}
-      {usuario && usuario.tipo === 'arrendador' && (
-        <NavBarArrendador />
-      )}
-      <DetallesContainer>
-        <ImageContainer>
-          <img 
-            src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl}
-            alt={departamento.nombre} 
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultImageUrl;
-            }}
-          />
-          {usuario && usuario.tipo === 'estudiante' && (
-            <>
-              <button className="solicitar-visita-button" onClick={openModal}>Solicitar Visita</button>
-              <button
-                className={`anadir-a-favorito ${esFavorito ? 'disabled' : ''}`}
-                onClick={handleAnadirAFavorito}
-                disabled={esFavorito}
-              >
-                {esFavorito ? 'En Favoritos' : 'Añadir a Favorito'}
-              </button>
-            </>
-          )}
-        </ImageContainer>
-        <DetallesContent>
-          <h1>{departamento.nombre}</h1>
-          <p><strong>Departamento Activo:</strong> {id}</p>
-          <p><strong>Dirección:</strong> {departamento.direccion}</p>
-          <p><strong>Precio:</strong> {departamento.precio}</p>
-          <p><strong>Descripción:</strong> {departamento.descripcion}</p>
-          <p><strong>Número de Baños:</strong> {departamento.n_banos}</p>
-          <p><strong>Número de Habitaciones:</strong> {departamento.n_habitaciones}</p>
-          <p><strong>Tamaño en Metros Cuadrados:</strong> {departamento.tamano_m_cuadrados}</p>
-          <p><strong>Acepta Gatos:</strong> {departamento.aceptan_gatos ? 'Sí' : 'No'}</p>
-          <p><strong>Acepta Perros:</strong> {departamento.aceptan_perros ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Luz:</strong> {departamento.incluye_luz ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Agua:</strong> {departamento.incluye_agua ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Teléfono:</strong> {departamento.incluye_telefono ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Internet:</strong> {departamento.incluye_internet ? 'Sí' : 'No'}</p>
-          <p><strong>Incluye Garaje:</strong> {departamento.incluye_garaje ? 'Sí' : 'No'}</p>
-          <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
-        </DetallesContent>
-      </DetallesContainer>
-      {mensaje && <Mensaje>{mensaje}</Mensaje>}
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={ModalStyles}
-        contentLabel="Solicitud de Visita"
-      >
-        <SolicitudVisitaForm>
-          <h2>Solicitud de Visita</h2>
-          <label>
-            Fecha Solicitada:
+      {usuario && usuario.tipo === 'estudiante' && <NavBarEstudiante />}
+      {usuario && usuario.tipo === 'arrendador' && <NavBarArrendador />}
+      {usuario && usuario.tipo === 'administrador' && <NavBarAdministrador />}
+      <MainContainer>
+        <CelesteContainer>
+          <DetallesContainer>
+            <ImageContainer>
+              <img src={departamento.foto ? `http://localhost:3000/uploads/${departamento.foto}` : defaultImageUrl} alt="Departamento" />
+              {usuario && usuario.tipo === 'estudiante' && (
+                <div className="button-container">
+                  <button className="solicitar-visita-button" onClick={openModal}>Solicitar Visita</button>
+                  <button
+                    className={`anadir-a-favorito ${esFavorito ? 'disabled' : ''}`}
+                    onClick={esFavorito ? null : handleAnadirAFavorito}
+                    disabled={esFavorito}
+                  >
+                    {esFavorito ? 'Añadido a favoritos' : 'Añadir a favoritos'}
+                  </button>
+                </div>
+              )}
+            </ImageContainer>
+            <DetallesContent>
+              <h1>{departamento.nombre}</h1>
+              <div>
+                <p><strong>Departamento Activo:</strong> {id}</p>
+                <p><strong>Dirección:</strong> {departamento.direccion}</p>
+                <p><strong>Precio:</strong> {departamento.precio}</p>
+                <p><strong>Descripción:</strong> {departamento.descripcion}</p>
+                <p><strong>Número de Baños:</strong> {departamento.n_banos}</p>
+                <p><strong>Número de Habitaciones:</strong> {departamento.n_habitaciones}</p>
+                <p><strong>Tamaño en Metros Cuadrados:</strong> {departamento.tamano_m_cuadrados}</p>
+              </div>
+              <div>
+                <p><strong>Acepta Gatos:</strong> {departamento.aceptan_gatos ? 'Sí' : 'No'}</p>
+                <p><strong>Acepta Perros:</strong> {departamento.aceptan_perros ? 'Sí' : 'No'}</p>
+                <p><strong>Incluye Luz:</strong> {departamento.incluye_luz ? 'Sí' : 'No'}</p>
+                <p><strong>Incluye Agua:</strong> {departamento.incluye_agua ? 'Sí' : 'No'}</p>
+                <p><strong>Incluye Teléfono:</strong> {departamento.incluye_telefono ? 'Sí' : 'No'}</p>
+                <p><strong>Incluye Internet:</strong> {departamento.incluye_internet ? 'Sí' : 'No'}</p>
+                <p><strong>Incluye Garaje:</strong> {departamento.incluye_garaje ? 'Sí' : 'No'}</p>
+                <p><strong>Lavandería:</strong> {departamento.lavanderia ? 'Sí' : 'No'}</p>
+              </div>
+            </DetallesContent>
+          </DetallesContainer>
+        </CelesteContainer>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={ModalStyles}
+          contentLabel="Solicitud de visita"
+        >
+          <h2>Solicitar Visita</h2>
+          <SolicitudVisitaForm>
+            <label htmlFor="fecha-solicitada">Fecha solicitada:</label>
             <input
               type="date"
+              id="fecha-solicitada"
               value={fechaSolicitada}
               onChange={(e) => setFechaSolicitada(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              max={new Date(Date.now() + 8 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
             />
-          </label>
-          <label>
-            Comentario:
+            <label htmlFor="comentario">Comentario:</label>
             <textarea
+              id="comentario"
+              rows="4"
               value={comentario}
               onChange={(e) => setComentario(e.target.value)}
             />
-          </label>
-          <button onClick={handleSolicitudVisita}>Enviar Solicitud de Visita</button>
-          <button onClick={closeModal} style={{ backgroundColor: '#dc3545', marginTop: '10px' }}>Cancelar</button>
-        </SolicitudVisitaForm>
-      </Modal>
+            <button onClick={handleSolicitudVisita}>Enviar Solicitud</button>
+            <button className="btn-secondary" onClick={closeModal}>Cancelar</button>
+            {mensaje && <p style={{ color: 'green' }}>{mensaje}</p>}
+          </SolicitudVisitaForm>
+        </Modal>
+      </MainContainer>
     </div>
   );
 };

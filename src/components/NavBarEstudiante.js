@@ -96,6 +96,22 @@ const MobileNavItem = styled(Link)`
   }
 `;
 
+const MobileNavButton = styled.button`
+  background-color: #343a40; /* Fondo del botón */
+  color: white; /* Texto blanco */
+  border: none;
+  padding: 0.5rem 1rem;
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #DFB163; /* Color de fondo del botón al pasar el ratón (opcional) */
+  }
+`;
+
 const DropdownContainer = styled.div`
   position: relative;
   display: flex;
@@ -200,8 +216,8 @@ const NavBarEstudiante = () => {
         <MobileNavItem to="/estudiante/dashboard" onClick={toggleMenu}>Anuncios</MobileNavItem>
         <MobileNavItem to="/mis-solicitudes" onClick={toggleMenu}>Solicitud de Visita</MobileNavItem>
         <MobileNavItem to="/estudiante/mis-arriendos/" onClick={toggleMenu}>Mi Arriendo</MobileNavItem>
-        <MobileNavItem to="/perfil" onClick={() => { handleProfileClick(); toggleMenu(); }}>Mi Perfil</MobileNavItem>
-        <MobileNavItem as="button" onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavItem>
+        <MobileNavItem to="/estudiante/perfil" onClick={() => { handleProfileClick(); toggleMenu(); }}>Mi Perfil</MobileNavItem>
+        <MobileNavButton onClick={() => { handleLogout(); toggleMenu(); }}>Salir</MobileNavButton>
       </MobileMenu>
     </NavBarContainer>
   );
