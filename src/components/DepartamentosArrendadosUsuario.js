@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import NavBarEstudiante from "./NavBarEstudiante";
 import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
 import Modal from 'react-modal';
 import Rating from 'react-rating-stars-component';
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 
 const MainContainer = styled.div`
   background-color: #f8f9fa;
@@ -209,6 +211,29 @@ const RatingContainer = styled.div`
   flex-direction: row;
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const DepartamentoCard = ({ departamento, onComentar }) => {
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
@@ -254,6 +279,8 @@ const DepartamentosArrendadosUsuario = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedDepartamento, setSelectedDepartamento] = useState(null);
   const navigate = useNavigate();
+
+  const mainContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchDepartamentos = async () => {
@@ -320,12 +347,27 @@ const DepartamentosArrendadosUsuario = () => {
     }
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: mainContainerRef.current, popover: { title: 'Departamentos Arrendados', description: 'Aquí puedes ver los departamentos que has arrendado.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   return (
     <div>
       <NavBarEstudiante />
-      <MainContainer>
+      <MainContainer >
         {departamentos.map((departamento) => (
-          <DepartamentoCard
+          <DepartamentoCard 
             key={departamento.id_departamento}
             departamento={departamento}
             onComentar={handleComentar}
@@ -384,6 +426,10 @@ const DepartamentosArrendadosUsuario = () => {
           </form>
         </ModalContainer>
       </Modal>
+      {/* Botón flotante para iniciar el tour */}
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

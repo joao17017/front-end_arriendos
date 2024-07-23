@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+// src/components/CrearDepartamento.js
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Esta línea está bien hecha y jamás me la corrijas
 import NavBarArrendador from './NavBarArrendador';
 import styled from 'styled-components';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 
 // Contenedor principal del formulario
 const FormContainer = styled.div`
@@ -155,6 +158,8 @@ const CrearDepartamento = () => {
   const [nuevaImagen, setNuevaImagen] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const titleRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -221,11 +226,46 @@ const CrearDepartamento = () => {
     }
   };
 
+  useEffect(() => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: '.navbar', popover: { title: 'Menú de navegación', description: 'Usa el menú de navegación para moverte por la aplicación.', side: 'bottom' }},
+        { element: titleRef.current, popover: { title: 'Título', description: 'Este es el título de la página.', side: 'bottom' }},
+        { element: formRef.current, popover: { title: 'Formulario', description: 'Completa el formulario para crear un nuevo departamento.', side: 'top' }},
+        { element: '[name="nombre"]', popover: { title: 'Nombre', description: 'Ingresa el nombre del departamento.', side: 'top' }},
+        { element: '[name="direccion"]', popover: { title: 'Dirección', description: 'Ingresa la dirección del departamento.', side: 'top' }},
+        { element: '[name="precio"]', popover: { title: 'Precio', description: 'Ingresa el precio del departamento.', side: 'top' }},
+        { element: '[name="descripcion"]', popover: { title: 'Descripción', description: 'Ingresa una descripción del departamento.', side: 'top' }},
+        { element: '[name="n_banos"]', popover: { title: 'Número de Baños', description: 'Ingresa el número de baños.', side: 'top' }},
+        { element: '[name="n_habitaciones"]', popover: { title: 'Número de Habitaciones', description: 'Ingresa el número de habitaciones.', side: 'top' }},
+        { element: '[name="tamano_m_cuadrados"]', popover: { title: 'Tamaño', description: 'Ingresa el tamaño del departamento en metros cuadrados.', side: 'top' }},
+        { element: '[name="imagen"]', popover: { title: 'Imagen', description: 'Sube una imagen del departamento.', side: 'top' }},
+        { element: '[name="incluye_luz"]', popover: { title: 'Incluye Luz', description: 'Marca si el departamento incluye luz.', side: 'top' }},
+        { element: '[name="todos_los_servicios_basicos"]', popover: { title: 'Servicios Básicos', description: 'Marca si el departamento incluye todos los servicios básicos.', side: 'top' }},
+        { element: '[name="incluye_agua"]', popover: { title: 'Incluye Agua', description: 'Marca si el departamento incluye agua.', side: 'top' }},
+        { element: '[name="incluye_telefono"]', popover: { title: 'Incluye Teléfono', description: 'Marca si el departamento incluye teléfono.', side: 'top' }},
+        { element: '[name="incluye_internet"]', popover: { title: 'Incluye Internet', description: 'Marca si el departamento incluye internet.', side: 'top' }},
+        { element: '[name="incluye_garaje"]', popover: { title: 'Incluye Garaje', description: 'Marca si el departamento incluye garaje.', side: 'top' }},
+        { element: '[name="lavanderia"]', popover: { title: 'Lavandería', description: 'Marca si el departamento incluye lavandería.', side: 'top' }},
+        { element: '[name="aceptan_gatos"]', popover: { title: 'Aceptan Gatos', description: 'Marca si el departamento acepta gatos.', side: 'top' }},
+        { element: '[name="aceptan_perros"]', popover: { title: 'Aceptan Perros', description: 'Marca si el departamento acepta perros.', side: 'top' }},
+        { element: '.btn-primary', popover: { title: 'Crear Departamento', description: 'Haz clic para crear el departamento.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  }, []);
+
   return (
     <div>
       <NavBarArrendador />
-      <FormContainer>
-        <Title>Crear Nuevo Departamento</Title>
+      <FormContainer ref={formRef}>
+        <Title ref={titleRef}>Crear Nuevo Departamento</Title>
         {error && <ErrorMessage>{error}</ErrorMessage>}
         <Form onSubmit={handleSubmit}>
           <FormRow>
@@ -401,7 +441,7 @@ const CrearDepartamento = () => {
               </FormGroup>
             </FormSection>
           </FormRow>
-          <SubmitButton type="submit">Crear Departamento</SubmitButton>
+          <SubmitButton className="btn-primary" type="submit">Crear Departamento</SubmitButton>
         </Form>
       </FormContainer>
     </div>

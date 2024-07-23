@@ -1,5 +1,5 @@
 // src/components/DepartamentosArrendados.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Importa jwtDecode correctamente
@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import { FaAddressCard, FaHandHoldingUsd, FaUserTie } from 'react-icons/fa';
 import Modal from 'react-modal';
 import Rating from 'react-rating-stars-component';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 
 const MainContainer = styled.div`
   background-color: #f8f9fa;
@@ -210,6 +212,29 @@ const RatingContainer = styled.div`
   flex-direction: row; /* Make sure stars are aligned horizontally */
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const DepartamentoCard = ({ departamento, onComentar, onEliminar, onDesocupar }) => {
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
@@ -258,6 +283,8 @@ const DepartamentosArrendados = () => {
   const [selectedDepartamento, setSelectedDepartamento] = useState(null);
   const [desocuparId, setDesocuparId] = useState(null);
   const navigate = useNavigate();
+  const containerRef = useRef(null);
+  const titleRef = useRef(null);
 
   useEffect(() => {
     const fetchDepartamentos = async () => {
@@ -348,10 +375,31 @@ const DepartamentosArrendados = () => {
     setModalIsOpen(true);
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: '.navbar', popover: { title: 'Menú de navegación', description: 'Usa el menú de navegación para moverte por la aplicación.', side: 'bottom' }},
+        { element: titleRef.current, popover: { title: 'Título', description: 'Lista de Departamentos Arrendados.', side: 'bottom' }},
+        { element: containerRef.current, popover: { title: 'Departamentos Arrendados', description: 'Aquí puedes ver y gestionar tus departamentos arrendados.', side: 'top' }},
+        { element: '.btn-primary', popover: { title: 'Comentar', description: 'Haz clic aquí para comentar sobre el usuario.', side: 'top' }},
+        { element: '.btn-danger', popover: { title: 'Eliminar Departamento', description: 'Haz clic aquí para eliminar el departamento arrendado.', side: 'top' }},
+        { element: '.btn-warning', popover: { title: 'Desocupar Departamento', description: 'Haz clic aquí para desocupar el departamento, primero se te pedira un comentario para el usuario y luego se elimina el departamento.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   return (
     <div>
       <NavBarArrendador />
-      <MainContainer>
+      <MainContainer ref={containerRef}>
+        <h1 ref={titleRef}>Departamentos Arrendados</h1>
         {departamentos.map((departamento) => (
           <DepartamentoCard
             key={departamento.id_departamento}
@@ -414,6 +462,9 @@ const DepartamentosArrendados = () => {
           </form>
         </ModalContainer>
       </Modal>
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

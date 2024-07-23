@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import NavBarArrendador from "./NavBarArrendador";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate, Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import styled from 'styled-components';
 import { FaEdit, FaTrash, FaEye, FaCheck } from 'react-icons/fa';
+import { driver } from "driver.js";
+import NavBarArrendador from "./NavBarArrendador";
+import "driver.js/dist/driver.css";
 
 const NavBarHeight = '60px'; // Ajusta este valor según el alto real de tu NavBar
 
@@ -114,9 +116,34 @@ const ButtonRow = styled.div`
   }
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const MisDepartamentos = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const navigate = useNavigate();
+  const containerRef = useRef(null);
+  const titleRef = useRef(null);
 
   useEffect(() => {
     const fetchDepartamentos = async () => {
@@ -175,13 +202,34 @@ const MisDepartamentos = () => {
     }
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: '.navbar', popover: { title: 'Menú de navegación', description: 'Usa el menú de navegación para moverte por la aplicación.', side: 'bottom' }},
+        { element: titleRef.current, popover: { title: 'Título', description: 'Este es el título de la página.', side: 'bottom' }},
+        { element: containerRef.current, popover: { title: 'Departamentos', description: 'Aquí puedes ver y gestionar tus departamentos.', side: 'top' }},
+        { element: '.btn-warning', popover: { title: 'Editar Departamento', description: 'Haz clic aquí para editar la información del departamento.', side: 'top' }},
+        { element: '.btn-danger', popover: { title: 'Eliminar Departamento', description: 'Haz clic aquí para eliminar el departamento.', side: 'top' }},
+        { element: '.btn-primary', popover: { title: 'Ver Departamento', description: 'Haz clic aquí para ver los detalles del departamento.', side: 'top' }},
+        { element: '.btn-success', popover: { title: 'Solicitar Activación', description: 'Haz clic aquí para solicitar la activación del departamento.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
   return (
     <div>
       <NavBarArrendador />
-      <Container>
-        <Title>Mis Departamentos</Title>
+      <Container ref={containerRef}>
+        <Title ref={titleRef}>Mis Departamentos</Title>
         <Row>
           {departamentos.map((departamento) => (
             <Col key={departamento.id_departamento}>
@@ -199,7 +247,7 @@ const MisDepartamentos = () => {
                   <ButtonRow>
                     <Link to={`/departamentos/editar/${departamento.id_departamento}`} className="icon-button btn-warning"><FaEdit /></Link>
                     <span className="icon-button btn-danger" onClick={() => handleDelete(departamento.id_departamento)}><FaTrash /></span>
-                    <Link to={`./${departamento.id_departamento}`} className="icon-button btn-primary"><FaEye /></Link>
+                    <Link to={`/arrendador/mis-departamentos/${departamento.id_departamento}`} className="icon-button btn-primary"><FaEye /></Link>
                     <span className="icon-button btn-success" onClick={() => handleSolicitarActivacion(departamento.id_departamento)}><FaCheck /></span>
                   </ButtonRow>
                 </div>
@@ -208,6 +256,10 @@ const MisDepartamentos = () => {
           ))}
         </Row>
       </Container>
+
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

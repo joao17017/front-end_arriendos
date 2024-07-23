@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
-import NavBarArrendador from "./NavBarArrendador";
+import { jwtDecode } from "jwt-decode";
 import styled from 'styled-components';
 import Modal from 'react-modal';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import NavBarArrendador from "./NavBarArrendador";
 
 const Dashboard = styled.div`
   padding: 20px;
@@ -145,6 +147,29 @@ const StarRating = ({ rating }) => {
   return <div>{stars}</div>;
 };
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const SolicitudesVisitaArrendador = () => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [selectedSolicitud, setSelectedSolicitud] = useState(null);
@@ -158,6 +183,8 @@ const SolicitudesVisitaArrendador = () => {
   const navigate = useNavigate();
 
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
+  const titleRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const fetchSolicitudes = async () => {
@@ -335,18 +362,42 @@ const SolicitudesVisitaArrendador = () => {
     setComentariosModalIsOpen(false);
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: '.navbar', popover: { title: 'Menú de navegación', description: 'Usa el menú de navegación para moverte por la aplicación.', side: 'bottom' }},
+        { element: titleRef.current, popover: { title: 'Título', description: 'Este es el título de la página.', side: 'bottom' }},
+        { element: containerRef.current, popover: { title: 'Solicitudes de Visita', description: 'Aquí puedes ver y gestionar las solicitudes de visita recibidas.', side: 'top' }},
+        { element: '.btn-success', popover: { title: 'Ver Comentarios', description: 'Haz clic aquí para ver los comentarios del usuario.', side: 'top' }},
+        { element: '.btn-primary', popover: { title: 'Aprobar Solicitud', description: 'Haz clic aquí para aprobar la solicitud de visita, solo se aprobara si la fecha actual es igual o meno que la del sistema.', side: 'top' }},
+        { element: '.btn-danger', popover: { title: 'Rechazar Solicitud', description: 'Haz clic aquí para rechazar la solicitud de visita.', side: 'top' }},
+        { element: '.btn-warning', popover: { title: 'Postergar Solicitud', description: 'Haz clic aquí para postergar la solicitud de visita.', side: 'top' }},
+        { element: '.btn-info', popover: { title: 'Reprogramar Solicitud', description: 'Haz clic aquí para reprogramar la solicitud de visita.', side: 'top' }},
+        { element: '.btn-secondary', popover: { title: 'Eliminar Solicitud', description: 'Haz clic aquí para eliminar la solicitud de visita.', side: 'top' }},
+        { element: '.btn-success', popover: { title: 'Arrendar Departamento', description: 'Haz clic aquí para arrendar el departamento al usuario.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   return (
     <div>
       <br></br>
       <NavBarArrendador />
       <br></br>
       <Dashboard>
-        <h1>Solicitudes de Visita Recibidas</h1>
+        <h1 ref={titleRef}>Solicitudes de Visita Recibidas</h1>
         <p>
           Estas son las solicitudes de visita que has recibido para tus
           departamentos.
         </p>
-        <CardsContainer>
+        <CardsContainer ref={containerRef}>
           {solicitudes.map((solicitud) => (
             <Card key={solicitud.id_solicitud_visita}>
               {solicitud.DepartamentoActivo ? (
@@ -367,20 +418,20 @@ const SolicitudesVisitaArrendador = () => {
                   <CardText><strong>Fecha Solicitada:</strong> {formatFecha(solicitud.fecha_solicitada)}</CardText>
                   <CardText><strong>Comentario Usuario:</strong> {solicitud.comentario}</CardText>
                   <CardText><strong>Comentario Arrendador:</strong> {solicitud.comentario_arrendador}</CardText>
-                  <Button color="#28a745" hoverColor="#218838" onClick={() => openComentariosModal(solicitud.id_usuario)}>Ver Comentarios del Usuario</Button>
+                  <Button color="#28a745" hoverColor="#218838" onClick={() => openComentariosModal(solicitud.id_usuario)} className="btn-success">Ver Comentarios del Usuario</Button>
                   {solicitud.estado !== "aprobada" && (
-                    <Button color="#007bff" hoverColor="#0056b3" onClick={() => openModal(solicitud, "aprobar")}>Aprobar Solicitud</Button>
+                    <Button color="#007bff" hoverColor="#0056b3" onClick={() => openModal(solicitud, "aprobar")} className="btn-primary">Aprobar Solicitud</Button>
                   )}
                   {solicitud.estado !== "rechazada" && (
-                    <Button color="#dc3545" hoverColor="#c82333" onClick={() => openModal(solicitud, "rechazar")}>Rechazar Solicitud</Button>
+                    <Button color="#dc3545" hoverColor="#c82333" onClick={() => openModal(solicitud, "rechazar")} className="btn-danger">Rechazar Solicitud</Button>
                   )}
                   {solicitud.estado !== "postergada" && (
-                    <Button color="#ffc107" hoverColor="#e0a800" onClick={() => openModal(solicitud, "postergar")}>Postergar Solicitud</Button>
+                    <Button color="#ffc107" hoverColor="#e0a800" onClick={() => openModal(solicitud, "postergar")} className="btn-warning">Postergar Solicitud</Button>
                   )}
-                  <Button color="#17a2b8" hoverColor="#138496" onClick={() => openModal(solicitud, "reprogramar")}>Reprogramar Solicitud</Button>
-                  <Button color="#6c757d" hoverColor="#5a6268" onClick={() => handleEliminar(solicitud.id_solicitud_visita)}>Eliminar Solicitud</Button>
+                  <Button color="#17a2b8" hoverColor="#138496" onClick={() => openModal(solicitud, "reprogramar")} className="btn-info">Reprogramar Solicitud</Button>
+                  <Button color="#6c757d" hoverColor="#5a6268" onClick={() => handleEliminar(solicitud.id_solicitud_visita)} className="btn-secondary">Eliminar Solicitud</Button>
                   {solicitud.estado === "aprobada" && (
-                    <Button color="#28a745" hoverColor="#218838" onClick={() => handleArrendar(solicitud)}>Arrendar Departamento</Button>
+                    <Button color="#28a745" hoverColor="#218838" onClick={() => handleArrendar(solicitud)} className="btn-success">Arrendar Departamento</Button>
                   )}
                 </>
               ) : (
@@ -459,6 +510,10 @@ const SolicitudesVisitaArrendador = () => {
             ))}
         </CommentsContainer>
       </Modal>
+
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

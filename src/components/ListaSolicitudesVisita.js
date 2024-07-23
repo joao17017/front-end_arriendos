@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import styled from "styled-components";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import NavBarEstudiante from "./NavBarEstudiante";
 
 const ListaSolicitudesContainer = styled.div`
@@ -94,13 +96,38 @@ const ErrorMessage = styled.p`
   margin-top: 2rem;
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const ListaSolicitudesVisita = () => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
+  const titleRef = useRef(null);
+  const firstCardRef = useRef(null);
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
-
+  
   useEffect(() => {
     const fetchSolicitudes = async () => {
       try {
@@ -141,6 +168,22 @@ const ListaSolicitudesVisita = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: titleRef.current, popover: { title: 'Mis Solicitudes de Visita', description: 'Aquí puedes ver tus solicitudes de visita.', side: 'bottom' }},
+        { element: firstCardRef.current, popover: { title: 'Solicitud de Visita', description: 'Aquí puedes ver la información de una solicitud de visita.', side: 'top' }}
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   if (error) {
     return <ErrorMessage>{error}</ErrorMessage>;
   }
@@ -155,10 +198,10 @@ const ListaSolicitudesVisita = () => {
       <NavBarEstudiante />
       <ListaSolicitudesContainer>
         <br></br>
-        <h1>Mis Solicitudes de Visita</h1>
+        <h1 ref={titleRef}>Mis Solicitudes de Visita</h1>
         <SolicitudesList>
-          {solicitudes.map((solicitud) => (
-            <SolicitudCard key={solicitud.id_solicitud_visita}>
+          {solicitudes.map((solicitud, index) => (
+            <SolicitudCard key={solicitud.id_solicitud_visita} ref={index === 0 ? firstCardRef : null}>
               {solicitud.DepartamentoActivo && solicitud.DepartamentoActivo.Departamento ? (
                 <>
                   <h3>{solicitud.DepartamentoActivo.Departamento.nombre}</h3>
@@ -204,6 +247,10 @@ const ListaSolicitudesVisita = () => {
           ))}
         </SolicitudesList>
       </ListaSolicitudesContainer>
+      {/* Botón flotante para iniciar el tour */}
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

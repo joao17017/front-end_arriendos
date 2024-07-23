@@ -1,11 +1,12 @@
-// components/MisFavoritos.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Importación corregida
 import NavBarEstudiante from './NavBarEstudiante';
 import styled from 'styled-components';
 import { FaEye, FaTrash } from 'react-icons/fa';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 
 const NavBarHeight = '60px'; // Ajusta este valor según el alto real de tu NavBar
 
@@ -107,9 +108,34 @@ const ButtonRow = styled.div`
   }
 `;
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const MisFavoritos = () => {
   const [favoritos, setFavoritos] = useState([]);
   const navigate = useNavigate();
+  const titleRef = useRef(null);
+  const firstCardRef = useRef(null);
 
   useEffect(() => {
     const fetchFavoritos = async () => {
@@ -154,16 +180,32 @@ const MisFavoritos = () => {
     navigate(`/departamentos/${id_departamento}`);
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: titleRef.current, popover: { title: 'Mis Favoritos', description: 'Aquí puedes ver tus departamentos favoritos.', side: 'bottom' }},
+        { element: firstCardRef.current, popover: { title: 'Departamento Favorito', description: 'Puedes ver más detalles o eliminar el departamento de tus favoritos.', side: 'top' }}
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
   return (
     <div>
       <NavBarEstudiante />
       <Container>
-        <Title>Mis Favoritos</Title>
+        <Title ref={titleRef}>Mis Favoritos</Title>
         <Row>
-          {favoritos.map(favorito => (
-            <Col key={favorito.id_favorito}>
+          {favoritos.map((favorito, index) => (
+            <Col key={favorito.id_favorito} ref={index === 0 ? firstCardRef : null}>
               <Card>
                 <img
                   src={favorito.DepartamentoActivo?.Departamento.imagen ? `http://localhost:3000/${favorito.DepartamentoActivo.Departamento.imagen}` : defaultImageUrl}
@@ -185,6 +227,10 @@ const MisFavoritos = () => {
           ))}
         </Row>
       </Container>
+      {/* Botón flotante para iniciar el tour */}
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

@@ -1,6 +1,4 @@
-// DepartamentoDetalles.js
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -9,6 +7,8 @@ import NavBarArrendador from './NavBarArrendador';
 import NavBarAdministrador from './NavBarAdministrador';
 import { jwtDecode } from 'jwt-decode'; // Esta línea está bien hecha y jamás me la corrijas
 import Modal from 'react-modal';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
 import Rating from 'react-rating-stars-component';
 
 const MainContainer = styled.div`
@@ -184,6 +184,29 @@ const ModalStyles = {
   },
 };
 
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 const DepartamentoDetalles = () => {
   const { id } = useParams(); // id del departamento activo obtenido desde los parámetros de la URL
   const [departamento, setDepartamento] = useState(null);
@@ -194,6 +217,9 @@ const DepartamentoDetalles = () => {
   const [comentario, setComentario] = useState(''); // Nuevo estado para el comentario
   const [modalIsOpen, setModalIsOpen] = useState(false); // Nuevo estado para el modal
   const [esFavorito, setEsFavorito] = useState(false); // Nuevo estado para el favorito
+
+  const detallesRef = useRef(null);
+  const buttonsRef = useRef(null);
 
   useEffect(() => {
     const fetchDepartamento = async () => {
@@ -307,6 +333,22 @@ const DepartamentoDetalles = () => {
     }
   };
 
+  const handleTour = () => {
+    const driverObj = driver({
+      showProgress: true,
+      doneBtnText: 'Hecho',
+      closeBtnText: 'Cerrar',
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      steps: [
+        { element: detallesRef.current, popover: { title: 'Detalles del Departamento', description: 'Aquí puede ver los detalles del departamento.', side: 'top' }},
+        { element: buttonsRef.current, popover: { title: 'Acciones', description: 'Aquí puede solicitar una visita o añadir a favoritos.', side: 'top' }},
+      ]
+    });
+
+    driverObj.drive();
+  };
+
   const defaultImageUrl = 'http://localhost:3000/uploads/defaultimagedepartamento.png';
 
   if (error) {
@@ -326,7 +368,7 @@ const DepartamentoDetalles = () => {
       <MainContainer>
         <CelesteContainer>
           <DetallesContainer>
-            <ImageContainer>
+            <ImageContainer ref={buttonsRef}>
               <img src={departamento.foto ? `http://localhost:3000/uploads/${departamento.foto}` : defaultImageUrl} alt="Departamento" />
               {usuario && usuario.tipo === 'estudiante' && (
                 <div className="button-container">
@@ -341,7 +383,7 @@ const DepartamentoDetalles = () => {
                 </div>
               )}
             </ImageContainer>
-            <DetallesContent>
+            <DetallesContent ref={detallesRef}>
               <h1>{departamento.nombre}</h1>
               <div>
                 <p><strong>Departamento Activo:</strong> {id}</p>
@@ -393,6 +435,10 @@ const DepartamentoDetalles = () => {
           </SolicitudVisitaForm>
         </Modal>
       </MainContainer>
+      {/* Botón flotante para iniciar el tour */}
+      <FloatingButton onClick={handleTour}>
+        ?
+      </FloatingButton>
     </div>
   );
 };

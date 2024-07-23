@@ -175,7 +175,8 @@ const Home = () => {
       steps: [
         { element: '#header-carousel', popover: { title: 'Carrusel de Bienvenida', description: 'Aquí puedes ver las imágenes destacadas de nuestro sitio.', side: "bottom", align: 'start' }},
         { element: '.container .row', popover: { title: 'Lista de Departamentos', description: 'Aquí puedes ver los departamentos disponibles.', side: "top", align: 'start' }},
-        
+        { element: 'a[href="/login"]', popover: { title: 'Iniciar Sesion', description: 'Debe Iniciar Sesion para ver los detalles del departamento.', side: 'top' }},
+        { element: 'a[href="/signup"]', popover: { title: 'Registrarse', description: 'Haga clic aquí para registrarse si no tiene una cuenta.', side: 'top' }}
       ]
     });
 
@@ -189,6 +190,7 @@ const Home = () => {
   const indexOfLastDepartamento = currentPage * departamentosPerPage;
   const indexOfFirstDepartamento = indexOfLastDepartamento - departamentosPerPage;
   const currentDepartamentos = departamentos.slice(indexOfFirstDepartamento, indexOfLastDepartamento);
+
 
   const handleNextPage = () => {
     setCurrentPage(prevPage => prevPage + 1);
