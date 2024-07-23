@@ -174,6 +174,60 @@ const InfoItem = styled.small`
   }
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80%;
+  overflow-y: auto;
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+`;
+
+const ModalTitle = styled.h2`
+  margin: 0;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+`;
+
+const ModalBody = styled.div`
+  padding-bottom: 20px;
+`;
+
+const ModalFooter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+`;
+
 const EstudianteDashboard = () => {
   const [departamentos, setDepartamentos] = useState([]);
   const [filteredDepartamentos, setFilteredDepartamentos] = useState([]);
@@ -195,6 +249,8 @@ const EstudianteDashboard = () => {
     tamanoMin: '',
     tamanoMax: '',
   });
+  const [showModal, setShowModal] = useState(false);
+  const [searchPerformed, setSearchPerformed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -206,17 +262,22 @@ const EstudianteDashboard = () => {
         let response;
         if (query) {
           response = await axios.get(`http://localhost:3000/bot/search?query=${query}`);
+          setSearchPerformed(true);
         } else {
           response = await axios.get('http://localhost:3000/departamentos-activos');
+          setSearchPerformed(false);
         }
         const departamentosActivos = response.data.map(da => ({
           ...da.Departamento,
           id_departamento_activo: da.id_departamento_activo
         }));
         setDepartamentos(departamentosActivos);
+        setFilteredDepartamentos(departamentosActivos);
+        setShowModal(searchPerformed);
       } catch (err) {
         setError('Error al obtener los departamentos activos');
         console.error(err);
+        setShowModal(true);
       }
     };
 
@@ -499,6 +560,57 @@ const EstudianteDashboard = () => {
           </div>
         </Content>
       </DashboardContainer>
+
+      {/* Modal para mostrar resultados de búsqueda */}
+      {showModal && searchPerformed && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalHeader>
+              <ModalTitle>Resultados de Búsqueda</ModalTitle>
+              <CloseButton onClick={() => setShowModal(false)}>&times;</CloseButton>
+            </ModalHeader>
+            <ModalBody>
+              {filteredDepartamentos.length > 0 ? (
+                <div className="container">
+                  <div className="row">
+                    {filteredDepartamentos.map((departamento) => (
+                      <PropertyContainer className="col-md-4 mb-4" key={departamento.id_departamento_activo}>
+                        <PropertyItem onClick={() => handleDepartamentoClick(departamento.id_departamento_activo)}>
+                          <ImageWrapper>
+                            <PropertyImage 
+                              src={departamento.imagen ? `http://localhost:3000/${departamento.imagen}` : defaultImageUrl} 
+                              alt={departamento.nombre} 
+                              onError={(e) => {
+                                e.target.onerror = null; 
+                                e.target.src = defaultImageUrl;
+                              }}
+                            />
+                          </ImageWrapper>
+                          <div className="p-4 pb-0">
+                            <Price>{departamento.precio}</Price>
+                            <Title>{departamento.nombre}</Title>
+                            <Address><i className="fa fa-map-marker-alt"></i>{departamento.direccion}</Address>
+                          </div>
+                          <InfoRow>
+                            <InfoItem><i className="fa fa-ruler-combined"></i>{departamento.tamano_m_cuadrados} m²</InfoItem>
+                            <InfoItem><i className="fa fa-bed"></i>{departamento.n_habitaciones} habitaciones</InfoItem>
+                            <InfoItem><i className="fa fa-bath"></i>{departamento.n_banos} baños</InfoItem>
+                          </InfoRow>
+                        </PropertyItem>
+                      </PropertyContainer>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p>No se encontraron departamentos que coincidan con la búsqueda.</p>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={() => setShowModal(false)}>Cerrar</Button>
+            </ModalFooter>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </div>
   );
 };

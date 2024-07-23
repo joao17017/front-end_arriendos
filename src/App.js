@@ -29,7 +29,10 @@ import BuscarDepartamentos from "./components/BuscarDepartamentos";
 import DepartamentosArrendados from "./components/DepartamentosArrendados";
 import DepartamentosArrendadosUsuario from "./components/DepartamentosArrendadosUsuario";
 import ListaSolicitudesVisita from "./components/ListaSolicitudesVisita";
+import AdminDepartamentos from './components/AdminDepartamentos'
 import MiPerfil from "./components/Mi_Perfil";
+import AdminUsuarios from "./components/AdminUsuarios"
+import EditarDepartamentoAdmin from "./components/EditarDepartamentoAdmin"
 import "./App.css";
 import DepartamentoDetalles2 from "./components/DepartamentoDetalles2";
 import 'slick-carousel/slick/slick.css';
@@ -172,10 +175,18 @@ function App() {
             element={<DepartamentoDetalles2 />}
           />
           <Route
+            path="/administrador/departamentos"
+            element={<AdminDepartamentos />}
+          />
+          <Route
             path="/estudiante/mis-arriendos/"
             element={<DepartamentosArrendadosUsuario />}
           />
           <Route path="/mi-perfil/" element={<MiPerfil />} />
+          <Route
+            path="/administrador/usuarios"
+            element={<AdminUsuarios />}
+          />
         </Routes>
       </div>
     </Router>

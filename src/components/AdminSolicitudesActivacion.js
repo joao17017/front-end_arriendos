@@ -75,6 +75,17 @@ const Card = styled.div`
   }
 `;
 
+const CardContent = styled.div`
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  p {
+    margin: 5px 0;
+  }
+`;
+
 const ButtonRow = styled.div`
   display: flex;
   flex-direction: row;
@@ -199,6 +210,13 @@ const AdminSolicitudesActivacion = () => {
                   </ButtonRow>
                 </div>
               </Card>
+              <CardContent>
+                <p><strong>Arrendador:</strong> {solicitud.Arrendador.nombres}</p>
+                <p><strong>Dirección:</strong> {solicitud.Departamento.direccion}</p>
+                <p><strong>Precio:</strong> ${solicitud.Departamento.precio}</p>
+                <p><strong>Descripción:</strong> {solicitud.Departamento.descripcion}</p>
+                <p><strong>Estado:</strong> {solicitud.estado}</p>
+              </CardContent>
             </Col>
           ))}
         </Row>

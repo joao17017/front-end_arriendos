@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import NavBarArrendador from "./NavBarArrendador";
 import "./SolicitudesVisitaArrendador.css";
 import { FaCheck, FaTimes, FaPause, FaRedo, FaTrash, FaHandshake } from "react-icons/fa";
@@ -12,6 +12,10 @@ const SolicitudesVisitaArrendador = () => {
   const [modalType, setModalType] = useState("");
   const [comentarioArrendador, setComentarioArrendador] = useState("");
   const [nuevaFecha, setNuevaFecha] = useState("");
+  const [comentariosModalIsOpen, setComentariosModalIsOpen] = useState(false);
+  const [comentarios, setComentarios] = useState([]);
+  const [activeTab, setActiveTab] = useState('aau');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -162,6 +166,34 @@ const SolicitudesVisitaArrendador = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const openComentariosModal = async (id_usuario) => {
+    setComentariosModalIsOpen(true);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
+      const endpoint = `http://localhost:3000/comentarios/usuario/${id_usuario}`;
+
+      const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setComentarios(response.data);
+    } catch (err) {
+      console.error('Error fetching comentarios:', err);
+      setError('Error al obtener los comentarios');
+    }
+  };
+
+  const closeComentariosModal = () => {
+    setComentariosModalIsOpen(false);
+  };
+
   return (
     <div>
       <NavBarArrendador />
@@ -271,7 +303,7 @@ const SolicitudesVisitaArrendador = () => {
             </div>
           ))}
         </div>
-      </div>
+      </Dashboard>
 
       {selectedSolicitud && (
         <div className="modal">
@@ -314,6 +346,36 @@ const SolicitudesVisitaArrendador = () => {
           </div>
         </div>
       )}
+
+      <Modal
+        isOpen={comentariosModalIsOpen}
+        onRequestClose={closeComentariosModal}
+        style={ModalStyles}
+        contentLabel="Comentarios del Usuario"
+      >
+        <ModalHeader>
+          <button onClick={closeComentariosModal} style={{ backgroundColor: '#dc3545', color: 'white' }}>Cerrar</button>
+          <h2>Comentarios del Usuario</h2>
+        </ModalHeader>
+        <TabsContainer>
+          <Tab active={activeTab === 'aau'} onClick={() => setActiveTab('aau')}>Comentarios Recibidos de Arrendadores</Tab>
+          <Tab active={activeTab === 'uaa'} onClick={() => setActiveTab('uaa')}>Comentarios Emitidos</Tab>
+        </TabsContainer>
+        <CommentsContainer>
+          {comentarios
+            .filter((c) => c.tipo_comentario === activeTab)
+            .map((comentario) => (
+              <CommentCard key={comentario.id_comentario}>
+                <p><strong>Comentario:</strong> {comentario.comentario}</p>
+                <p><strong>Estrellas:</strong> <StarRating rating={comentario.estrellas} /></p>
+                <p><strong>Fecha:</strong> {comentario.fecha}</p>
+                <p><strong>Departamento:</strong> {comentario.Departamento?.nombre}</p>
+                <p><strong>Arrendador:</strong> {comentario.Arrendador?.nombres}</p>
+                <p><strong>Usuario:</strong> {comentario.Usuario?.nombres}</p>
+              </CommentCard>
+            ))}
+        </CommentsContainer>
+      </Modal>
     </div>
   );
 };
