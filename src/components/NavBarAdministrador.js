@@ -195,16 +195,10 @@ const NavBarAdministrador = ({ onGestionarUsuariosClick }) => {
           <i className="fas fa-bars"></i>
         </NavbarToggler>
         <NavItems>
-          <SearchInput
-            type="text"
-            placeholder="Buscar departamentos"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleSearch}
-          />
-          <NavItem to="#" onClick={() => navigate('#')}>Gestionar Departamentos</NavItem>
+          
+          <NavItem to="/administrador/departamentos" onClick={() => navigate('#')}>Gestionar Departamentos</NavItem>
           <NavItem to="/administrador/lista-solicitudes">Administrar Solicitudes</NavItem>
-          <NavItemButton onClick={onGestionarUsuariosClick}>Gestionar Usuarios</NavItemButton>
+          <NavItem to="/administrador/usuarios">Gestionar Usuarios</NavItem>
           <DropdownContainer isOpen={dropdownOpen}>
             <FaUserCircle size={24} color="#DFB163" onClick={toggleDropdown} />
             <div className="dropdown-menu">
